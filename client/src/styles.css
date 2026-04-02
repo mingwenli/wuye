@@ -1,0 +1,25 @@
+:root {
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f5f7fb;
+}
+
+.cost-total-noenergy td {
+  font-weight: 700;
+  background: #f3f4f6 !important;
+}
+
+.cost-total-all td {
+  font-weight: 800;
+  background: #e6f4ff !important;
+}
+

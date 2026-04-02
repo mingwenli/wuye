@@ -1,0 +1,280 @@
+{
+  "common": {
+    "language": "Language",
+    "chinese": "中文",
+    "english": "English",
+    "error": "Request failed, please try again"
+  },
+  "login": {
+    "title": "Property Cost Control",
+    "subtitle": "Sign in with your username and password",
+    "username": "Username",
+    "usernamePlaceholder": "e.g. admin",
+    "usernameRequired": "Please enter username",
+    "password": "Password",
+    "passwordPlaceholder": "Enter password",
+    "passwordRequired": "Please enter password",
+    "submit": "Sign in",
+    "success": "Signed in successfully",
+    "fail": "Sign in failed, please try again",
+    "bootstrapHint": "First-time setup: call the backend bootstrap API to create an account:",
+    "testLogin": "One-click login (default account)",
+    "testSuccess": "Signed in (default account)"
+  },
+  "layout": {
+    "brand": "Property Cost Control",
+    "brandShort": "PCC",
+    "user": "Account",
+    "logout": "Sign out",
+    "menu": {
+      "dataOverview": "Data overview",
+      "costSummary": "Cost summary",
+      "costRestore": "Cost restoration",
+      "detailLedger": "Detail ledger",
+      "energyLedger": "Energy ledger",
+      "systemSettings": "System settings",
+      "subjectManagement": "Subject management",
+      "userManagement": "Personnel management",
+      "projectManagement": "Project management",
+      "costManagement": "Cost management",
+      "budgetManagement": "Budget management",
+      "internalValueManagement": "Internal value management",
+      "processControlManagement": "Process control"
+    }
+  },
+  "costSummary": {
+    "pageTitle": "Cost summary",
+    "searchTitle": "Filters & statistics mode",
+    "tableTitle": "Cost summary table",
+    "fieldProject": "Project",
+    "fieldTime": "Period",
+    "fieldCategory": "Category",
+    "areaShopping": "Shopping center area (sqm)",
+    "areaOffice": "Office area (sqm)",
+    "unitBudget": "Budget unit cost (RMB/sqm)",
+    "unitInternal": "Internal unit cost (RMB/sqm)",
+    "unitProcess": "Process unit cost (RMB/sqm)",
+    "projects": {
+      "all": "All projects",
+      "p1": "Project A",
+      "p2": "Project B"
+    },
+    "categories": {
+      "all": "All categories",
+      "c1": "Labor",
+      "c2": "Energy"
+    },
+    "btnByProject": "By project",
+    "btnByCategory": "By category",
+    "btnByCategoryDetail": "By category detail",
+    "stats": {
+      "budgetA": "Budget A (annual total)",
+      "internalBudgetB": "Internal budget B (annual internal)",
+      "accruedPayable": "Accrued payable (YTD payable)",
+      "accruedPaid": "Accrued paid (YTD paid)",
+      "payableUnpaid": "Payable unpaid (total)",
+      "internalExpectedDiff": "Internal vs expected variance",
+      "payableSideDiff": "Payable-side variance vs internal",
+      "paidSideDiff": "Paid-side variance vs control"
+    },
+    "table": {
+      "rowProject": "Project / category",
+      "groupIndicators": "Annual indicators (incl. energy)",
+      "groupRolling": "Rolling YTD (incl. energy)",
+      "groupNotOccurred": "Remaining year (incl. energy)",
+      "colBudgetA": "Budget A",
+      "colInternalB": "Internal budget B",
+      "colProcessC": "Process control C",
+      "colBcDiff": "Internal expected variance (B-C)",
+      "colCbRate": "Internal completion (C/B)",
+      "colCaRate": "Process completion (C/A)",
+      "colPayableMinusCtl": "Accrued payable − internal",
+      "colAccruedPayable": "Accrued payable",
+      "colDiff": "Variance",
+      "colAccruedPaid": "Accrued paid",
+      "colPayableUnpaid": "Payable unpaid",
+      "colRemainApCtl": "Remaining months payable − internal",
+      "colRemainPaidCtl": "Remaining months paid − control"
+    }
+  },
+  "costManagement": {
+    "budget": {
+      "title": "Budget management",
+      "totalTitle": "Total budget amount",
+      "lastYear": "Last year budget",
+      "thisYear": "This year budget",
+      "nextYear": "Next year budget",
+      "notPlanned": "Not planned",
+      "searchTitle": "Filters",
+      "listTitle": "Budget list",
+      "expand": "Expand",
+      "drawerTitle": "Sub-subject budget",
+      "table": {
+        "projectName": "Project name",
+        "year": "Year",
+        "subject": "Primary category",
+        "budgetAmount": "Budget amount"
+      },
+      "search": {
+        "project": "Project",
+        "projectAll": "All projects",
+        "year": "Year",
+        "yearAll": "All years",
+        "subject": "Primary category",
+        "subjectAll": "All primary categories",
+        "btn": "Search",
+        "reset": "Reset"
+      },
+      "import": {
+        "btn": "Import budget table",
+        "title": "Import budget table",
+        "ok": "OK",
+        "year": "Select year",
+        "file": "Attachment",
+        "chooseFile": "Choose file",
+        "hint": "(Mock) Only for UI demo, not uploaded to server",
+        "selectFile": "Please choose attachment",
+        "noProject": "Please create a project first",
+        "success": "Import successful"
+      }
+    },
+    "internal": {
+      "title": "Internal value management",
+      "desc": "This page is under construction.",
+      "searchTitle": "Filters & search",
+      "listTitle": "Internal value list",
+      "totalBudget": "Total budget",
+      "totalInternal": "Total internal value",
+      "totalDiff": "Budget - internal",
+      "search": {
+        "project": "Project",
+        "projectAll": "All projects",
+        "year": "Year",
+        "yearAll": "All years",
+        "subject": "Subject",
+        "subjectAll": "All subjects"
+      },
+      "table": {
+        "projectName": "Project name",
+        "year": "Year",
+        "subject": "Subject",
+        "budgetAmount": "Budget amount",
+        "internalAmount": "Internal value",
+        "processAmount": "Process control C",
+        "bcDiff": "Internal expected variance (B-C)",
+        "cbRate": "Internal completion (C/B)",
+        "caRate": "Process completion (C/A)",
+        "remark": "Remark",
+        "actions": "Actions"
+      },
+      "modify": "Modify",
+      "modifyModalTitle": "Modify internal value",
+      "save": "Save",
+      "form": {
+        "newAmount": "New internal value",
+        "processAmount": "Process control C",
+        "remark": "Remark"
+      },
+      "validateExceedBudget": "Total internal value cannot exceed total budget. Please adjust and try again.",
+      "modifySuccess": "Modified successfully"
+    },
+    "process": {
+      "title": "Process control",
+      "desc": "This page is under construction."
+    }
+  },
+  "overview": {
+    "costRestore": {
+      "title": "Cost restoration",
+      "desc": "This page is under construction."
+    },
+    "detailLedger": {
+      "title": "Detail ledger",
+      "desc": "This page is under construction."
+    },
+    "energyLedger": {
+      "title": "Energy ledger",
+      "desc": "This page is under construction."
+    }
+  }
+  ,
+  "settings": {
+    "common": {
+      "actions": "Actions",
+      "search": "Search",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteConfirm": "Are you sure to delete?",
+      "ok": "OK",
+      "cancel": "Cancel",
+      "create": "Create",
+      "save": "Save",
+      "add": "Add",
+      "required": "This field is required",
+      "createSuccess": "Created successfully",
+      "updateSuccess": "Updated successfully",
+      "deleteSuccess": "Deleted successfully"
+    },
+    "projects": {
+      "title": "Project management",
+      "addBtn": "Add project",
+      "addTitle": "Add project",
+      "editTitle": "Edit project",
+      "table": {
+        "name": "Name",
+        "code": "Code",
+        "city": "City"
+      },
+      "search": {
+        "name": "Search by name",
+        "code": "Search by code",
+        "city": "Search by city"
+      },
+      "form": {
+        "name": "Name",
+        "code": "Code",
+        "city": "City"
+      },
+      "createSuccess": "Project created",
+      "updateSuccess": "Project updated"
+    },
+    "users": {
+      "title": "Personnel management",
+      "addBtn": "Add user",
+      "addTitle": "Add user",
+      "editTitle": "Edit user",
+      "table": {
+        "username": "Username",
+        "project": "Project"
+      },
+      "search": {
+        "username": "Search by username",
+        "project": "Project",
+        "allProjects": "All projects"
+      },
+      "form": {
+        "username": "Username",
+        "password": "Password",
+        "passwordHint": "Leave empty to keep unchanged",
+        "project": "Project",
+        "projectPlaceholder": "Select project"
+      },
+      "createSuccess": "User created",
+      "updateSuccess": "User updated"
+    },
+    "subjects": {
+      "title": "Subject management",
+      "selectProject": "Select project",
+      "editTax": "Edit tax rate",
+      "addChild": "Add sub-subject",
+      "taxModalTitle": "Edit leaf tax rate",
+      "taxPercent": "Tax rate (%)",
+      "taxPercentHint": "Only leaf nodes can set tax rate",
+      "taxUpdateSuccess": "Tax rate updated",
+      "addChildModalTitle": "Add sub-subject",
+      "childName": "Child subject name",
+      "taxModalHint": "",
+      "addSuccess": "Child subject added"
+    }
+  }
+}

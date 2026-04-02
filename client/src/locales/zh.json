@@ -1,0 +1,280 @@
+{
+  "common": {
+    "language": "语言",
+    "chinese": "中文",
+    "english": "English",
+    "error": "请求失败，请稍后重试"
+  },
+  "login": {
+    "title": "物业成本管控平台",
+    "subtitle": "请使用账号密码登录",
+    "username": "账号",
+    "usernamePlaceholder": "例如：admin",
+    "usernameRequired": "请输入账号",
+    "password": "密码",
+    "passwordPlaceholder": "请输入密码",
+    "passwordRequired": "请输入密码",
+    "submit": "登录",
+    "success": "登录成功",
+    "fail": "登录失败，请重试",
+    "bootstrapHint": "首次使用可先调用后端初始化接口创建账号：",
+    "testLogin": "一键登录（默认账号）",
+    "testSuccess": "登录成功（默认账号）"
+  },
+  "layout": {
+    "brand": "物业成本管控平台",
+    "brandShort": "物业",
+    "user": "账户",
+    "logout": "退出登录",
+    "menu": {
+      "dataOverview": "数据概览",
+      "costSummary": "成本汇总",
+      "costRestore": "成本还原",
+      "detailLedger": "明细台账",
+      "energyLedger": "能耗台账",
+      "systemSettings": "系统设置",
+      "subjectManagement": "科目管理",
+      "userManagement": "人员管理",
+      "projectManagement": "项目管理",
+      "costManagement": "成本管理",
+      "budgetManagement": "预算管理",
+      "internalValueManagement": "内控值管理",
+      "processControlManagement": "过程管控"
+    }
+  },
+  "costSummary": {
+    "pageTitle": "成本汇总",
+    "searchTitle": "筛选与统计方式",
+    "tableTitle": "成本汇总表",
+    "fieldProject": "选择项目",
+    "fieldTime": "选择时间",
+    "fieldCategory": "选择类目",
+    "areaShopping": "购物中心面积（㎡）",
+    "areaOffice": "写字楼面积（㎡）",
+    "unitBudget": "预算单方成本（元/㎡）",
+    "unitInternal": "内控单方成本（元/㎡）",
+    "unitProcess": "过程单方成本（元/㎡）",
+    "projects": {
+      "all": "全部项目",
+      "p1": "项目 A",
+      "p2": "项目 B"
+    },
+    "categories": {
+      "all": "全部类目",
+      "c1": "人工",
+      "c2": "能耗"
+    },
+    "btnByProject": "按项目统计",
+    "btnByCategory": "按类目统计",
+    "btnByCategoryDetail": "按类目明细统计",
+    "stats": {
+      "budgetA": "预算值 A（全年总预算）",
+      "internalBudgetB": "内控预算值 B（全年总内控）",
+      "accruedPayable": "当前累计应付（全年已发生应付）",
+      "accruedPaid": "当前累计实付（全年已发生实付）",
+      "payableUnpaid": "应付未付（全年应付未付总额）",
+      "internalExpectedDiff": "内控预计差额（全年内控与预计成本差额）",
+      "payableSideDiff": "应付侧差额（剩余应付与内控差额）",
+      "paidSideDiff": "实付侧差额（剩余实付与管控差额）"
+    },
+    "table": {
+      "rowProject": "项目/类目",
+      "groupIndicators": "全年指标情况（含能耗）",
+      "groupRolling": "全年滚动已发生（含能耗）",
+      "groupNotOccurred": "全年累计未发生（含能耗）",
+      "colBudgetA": "预算值 A",
+      "colInternalB": "内控预算值 B",
+      "colProcessC": "过程管控值 C",
+      "colBcDiff": "内控预计差额（B-C）",
+      "colCbRate": "内控完成率（C/B）",
+      "colCaRate": "过程完成率（C/A）",
+      "colPayableMinusCtl": "当前累计应付-内控值",
+      "colAccruedPayable": "当前累计应付",
+      "colDiff": "差额",
+      "colAccruedPaid": "当前累计实付",
+      "colPayableUnpaid": "应付未付",
+      "colRemainApCtl": "剩余月份累计应付-内控值",
+      "colRemainPaidCtl": "剩余月份累计实付-管控值"
+    }
+  },
+  "costManagement": {
+    "budget": {
+      "title": "预算管理",
+      "totalTitle": "预算总金额",
+      "lastYear": "去年预算",
+      "thisYear": "今年预算",
+      "nextYear": "下一年预算",
+      "notPlanned": "暂未规划",
+      "searchTitle": "筛选条件",
+      "listTitle": "预算清单",
+      "expand": "展开",
+      "drawerTitle": "下级科目预算",
+      "table": {
+        "projectName": "项目名称",
+        "year": "所属年度",
+        "subject": "一级类目",
+        "budgetAmount": "预算金额"
+      },
+      "search": {
+        "project": "项目",
+        "projectAll": "全部项目",
+        "year": "年度",
+        "yearAll": "全部年度",
+        "subject": "一级科目",
+        "subjectAll": "全部一级科目",
+        "btn": "查询",
+        "reset": "重置"
+      },
+      "import": {
+        "btn": "导入预算表",
+        "title": "导入预算表",
+        "ok": "确认",
+        "year": "选择年份",
+        "file": "附件",
+        "chooseFile": "选择文件",
+        "hint": "（模拟）这里只用于演示 UI，不会上传到服务器",
+        "selectFile": "请先选择附件",
+        "noProject": "请先创建项目后再导入",
+        "success": "导入成功"
+      }
+    },
+    "internal": {
+      "title": "内控值管理",
+      "desc": "页面开发中，将展示内控值管理。",
+      "searchTitle": "筛选与查询",
+      "listTitle": "内控值列表",
+      "totalBudget": "预算总金额",
+      "totalInternal": "内控总金额",
+      "totalDiff": "预算-内控差额",
+      "search": {
+        "project": "项目",
+        "projectAll": "全部项目",
+        "year": "年度",
+        "yearAll": "全部年度",
+        "subject": "科目",
+        "subjectAll": "全部科目"
+      },
+      "table": {
+        "projectName": "项目名称",
+        "year": "所属年度",
+        "subject": "科目",
+        "budgetAmount": "预算金额",
+        "internalAmount": "内控值",
+        "processAmount": "过程管控值 C",
+        "bcDiff": "内控预计差额（B-C）",
+        "cbRate": "内控完成率（C/B）",
+        "caRate": "过程完成率（C/A）",
+        "remark": "备注",
+        "actions": "操作"
+      },
+      "modify": "修改",
+      "modifyModalTitle": "修改内控值",
+      "save": "保存",
+      "form": {
+        "newAmount": "新内控金额",
+        "processAmount": "过程管控值 C",
+        "remark": "备注"
+      },
+      "validateExceedBudget": "内控总金额不能大于预算总金额，请调整后重试。",
+      "modifySuccess": "修改成功"
+    },
+    "process": {
+      "title": "过程管控",
+      "desc": "页面开发中，将展示过程管控。"
+    }
+  },
+  "overview": {
+    "costRestore": {
+      "title": "成本还原",
+      "desc": "页面开发中，将展示成本还原分析。"
+    },
+    "detailLedger": {
+      "title": "明细台账",
+      "desc": "页面开发中，将展示明细台账数据。"
+    },
+    "energyLedger": {
+      "title": "能耗台账",
+      "desc": "页面开发中，将展示能耗相关台账。"
+    }
+  }
+  ,
+  "settings": {
+    "common": {
+      "actions": "操作",
+      "search": "查询",
+      "edit": "编辑",
+      "delete": "删除",
+      "deleteConfirm": "确认删除吗？",
+      "ok": "确定",
+      "cancel": "取消",
+      "create": "新增",
+      "save": "保存",
+      "add": "添加",
+      "required": "该字段为必填项",
+      "createSuccess": "创建成功",
+      "updateSuccess": "更新成功",
+      "deleteSuccess": "删除成功"
+    },
+    "projects": {
+      "title": "项目管理",
+      "addBtn": "添加项目",
+      "addTitle": "新增项目",
+      "editTitle": "编辑项目",
+      "table": {
+        "name": "名称",
+        "code": "编号",
+        "city": "城市"
+      },
+      "search": {
+        "name": "按名称搜索",
+        "code": "按编号搜索",
+        "city": "按城市搜索"
+      },
+      "form": {
+        "name": "名称",
+        "code": "编号",
+        "city": "城市"
+      },
+      "createSuccess": "项目创建成功",
+      "updateSuccess": "项目更新成功"
+    },
+    "users": {
+      "title": "人员管理",
+      "addBtn": "添加人员",
+      "addTitle": "新增人员",
+      "editTitle": "编辑人员",
+      "table": {
+        "username": "账号",
+        "project": "所属项目"
+      },
+      "search": {
+        "username": "按账号搜索",
+        "project": "所属项目",
+        "allProjects": "全部项目"
+      },
+      "form": {
+        "username": "账号",
+        "password": "密码",
+        "passwordHint": "不填则不修改密码",
+        "project": "所属项目",
+        "projectPlaceholder": "请选择项目"
+      },
+      "createSuccess": "人员创建成功",
+      "updateSuccess": "人员更新成功"
+    },
+    "subjects": {
+      "title": "科目管理",
+      "selectProject": "选择项目",
+      "editTax": "编辑税率",
+      "addChild": "添加子科目",
+      "taxModalTitle": "编辑叶子节点税率",
+      "taxPercent": "税率（%）",
+      "taxPercentHint": "仅叶子节点允许设置税率",
+      "taxUpdateSuccess": "税率更新成功",
+      "addChildModalTitle": "添加子科目",
+      "childName": "子科目名称",
+      "taxModalHint": "",
+      "addSuccess": "子科目添加成功"
+    }
+  }
+}
