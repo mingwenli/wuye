@@ -1,0 +1,1308 @@
+{
+  "meta": {
+    "title": "能耗明细表",
+    "monthLabels": [
+      "12月",
+      "1月",
+      "2月",
+      "3月",
+      "4月",
+      "5月",
+      "6月",
+      "7月",
+      "8月",
+      "9月",
+      "10月",
+      "11月"
+    ],
+    "groupYearMix": "全年（已发生+预估发生金额）",
+    "groupRolling": "全年滚动已发生",
+    "groupUnoccurred": "全年累计未发生"
+  },
+  "rows": [
+    {
+      "metricName": "财务指标控制",
+      "energyType": null,
+      "metricKind": "总能耗",
+      "annualYearMix": {
+        "budget": 21283900.732300002,
+        "manage": 20822851.08398959,
+        "completionRate": 0.978338103803936
+      },
+      "annualRolling": {
+        "budget": 1381628.9435,
+        "actualOccur": 1279170.8013145868,
+        "remainDiff": 102458.14218541328
+      },
+      "annualUnoccurred": {
+        "budget": 19902271.7888,
+        "expectedOccur": 19543680.282675,
+        "remainDiff": 358591.5061249994
+      },
+      "months": [
+        {
+          "budget": 1381628.9435,
+          "expectedOccur": null,
+          "actualOccur": 1223465.1513145869,
+          "completionRate": 0.8855236835262397,
+          "actualPaid": 1238760.1113145866
+        },
+        {
+          "budget": 1399360.7344,
+          "expectedOccur": 1399360.7344,
+          "actualOccur": 55705.65,
+          "completionRate": 1.039807927027397,
+          "actualPaid": 55705.65
+        },
+        {
+          "budget": 1165758.6309,
+          "expectedOccur": 1145822.55476,
+          "actualOccur": 0,
+          "completionRate": 0.9828986244565835,
+          "actualPaid": 0
+        },
+        {
+          "budget": 1487032.3335,
+          "expectedOccur": 1463263.1136,
+          "actualOccur": 0,
+          "completionRate": 0.984015667067538,
+          "actualPaid": null
+        },
+        {
+          "budget": 1450178.326500001,
+          "expectedOccur": 1423961.5840200009,
+          "actualOccur": 0,
+          "completionRate": 0.981921711281347,
+          "actualPaid": null
+        },
+        {
+          "budget": 1564793.1599999992,
+          "expectedOccur": 1535285.9838949991,
+          "actualOccur": 0,
+          "completionRate": 0.981143082127864,
+          "actualPaid": null
+        },
+        {
+          "budget": 1776084.4884999997,
+          "expectedOccur": 1740177.92165,
+          "actualOccur": 0,
+          "completionRate": 0.9797833002413501,
+          "actualPaid": null
+        },
+        {
+          "budget": 2467373.5005,
+          "expectedOccur": 2413673.5626499997,
+          "actualOccur": 0,
+          "completionRate": 0.9782359914949568,
+          "actualPaid": null
+        },
+        {
+          "budget": 2530486.5250000004,
+          "expectedOccur": 2479543.9577,
+          "actualOccur": 0,
+          "completionRate": 0.9798684692462449,
+          "actualPaid": null
+        },
+        {
+          "budget": 2531992.5640000002,
+          "expectedOccur": 2481379.0365000004,
+          "actualOccur": 0,
+          "completionRate": 0.9800103964681313,
+          "actualPaid": null
+        },
+        {
+          "budget": 1924362.9215000002,
+          "expectedOccur": 1885224.6295,
+          "actualOccur": 0,
+          "completionRate": 0.9796616887788023,
+          "actualPaid": null
+        },
+        {
+          "budget": 1604848.604,
+          "expectedOccur": 1575987.204,
+          "actualOccur": null,
+          "completionRate": 0.9820161229364162,
+          "actualPaid": null
+        }
+      ],
+      "isSummaryRow": true
+    },
+    {
+      "metricName": null,
+      "energyType": null,
+      "metricKind": "公区能耗",
+      "annualYearMix": {
+        "budget": 7729161.909274999,
+        "manage": 7586293.077089587,
+        "completionRate": 0.9815156114126722
+      },
+      "annualRolling": {
+        "budget": 513732.3835,
+        "actualOccur": 370863.5513145867,
+        "remainDiff": 142868.83218541328
+      },
+      "annualUnoccurred": {
+        "budget": 7215429.525774999,
+        "expectedOccur": 7215429.525775,
+        "remainDiff": 0
+      },
+      "months": [
+        {
+          "budget": 513732.3835,
+          "expectedOccur": null,
+          "actualOccur": 370863.5513145867,
+          "completionRate": 0.7219002796513152,
+          "actualPaid": 370863.5513145867
+        },
+        {
+          "budget": 402196.8278999999,
+          "expectedOccur": 402196.8278999999,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": 0
+        },
+        {
+          "budget": 378785.44665999996,
+          "expectedOccur": 378785.44665999996,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": 0
+        },
+        {
+          "budget": 451615.1781,
+          "expectedOccur": 451615.1781,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        },
+        {
+          "budget": 498118.10712000076,
+          "expectedOccur": 498118.10712000076,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        },
+        {
+          "budget": 560636.3459949993,
+          "expectedOccur": 560636.3459949993,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        },
+        {
+          "budget": 682224.7701499999,
+          "expectedOccur": 682224.7701499999,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        },
+        {
+          "budget": 1020298.8191499999,
+          "expectedOccur": 1020298.8191499999,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        },
+        {
+          "budget": 967908.7786999999,
+          "expectedOccur": 967908.7786999999,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        },
+        {
+          "budget": 961657.0225,
+          "expectedOccur": 961657.0225,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        },
+        {
+          "budget": 743621.6295,
+          "expectedOccur": 743621.6295,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        },
+        {
+          "budget": 548366.6,
+          "expectedOccur": 548366.6,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        }
+      ],
+      "isSummaryRow": false
+    },
+    {
+      "metricName": null,
+      "energyType": null,
+      "metricKind": "租区能耗",
+      "annualYearMix": {
+        "budget": 13196147.6284,
+        "manage": 13236558.0069,
+        "completionRate": 1.0030622860275549
+      },
+      "annualRolling": {
+        "budget": 867896.5599999999,
+        "actualOccur": 908307.2500000001,
+        "remainDiff": -40410.69000000018
+      },
+      "annualUnoccurred": {
+        "budget": 12328251.0684,
+        "expectedOccur": 12328250.7569,
+        "remainDiff": 0.3114999998360872
+      },
+      "months": [
+        {
+          "budget": 867896.5599999999,
+          "expectedOccur": null,
+          "actualOccur": 852601.6000000001,
+          "completionRate": 0.9823769781965723,
+          "actualPaid": 867896.5599999999
+        },
+        {
+          "budget": 997163.9065,
+          "expectedOccur": 997163.9065,
+          "actualOccur": 55705.65,
+          "completionRate": 1.0558640857705373,
+          "actualPaid": 55705.65
+        },
+        {
+          "budget": 767037.1081,
+          "expectedOccur": 767037.1081,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": 0
+        },
+        {
+          "budget": 1011647.9355,
+          "expectedOccur": 1011647.9355,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        },
+        {
+          "budget": 925843.4769,
+          "expectedOccur": 925843.4769,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        },
+        {
+          "budget": 974649.6379,
+          "expectedOccur": 974649.6379,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        },
+        {
+          "budget": 1057953.1515,
+          "expectedOccur": 1057953.1515,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        },
+        {
+          "budget": 1393374.7435,
+          "expectedOccur": 1393374.7435,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        },
+        {
+          "budget": 1511635.1790000002,
+          "expectedOccur": 1511635.1790000002,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        },
+        {
+          "budget": 1519722.0140000002,
+          "expectedOccur": 1519722.0140000002,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        },
+        {
+          "budget": 1141603.3115,
+          "expectedOccur": 1141603,
+          "actualOccur": 0,
+          "completionRate": 0.9999997271381426,
+          "actualPaid": null
+        },
+        {
+          "budget": 1027620.6039999999,
+          "expectedOccur": 1027620.6039999999,
+          "actualOccur": 0,
+          "completionRate": 1,
+          "actualPaid": null
+        }
+      ],
+      "isSummaryRow": false
+    },
+    {
+      "metricName": null,
+      "energyType": null,
+      "metricKind": "租区收入",
+      "annualYearMix": {
+        "budget": 0,
+        "manage": 0,
+        "completionRate": null
+      },
+      "annualRolling": {
+        "budget": 0,
+        "actualOccur": 0,
+        "remainDiff": 0
+      },
+      "annualUnoccurred": {
+        "budget": 0,
+        "expectedOccur": 0,
+        "remainDiff": 0
+      },
+      "months": [
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        }
+      ],
+      "isSummaryRow": false
+    },
+    {
+      "metricName": null,
+      "energyType": null,
+      "metricKind": "能耗NPI",
+      "annualYearMix": {
+        "budget": 0,
+        "manage": 0,
+        "completionRate": null
+      },
+      "annualRolling": {
+        "budget": 0,
+        "actualOccur": 0,
+        "remainDiff": 0
+      },
+      "annualUnoccurred": {
+        "budget": 0,
+        "expectedOccur": 0,
+        "remainDiff": null
+      },
+      "months": [
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        }
+      ],
+      "isSummaryRow": false
+    },
+    {
+      "metricName": "管理指标控制",
+      "energyType": "用电",
+      "metricKind": "公区用量",
+      "annualYearMix": {
+        "budget": 9486434.82,
+        "manage": 468473.4100000004,
+        "completionRate": 0.049383505910179266
+      },
+      "annualRolling": {
+        "budget": 709843,
+        "actualOccur": 468473.4100000004,
+        "remainDiff": 241369.58999999962
+      },
+      "annualUnoccurred": {
+        "budget": 8776591.82,
+        "expectedOccur": 0,
+        "remainDiff": 8776591.82
+      },
+      "months": [
+        {
+          "budget": 709843,
+          "expectedOccur": null,
+          "actualOccur": 468473.4100000004,
+          "completionRate": 0.6599676407318243,
+          "actualPaid": null
+        },
+        {
+          "budget": 541578.1,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 509896.49,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 574464.1,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 618792.820000001,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 773601.509999999,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 949359.7,
+          "expectedOccur": null,
+          "actualOccur": 0,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 1144426.7,
+          "expectedOccur": null,
+          "actualOccur": 0,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 1066056.4,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 1014135,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 882981,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 701300,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        }
+      ],
+      "isSummaryRow": false
+    },
+    {
+      "metricName": null,
+      "energyType": null,
+      "metricKind": "公区单价",
+      "annualYearMix": {
+        "budget": null,
+        "manage": null,
+        "completionRate": null
+      },
+      "annualRolling": {
+        "budget": null,
+        "actualOccur": 0.7495,
+        "remainDiff": null
+      },
+      "annualUnoccurred": {
+        "budget": null,
+        "expectedOccur": null,
+        "remainDiff": null
+      },
+      "months": [
+        {
+          "budget": 0.71,
+          "expectedOccur": null,
+          "actualOccur": 0.7495,
+          "completionRate": 1.0556338028169014,
+          "actualPaid": null
+        },
+        {
+          "budget": 0.72,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": 0
+        },
+        {
+          "budget": 0.72,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": 0
+        },
+        {
+          "budget": 0.78,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 0.78,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 0.71,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 0.71,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 0.86,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 0.89,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 0.93,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 0.81,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 0.76,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        }
+      ],
+      "isSummaryRow": false
+    },
+    {
+      "metricName": null,
+      "energyType": "用水",
+      "metricKind": "公区用量",
+      "annualYearMix": {
+        "budget": 151018.1,
+        "manage": 4991,
+        "completionRate": 0.03304901862756848
+      },
+      "annualRolling": {
+        "budget": 9312,
+        "actualOccur": 4991,
+        "remainDiff": 4321
+      },
+      "annualUnoccurred": {
+        "budget": 141706.1,
+        "expectedOccur": 0,
+        "remainDiff": 141706.1
+      },
+      "months": [
+        {
+          "budget": 9312,
+          "expectedOccur": null,
+          "actualOccur": 4991,
+          "completionRate": 0.5359750859106529,
+          "actualPaid": null
+        },
+        {
+          "budget": 8463,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 7999,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 6912,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 10551,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 10351,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 11161,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 22732.1,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 17737,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 17500,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 17100,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 11200,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        }
+      ],
+      "isSummaryRow": false
+    },
+    {
+      "metricName": null,
+      "energyType": null,
+      "metricKind": "公区单价",
+      "annualYearMix": {
+        "budget": null,
+        "manage": null,
+        "completionRate": null
+      },
+      "annualRolling": {
+        "budget": null,
+        "actualOccur": null,
+        "remainDiff": null
+      },
+      "annualUnoccurred": {
+        "budget": null,
+        "expectedOccur": null,
+        "remainDiff": null
+      },
+      "months": [
+        {
+          "budget": 3.95,
+          "expectedOccur": null,
+          "actualOccur": 3.95,
+          "completionRate": 1,
+          "actualPaid": null
+        },
+        {
+          "budget": 3.95,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": 0
+        },
+        {
+          "budget": 3.95,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": 0
+        },
+        {
+          "budget": 3.95,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 3.95,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": 0
+        },
+        {
+          "budget": 3.95,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 3.95,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 3.95,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 3.95,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 3.95,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 3.95,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        },
+        {
+          "budget": 3.95,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": 0,
+          "actualPaid": null
+        }
+      ],
+      "isSummaryRow": false
+    },
+    {
+      "metricName": null,
+      "energyType": "燃气",
+      "metricKind": "公区用量",
+      "annualYearMix": {
+        "budget": null,
+        "manage": null,
+        "completionRate": null
+      },
+      "annualRolling": {
+        "budget": null,
+        "actualOccur": null,
+        "remainDiff": null
+      },
+      "annualUnoccurred": {
+        "budget": null,
+        "expectedOccur": null,
+        "remainDiff": null
+      },
+      "months": [
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        }
+      ],
+      "isSummaryRow": false
+    },
+    {
+      "metricName": null,
+      "energyType": null,
+      "metricKind": "公区单价",
+      "annualYearMix": {
+        "budget": null,
+        "manage": null,
+        "completionRate": null
+      },
+      "annualRolling": {
+        "budget": null,
+        "actualOccur": null,
+        "remainDiff": null
+      },
+      "annualUnoccurred": {
+        "budget": null,
+        "expectedOccur": null,
+        "remainDiff": null
+      },
+      "months": [
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        }
+      ],
+      "isSummaryRow": false
+    },
+    {
+      "metricName": null,
+      "energyType": "采暖",
+      "metricKind": "成本",
+      "annualYearMix": {
+        "budget": null,
+        "manage": null,
+        "completionRate": null
+      },
+      "annualRolling": {
+        "budget": null,
+        "actualOccur": null,
+        "remainDiff": null
+      },
+      "annualUnoccurred": {
+        "budget": null,
+        "expectedOccur": null,
+        "remainDiff": null
+      },
+      "months": [
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        },
+        {
+          "budget": null,
+          "expectedOccur": null,
+          "actualOccur": null,
+          "completionRate": null,
+          "actualPaid": null
+        }
+      ],
+      "isSummaryRow": false
+    }
+  ]
+}

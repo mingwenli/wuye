@@ -1,0 +1,1795 @@
+{
+  "months": [
+    "2022-12",
+    "2023-01",
+    "2023-02",
+    "2023-03",
+    "2023-04",
+    "2023-05",
+    "2023-06",
+    "2023-07",
+    "2023-08",
+    "2023-09",
+    "2023-10",
+    "2023-11",
+    "2023-12"
+  ],
+  "rows": [
+    {
+      "subject": "一、管理、服务人员的工资和福利费",
+      "metricType": "内控值",
+      "yearlyTotal": 0,
+      "occurredPaid": 0,
+      "unoccurredUnpaid": 0,
+      "months": [
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": "一、管理、服务人员的工资和福利费",
+      "metricType": "过程管控值",
+      "yearlyTotal": 0,
+      "occurredPaid": 0,
+      "unoccurredUnpaid": 0,
+      "months": [
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": null,
+      "metricType": "实付&未付值",
+      "yearlyTotal": 0,
+      "occurredPaid": 0,
+      "unoccurredUnpaid": 0,
+      "months": [
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": "二、行政办公费、劳保后勤",
+      "metricType": "内控值",
+      "yearlyTotal": 0,
+      "occurredPaid": 0,
+      "unoccurredUnpaid": 0,
+      "months": [
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": "二、行政办公费、劳保后勤",
+      "metricType": "过程管控值",
+      "yearlyTotal": 0,
+      "occurredPaid": 0,
+      "unoccurredUnpaid": 0,
+      "months": [
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": null,
+      "metricType": "实付&未付值",
+      "yearlyTotal": 0,
+      "occurredPaid": 0,
+      "unoccurredUnpaid": 0,
+      "months": [
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": "三、公共设施、设备日常维修保养费",
+      "metricType": "内控值",
+      "yearlyTotal": 0,
+      "occurredPaid": 0,
+      "unoccurredUnpaid": 0,
+      "months": [
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": "三、公共设施、设备日常维修保养费",
+      "metricType": "过程管控值",
+      "yearlyTotal": 0,
+      "occurredPaid": 0,
+      "unoccurredUnpaid": 0,
+      "months": [
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": null,
+      "metricType": "实付&未付值",
+      "yearlyTotal": 0,
+      "occurredPaid": 0,
+      "unoccurredUnpaid": 0,
+      "months": [
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": "四、绿化管理费",
+      "metricType": "内控值",
+      "yearlyTotal": 464520,
+      "occurredPaid": 75400,
+      "unoccurredUnpaid": 389120,
+      "months": [
+        {
+          "paid": 7200,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 68200,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 59980,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 7200,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 12200,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 59980,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 18700,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 12200,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 101780,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 12200,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 32200,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 72680,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": "四、绿化管理费",
+      "metricType": "过程管控值",
+      "yearlyTotal": 422320,
+      "occurredPaid": 33200,
+      "unoccurredUnpaid": 389120,
+      "months": [
+        {
+          "paid": 7200,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 26000,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 59980,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 7200,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 12200,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 59980,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 18700,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 12200,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 101780,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 12200,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 32200,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 72680,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": null,
+      "metricType": "实付&未付值",
+      "yearlyTotal": 56980,
+      "occurredPaid": 23780,
+      "unoccurredUnpaid": 33200,
+      "months": [
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 7200
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 26000
+        },
+        {
+          "paid": 23780,
+          "expected": 36200,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 7200,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 12200,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 59980,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 18700,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 12200,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 101780,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 12200,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 32200,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 72680,
+          "unpaid": 0
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": "五、清洁卫生费",
+      "metricType": "内控值",
+      "yearlyTotal": 0,
+      "occurredPaid": 0,
+      "unoccurredUnpaid": 0,
+      "months": [
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": "五、清洁卫生费",
+      "metricType": "过程管控值",
+      "yearlyTotal": 0,
+      "occurredPaid": 0,
+      "unoccurredUnpaid": 0,
+      "months": [
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": null,
+      "metricType": "实付&未付值",
+      "yearlyTotal": 0,
+      "occurredPaid": 0,
+      "unoccurredUnpaid": 0,
+      "months": [
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": "六、安全管理费",
+      "metricType": "内控值",
+      "yearlyTotal": 433473.4,
+      "occurredPaid": 65473.4,
+      "unoccurredUnpaid": 368000,
+      "months": [
+        {
+          "paid": 31673.4,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 33800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": "六、安全管理费",
+      "metricType": "过程管控值",
+      "yearlyTotal": 433473.4,
+      "occurredPaid": 65473.4,
+      "unoccurredUnpaid": 368000,
+      "months": [
+        {
+          "paid": 31673.4,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 33800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 36800,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": null,
+      "metricType": "实付&未付值",
+      "yearlyTotal": 31673.4,
+      "occurredPaid": 31673.4,
+      "unoccurredUnpaid": 0,
+      "months": [
+        {
+          "paid": 31673.4,
+          "expected": 0,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 33800,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 36800,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 36800,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 36800,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 36800,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 36800,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 36800,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 36800,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 36800,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 36800,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 36800,
+          "unpaid": 0
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": "七、酬金",
+      "metricType": "内控值",
+      "yearlyTotal": 52650.841666666674,
+      "occurredPaid": 8184.175,
+      "unoccurredUnpaid": 44466.66666666667,
+      "months": [
+        {
+          "paid": 3959.175,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4225,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4600,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4600,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4600,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4600,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4600,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4600,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4600,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4088.8888888888887,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4088.8888888888887,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4088.8888888888887,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": "七、酬金",
+      "metricType": "过程管控值",
+      "yearlyTotal": 52650.841666666674,
+      "occurredPaid": 8184.175,
+      "unoccurredUnpaid": 44466.66666666667,
+      "months": [
+        {
+          "paid": 3959.175,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4225,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4600,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4600,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4600,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4600,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4600,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4600,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4600,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4088.8888888888887,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4088.8888888888887,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 4088.8888888888887,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": null,
+      "metricType": "实付&未付值",
+      "yearlyTotal": 0,
+      "occurredPaid": 0,
+      "unoccurredUnpaid": 0,
+      "months": [
+        {
+          "paid": 0,
+          "expected": 3959.175,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 4225,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 4600,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 4600,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 4600,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 4600,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 4600,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 4600,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 4600,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 4088.8888888888887,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 4088.8888888888887,
+          "unpaid": 0
+        },
+        {
+          "paid": 0,
+          "expected": 4088.8888888888887,
+          "unpaid": 0
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": "八、能耗",
+      "metricType": "内控值",
+      "yearlyTotal": null,
+      "occurredPaid": null,
+      "unoccurredUnpaid": null,
+      "months": [
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": "八、能耗",
+      "metricType": "过程管控值",
+      "yearlyTotal": null,
+      "occurredPaid": null,
+      "unoccurredUnpaid": null,
+      "months": [
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": 0,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    },
+    {
+      "subject": null,
+      "metricType": "实付&未付值",
+      "yearlyTotal": null,
+      "occurredPaid": null,
+      "unoccurredUnpaid": null,
+      "months": [
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": 0
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        },
+        {
+          "paid": null,
+          "expected": null,
+          "unpaid": null
+        }
+      ]
+    }
+  ]
+}

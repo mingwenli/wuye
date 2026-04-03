@@ -238,15 +238,106 @@
   "overview": {
     "costRestore": {
       "title": "成本还原",
-      "desc": "页面开发中，将展示成本还原分析。"
+      "desc": "页面开发中，将展示成本还原分析。",
+      "searchTitle": "查询条件",
+      "tableTitle": "成本还原表",
+      "fieldProject": "项目",
+      "fieldTime": "统计周期",
+      "groupRoot": "成本还原",
+      "colSubject": "一级科目",
+      "colMetric": "口径",
+      "colYearTotal": "全年合计",
+      "colOccurred": "已发生&支付",
+      "colUnoccurred": "未发生&未支付",
+      "stats": {
+        "yearTotal": "全年合计（内控值汇总）",
+        "occurredPaid": "已发生&支付（内控值汇总）",
+        "unoccurredUnpaid": "未发生&未支付（内控值汇总）"
+      },
+      "monthCol": {
+        "paid": "已支出金额",
+        "expected": "预计未支付金额",
+        "unpaid": "未支付金额"
+      }
     },
     "detailLedger": {
       "title": "明细台账",
-      "desc": "页面开发中，将展示明细台账数据。"
+      "desc": "页面开发中，将展示明细台账数据。",
+      "searchTitle": "筛选条件",
+      "tableTitle": "明细台账表",
+      "fieldProject": "选择项目",
+      "fieldTime": "选择时间",
+      "metaProject": "项目",
+      "metaExTaxHint": "不含税合计（表头）",
+      "groupAnnual": "2023全年",
+      "groupRoot": "物业成本明细",
+      "colSubject": "成本费用科目",
+      "colExTax": "不含税金额",
+      "colTaxRate": "税率",
+      "annual": {
+        "budgetYear": "预估年度金额",
+        "internal": "内控金额",
+        "expectedOccur": "预估发生金额",
+        "actualOccur": "实际发生金额",
+        "actualPaid": "实付金额"
+      },
+      "monthly": {
+        "internal": "内控金额",
+        "expectedOccur": "预估发生金额",
+        "actualOccur": "实际发生金额",
+        "actualPaid": "实付金额",
+        "unpaid": "未支付金额"
+      },
+      "stats": {
+        "budgetYear": "预估年度金额（合计）",
+        "internal": "内控金额（合计）",
+        "expectedOccur": "预估发生金额（合计）",
+        "actualOccur": "实际发生金额（合计）",
+        "actualPaid": "实付金额（合计）"
+      }
     },
     "energyLedger": {
       "title": "能耗台账",
-      "desc": "页面开发中，将展示能耗相关台账。"
+      "desc": "页面开发中，将展示能耗相关台账。",
+      "searchTitle": "筛选条件",
+      "tableTitle": "能耗明细表",
+      "fieldProject": "选择项目",
+      "fieldTime": "选择时间",
+      "metaSheetTitle": "表头名称",
+      "groupRoot": "能耗明细",
+      "colMetricName": "指标名称",
+      "colEnergyType": "能耗类型",
+      "colMetricKind": "指标类型",
+      "yearMix": {
+        "budget": "预算值",
+        "manage": "管理值",
+        "completionRate": "完成率"
+      },
+      "rolling": {
+        "budget": "预算值",
+        "actualOccur": "实际发生金额",
+        "remainDiff": "剩余差额"
+      },
+      "unoccurred": {
+        "budget": "预算值",
+        "expectedOccur": "预估发生金额",
+        "remainDiff": "剩余差额"
+      },
+      "monthly": {
+        "budget": "预算值",
+        "expectedOccur": "预估发生",
+        "actualOccur": "实际发生",
+        "completionRate": "完成率",
+        "actualPaid": "实付"
+      },
+      "stats": {
+        "yearBudget": "全年（已发生+预估）预算值",
+        "yearManage": "全年（已发生+预估）管理值",
+        "yearRate": "全年（已发生+预估）完成率",
+        "rollBudget": "全年滚动预算值",
+        "rollActual": "全年滚动实际发生",
+        "rollRemain": "全年滚动剩余差额"
+      }
     }
   }
   ,

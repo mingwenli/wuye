@@ -238,15 +238,106 @@
   "overview": {
     "costRestore": {
       "title": "Cost restoration",
-      "desc": "This page is under construction."
+      "desc": "This page is under construction.",
+      "searchTitle": "Filters",
+      "tableTitle": "Cost restoration table",
+      "fieldProject": "Project",
+      "fieldTime": "Period",
+      "groupRoot": "Cost restoration",
+      "colSubject": "Level-1 subject",
+      "colMetric": "Measure",
+      "colYearTotal": "Annual total",
+      "colOccurred": "Occurred & paid",
+      "colUnoccurred": "Not occurred & unpaid",
+      "stats": {
+        "yearTotal": "Annual total (internal control sum)",
+        "occurredPaid": "Occurred & paid (internal control sum)",
+        "unoccurredUnpaid": "Not occurred & unpaid (internal control sum)"
+      },
+      "monthCol": {
+        "paid": "Paid out",
+        "expected": "Expected unpaid",
+        "unpaid": "Unpaid"
+      }
     },
     "detailLedger": {
       "title": "Detail ledger",
-      "desc": "This page is under construction."
+      "desc": "This page is under construction.",
+      "searchTitle": "Filters",
+      "tableTitle": "Detail ledger table",
+      "fieldProject": "Project",
+      "fieldTime": "Period",
+      "metaProject": "Project",
+      "metaExTaxHint": "Amount excl. tax (header)",
+      "groupAnnual": "Annual",
+      "groupRoot": "Property cost detail",
+      "colSubject": "Cost item",
+      "colExTax": "Amount excl. tax",
+      "colTaxRate": "Tax rate",
+      "annual": {
+        "budgetYear": "Estimated annual amount",
+        "internal": "Internal control",
+        "expectedOccur": "Expected occurrence",
+        "actualOccur": "Actual occurrence",
+        "actualPaid": "Actual paid"
+      },
+      "monthly": {
+        "internal": "Internal control",
+        "expectedOccur": "Expected occurrence",
+        "actualOccur": "Actual occurrence",
+        "actualPaid": "Actual paid",
+        "unpaid": "Unpaid"
+      },
+      "stats": {
+        "budgetYear": "Estimated annual (total)",
+        "internal": "Internal control (total)",
+        "expectedOccur": "Expected occurrence (total)",
+        "actualOccur": "Actual occurrence (total)",
+        "actualPaid": "Actual paid (total)"
+      }
     },
     "energyLedger": {
       "title": "Energy ledger",
-      "desc": "This page is under construction."
+      "desc": "This page is under construction.",
+      "searchTitle": "Filters",
+      "tableTitle": "Energy detail table",
+      "fieldProject": "Project",
+      "fieldTime": "Period",
+      "metaSheetTitle": "Sheet title",
+      "groupRoot": "Energy detail",
+      "colMetricName": "Indicator",
+      "colEnergyType": "Energy type",
+      "colMetricKind": "Metric type",
+      "yearMix": {
+        "budget": "Budget",
+        "manage": "Managed",
+        "completionRate": "Completion rate"
+      },
+      "rolling": {
+        "budget": "Budget",
+        "actualOccur": "Actual occurred",
+        "remainDiff": "Remaining diff."
+      },
+      "unoccurred": {
+        "budget": "Budget",
+        "expectedOccur": "Expected occurred",
+        "remainDiff": "Remaining diff."
+      },
+      "monthly": {
+        "budget": "Budget",
+        "expectedOccur": "Expected",
+        "actualOccur": "Actual occurred",
+        "completionRate": "Completion rate",
+        "actualPaid": "Paid"
+      },
+      "stats": {
+        "yearBudget": "Annual (occurred+expected) budget",
+        "yearManage": "Annual (occurred+expected) managed",
+        "yearRate": "Annual (occurred+expected) completion",
+        "rollBudget": "Rolling annual budget",
+        "rollActual": "Rolling actual occurred",
+        "rollRemain": "Rolling remaining diff."
+      }
     }
   }
   ,
