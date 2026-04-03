@@ -183,6 +183,40 @@ export async function initDbAndSeed() {
   }
 }
 
+/** 内控值修改日志（过程管控 / 内控值管理） */
+export async function ensureInternalValueLogsTable() {
+  if (isMockDb || !pool) return;
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS internal_value_change_logs (
+      id BIGSERIAL PRIMARY KEY,
+      project_id BIGINT NOT NULL,
+      year INT NOT NULL,
+      subject_id BIGINT NOT NULL,
+      subject_name TEXT NOT NULL,
+      old_internal_amount NUMERIC(20,2) NOT NULL,
+      new_internal_amount NUMERIC(20,2) NOT NULL,
+      old_process_amount NUMERIC(20,2) NOT NULL,
+      new_process_amount NUMERIC(20,2) NOT NULL,
+      remark TEXT,
+      changed_by_user_id TEXT NOT NULL,
+      changed_by_username TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_ivcl_project_year
+    ON internal_value_change_logs (project_id, year);
+  `);
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_ivcl_created
+    ON internal_value_change_logs (created_at DESC);
+  `);
+  await pool.query(`
+    ALTER TABLE internal_value_change_logs
+    ADD COLUMN IF NOT EXISTS attachment_info TEXT;
+  `);
+}
+
 export async function initProjectSubjects(projectId) {
   if (isMockDb) return;
 

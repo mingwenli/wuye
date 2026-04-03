@@ -13,6 +13,7 @@ import {
 } from "antd";
 import { http } from "../../api/http.js";
 import { useTranslation } from "react-i18next";
+import { getTablePagination } from "../../utils/tablePagination.js";
 
 export default function ProjectManagement() {
   const { t } = useTranslation();
@@ -126,56 +127,67 @@ export default function ProjectManagement() {
 
   return (
     <Card
+      className="app-card"
       title={t("settings.projects.title")}
       extra={
         <Button type="primary" onClick={openCreate}>
           {t("settings.projects.addBtn")}
         </Button>
       }
-      style={{ borderRadius: 12 }}
     >
-      <Form
-        layout="inline"
-        onFinish={() => fetchList()}
-        initialValues={filters}
-        style={{ marginBottom: 16 }}
-      >
-        <Form.Item name="name">
-          <Input
-            placeholder={t("settings.projects.search.name")}
-            value={filters.name}
-            onChange={(e) => setFilters((p) => ({ ...p, name: e.target.value }))}
-            style={{ width: 220 }}
-          />
-        </Form.Item>
-        <Form.Item name="code">
-          <Input
-            placeholder={t("settings.projects.search.code")}
-            value={filters.code}
-            onChange={(e) => setFilters((p) => ({ ...p, code: e.target.value }))}
-            style={{ width: 160 }}
-          />
-        </Form.Item>
-        <Form.Item name="city">
-          <Input
-            placeholder={t("settings.projects.search.city")}
-            value={filters.city}
-            onChange={(e) => setFilters((p) => ({ ...p, city: e.target.value }))}
-            style={{ width: 200 }}
-          />
-        </Form.Item>
-        <Form.Item>
-          <Button onClick={() => fetchList()}>{t("settings.common.search")}</Button>
-        </Form.Item>
-      </Form>
+      <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+        <Form
+          layout="inline"
+          onFinish={() => fetchList()}
+          initialValues={filters}
+        >
+          <Space wrap size="middle" align="center">
+            <Form.Item name="name" style={{ marginBottom: 0 }}>
+              <Input.Search
+                allowClear
+                placeholder={t("settings.projects.search.name")}
+                value={filters.name}
+                onChange={(e) => setFilters((p) => ({ ...p, name: e.target.value }))}
+                onSearch={() => fetchList()}
+                style={{ width: 220 }}
+              />
+            </Form.Item>
+            <Form.Item name="code" style={{ marginBottom: 0 }}>
+              <Input
+                allowClear
+                placeholder={t("settings.projects.search.code")}
+                value={filters.code}
+                onChange={(e) => setFilters((p) => ({ ...p, code: e.target.value }))}
+                style={{ width: 160 }}
+              />
+            </Form.Item>
+            <Form.Item name="city" style={{ marginBottom: 0 }}>
+              <Input
+                allowClear
+                placeholder={t("settings.projects.search.city")}
+                value={filters.city}
+                onChange={(e) => setFilters((p) => ({ ...p, city: e.target.value }))}
+                style={{ width: 200 }}
+              />
+            </Form.Item>
+            <Form.Item style={{ marginBottom: 0 }}>
+              <Space>
+                <Button type="primary" onClick={() => fetchList()}>
+                  {t("settings.common.search")}
+                </Button>
+              </Space>
+            </Form.Item>
+          </Space>
+        </Form>
 
-      <Table
-        rowKey="id"
-        loading={loading}
-        dataSource={list}
-        columns={columns}
-        pagination={{ pageSize: 10 }}
-      />
+        <Table
+          rowKey="id"
+          loading={loading}
+          dataSource={list}
+          columns={columns}
+          pagination={getTablePagination(t)}
+        />
+      </Space>
 
       <Modal
         open={modalOpen}

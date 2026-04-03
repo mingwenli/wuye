@@ -63,6 +63,7 @@ export default function Login() {
       }}
     >
       <Card
+        className="app-card"
         style={{ width: 420, maxWidth: "100%" }}
         extra={
           <Space size="small">

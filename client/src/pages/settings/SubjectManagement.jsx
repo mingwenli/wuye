@@ -162,8 +162,8 @@ export default function SubjectManagement() {
 
   return (
     <Card
+      className="app-card"
       title={t("settings.subjects.title")}
-      style={{ borderRadius: 12 }}
       extra={
         <Space>
           <Select

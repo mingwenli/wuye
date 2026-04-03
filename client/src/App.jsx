@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { ConfigProvider } from "antd";
+import { antdTheme } from "./theme/antdTheme.js";
 import zhCN from "antd/locale/zh_CN";
 import enUS from "antd/locale/en_US";
 import { useTranslation } from "react-i18next";
@@ -67,7 +68,7 @@ export default function App() {
   const antdLocale = i18n.language?.startsWith("en") ? enUS : zhCN;
 
   return (
-    <ConfigProvider locale={antdLocale}>
+    <ConfigProvider locale={antdLocale} theme={antdTheme}>
       <AppRoutes />
     </ConfigProvider>
   );

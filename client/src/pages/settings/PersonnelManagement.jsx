@@ -14,6 +14,7 @@ import {
 } from "antd";
 import { http } from "../../api/http.js";
 import { useTranslation } from "react-i18next";
+import { getTablePagination } from "../../utils/tablePagination.js";
 
 export default function PersonnelManagement() {
   const { t } = useTranslation();
@@ -151,51 +152,59 @@ export default function PersonnelManagement() {
 
   return (
     <Card
+      className="app-card"
       title={t("settings.users.title")}
       extra={
         <Button type="primary" onClick={openCreate}>
           {t("settings.users.addBtn")}
         </Button>
       }
-      style={{ borderRadius: 12 }}
     >
-      <Form layout="inline" style={{ marginBottom: 16 }}>
-        <Form.Item name="username">
-          <Input
-            placeholder={t("settings.users.search.username")}
-            value={filters.username}
-            onChange={(e) => setFilters((p) => ({ ...p, username: e.target.value }))}
-            style={{ width: 220 }}
-          />
-        </Form.Item>
-        <Form.Item name="projectId">
-          <Select
-            allowClear
-            placeholder={t("settings.users.search.project")}
-            value={filters.projectId || undefined}
-            onChange={(v) => setFilters((p) => ({ ...p, projectId: v || "" }))}
-            style={{ width: 220 }}
-          >
-            <Select.Option value={""}>{t("settings.users.search.allProjects")}</Select.Option>
-            {projects.map((p) => (
-              <Select.Option key={p.id} value={p.id}>
-                {p.name}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-        <Form.Item>
-          <Button onClick={fetchUsers}>{t("settings.common.search")}</Button>
-        </Form.Item>
-      </Form>
+      <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+        <Form layout="inline">
+          <Space wrap size="middle" align="center">
+            <Form.Item name="username" style={{ marginBottom: 0 }}>
+              <Input.Search
+                allowClear
+                placeholder={t("settings.users.search.username")}
+                value={filters.username}
+                onChange={(e) => setFilters((p) => ({ ...p, username: e.target.value }))}
+                onSearch={fetchUsers}
+                style={{ width: 220 }}
+              />
+            </Form.Item>
+            <Form.Item name="projectId" style={{ marginBottom: 0 }}>
+              <Select
+                allowClear
+                placeholder={t("settings.users.search.project")}
+                value={filters.projectId || undefined}
+                onChange={(v) => setFilters((p) => ({ ...p, projectId: v || "" }))}
+                style={{ width: 220 }}
+              >
+                <Select.Option value="">{t("settings.users.search.allProjects")}</Select.Option>
+                {projects.map((p) => (
+                  <Select.Option key={p.id} value={p.id}>
+                    {p.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item style={{ marginBottom: 0 }}>
+              <Button type="primary" onClick={fetchUsers}>
+                {t("settings.common.search")}
+              </Button>
+            </Form.Item>
+          </Space>
+        </Form>
 
-      <Table
-        rowKey="id"
-        loading={loading}
-        dataSource={users}
-        columns={columns}
-        pagination={{ pageSize: 10 }}
-      />
+        <Table
+          rowKey="id"
+          loading={loading}
+          dataSource={users}
+          columns={columns}
+          pagination={getTablePagination(t)}
+        />
+      </Space>
 
       <Modal
         open={modalOpen}

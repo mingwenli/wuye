@@ -7,6 +7,7 @@ import {
   Button,
   Flex,
   Typography,
+  Space,
 } from "antd";
 import {
   BarChartOutlined,
@@ -44,9 +45,7 @@ export default function MainLayout() {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [openKeys, setOpenKeys] = useState(pathToOpenKeys(location.pathname));
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+  const { token } = theme.useToken();
 
   const menuItems = useMemo(
     () => [
@@ -74,6 +73,25 @@ export default function MainLayout() {
         ],
       },
       {
+        key: COST_KEY,
+        icon: <FundOutlined />,
+        label: t("layout.menu.costManagement"),
+        children: [
+          {
+            key: "/cost-management/budget",
+            label: t("layout.menu.budgetManagement"),
+          },
+          {
+            key: "/cost-management/internal",
+            label: t("layout.menu.internalValueManagement"),
+          },
+          {
+            key: "/cost-management/process",
+            label: t("layout.menu.processControlManagement"),
+          },
+        ],
+      },
+      {
         key: SETTINGS_KEY,
         icon: <SettingOutlined />,
         label: t("layout.menu.systemSettings"),
@@ -95,30 +113,10 @@ export default function MainLayout() {
           },
         ],
       },
-      {
-        key: COST_KEY,
-        icon: <FundOutlined />,
-        label: t("layout.menu.costManagement"),
-        children: [
-          {
-            key: "/cost-management/budget",
-            label: t("layout.menu.budgetManagement"),
-          },
-          {
-            key: "/cost-management/internal",
-            label: t("layout.menu.internalValueManagement"),
-          },
-          {
-            key: "/cost-management/process",
-            label: t("layout.menu.processControlManagement"),
-          },
-        ],
-      },
     ],
     [t]
   );
 
-  // 路由切换时，自动把展开的分组切到对应区域
   React.useEffect(() => {
     const next = pathToOpenKeys(location.pathname);
     if (next.length > 0) setOpenKeys(next);
@@ -139,7 +137,7 @@ export default function MainLayout() {
   };
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: "100vh", background: token.colorBgLayout }}>
       <Sider
         collapsible
         collapsed={collapsed}
@@ -188,15 +186,18 @@ export default function MainLayout() {
           }}
         />
       </Sider>
-      <Layout>
+      <Layout style={{ background: token.colorBgLayout }}>
         <Header
           style={{
+            height: 56,
+            lineHeight: "56px",
             padding: "0 24px",
-            background: colorBgContainer,
+            background: token.colorBgContainer,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            borderBottom: "1px solid rgba(5,5,5,0.06)",
+            borderBottom: `1px solid ${token.colorSplit}`,
+            boxShadow: token.boxShadowSecondary,
           }}
         >
           <Button
@@ -205,27 +206,26 @@ export default function MainLayout() {
             onClick={() => setCollapsed(!collapsed)}
             aria-label={collapsed ? "Expand menu" : "Collapse menu"}
           />
-          <Flex align="center" gap={12}>
-            <Flex align="center" gap={8}>
-              <Typography.Text type="secondary">
+          <Space size="middle" align="center">
+            <Space size="small" align="center">
+              <Typography.Text type="secondary" style={{ fontSize: 13 }}>
                 {t("common.language")}
               </Typography.Text>
               <LanguageSwitcher size="middle" />
-            </Flex>
+            </Space>
             <Dropdown menu={userMenu} placement="bottomRight">
               <Button type="text" icon={<UserOutlined />}>
                 {t("layout.user")}
               </Button>
             </Dropdown>
-          </Flex>
+          </Space>
         </Header>
         <Content
           style={{
-            margin: 16,
-            padding: 24,
-            minHeight: 280,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
+            margin: 0,
+            padding: "24px 32px 32px",
+            minHeight: "calc(100vh - 56px)",
+            background: token.colorBgLayout,
           }}
         >
           <Outlet />

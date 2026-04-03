@@ -1,17 +1,16 @@
 import React from "react";
-import { Typography } from "antd";
+import { Card, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 
-const { Title, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
 export default function PlaceholderPage({ titleKey, descKey }) {
   const { t } = useTranslation();
   return (
-    <div>
-      <Title level={4} style={{ marginTop: 0 }}>
-        {t(titleKey)}
-      </Title>
-      <Paragraph type="secondary">{t(descKey)}</Paragraph>
-    </div>
+    <Card className="app-card" title={t(titleKey)} size="small">
+      <Paragraph type="secondary" style={{ marginBottom: 0 }}>
+        {t(descKey)}
+      </Paragraph>
+    </Card>
   );
 }

@@ -2,10 +2,11 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { authRouter } from "./routes/auth.js";
-import { initDbAndSeed } from "./db.js";
+import { initDbAndSeed, ensureInternalValueLogsTable } from "./db.js";
 import { projectsRouter } from "./routes/projects.js";
 import { usersRouter } from "./routes/users.js";
 import { subjectsRouter } from "./routes/subjects.js";
+import { internalValueLogsRouter } from "./routes/internalValueLogs.js";
 
 const app = express();
 
@@ -25,10 +26,12 @@ app.use("/api/auth", authRouter);
 app.use("/api/settings/projects", projectsRouter);
 app.use("/api/settings/users", usersRouter);
 app.use("/api/settings/subjects", subjectsRouter);
+app.use("/api/cost/internal-value-logs", internalValueLogsRouter);
 
 const port = Number(process.env.PORT || 3001);
 
 await initDbAndSeed();
+await ensureInternalValueLogsTable();
 
 app.listen(port, () => {
   // eslint-disable-next-line no-console

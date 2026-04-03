@@ -1,8 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Button,
   Card,
   Col,
+  DatePicker,
+  Drawer,
   Form,
   Input,
   InputNumber,
@@ -11,8 +13,15 @@ import {
   Select,
   Space,
   Table,
+  Upload,
   message,
 } from "antd";
+import {
+  HistoryOutlined,
+  PaperClipOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
+import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { http } from "../../api/http.js";
 
@@ -42,6 +51,12 @@ export default function InternalValueManagement() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalLoading, setModalLoading] = useState(false);
   const [form] = Form.useForm();
+
+  const [logDrawerOpen, setLogDrawerOpen] = useState(false);
+  const [logFilterSubjectId, setLogFilterSubjectId] = useState(undefined);
+  const [logTimeRange, setLogTimeRange] = useState(null);
+  const [logRows, setLogRows] = useState([]);
+  const [logLoading, setLogLoading] = useState(false);
 
   function randInt(min, max, seed) {
     const x = Math.sin(seed) * 10000;
@@ -102,6 +117,58 @@ export default function InternalValueManagement() {
       })),
     ];
   }, [allSubjects, t]);
+
+  const logSubjectSelectOptions = useMemo(() => {
+    return allSubjects.map((s) => ({
+      value: s.id,
+      label: `${"　".repeat(Math.min(6, s.level))}${s.name}`,
+    }));
+  }, [allSubjects]);
+
+  const loadChangeLogs = useCallback(async () => {
+    if (!filters.projectId) {
+      setLogRows([]);
+      return;
+    }
+    setLogLoading(true);
+    try {
+      const params = { projectId: filters.projectId };
+      if (filters.year != null && filters.year !== "") {
+        params.year = filters.year;
+      }
+      if (logFilterSubjectId != null) {
+        params.subjectId = logFilterSubjectId;
+      }
+      if (logTimeRange?.[0]) {
+        params.startTime = logTimeRange[0].startOf("day").toISOString();
+      }
+      if (logTimeRange?.[1]) {
+        params.endTime = logTimeRange[1].endOf("day").toISOString();
+      }
+      const res = await http.get("/api/cost/internal-value-logs", { params });
+      setLogRows(Array.isArray(res.data?.data) ? res.data.data : []);
+    } catch (e) {
+      message.error(
+        e?.response?.data?.message || e?.message || t("costManagement.internal.logLoadError")
+      );
+      setLogRows([]);
+    } finally {
+      setLogLoading(false);
+    }
+  }, [
+    filters.projectId,
+    filters.year,
+    logFilterSubjectId,
+    logTimeRange,
+    t,
+  ]);
+
+  useEffect(() => {
+    if (!logDrawerOpen) return;
+    loadChangeLogs();
+    // 打开抽屉时拉取；筛选变更请点「查询」
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [logDrawerOpen]);
 
   const childrenByParent = useMemo(() => {
     const m = new Map();
@@ -287,14 +354,14 @@ export default function InternalValueManagement() {
         title: t("costManagement.internal.table.subject"),
         dataIndex: "subjectName",
         key: "subjectName",
-        width: 520,
+        width: 240,
         ellipsis: true,
       },
       {
         title: t("costManagement.internal.table.budgetAmount"),
         dataIndex: "budgetAmount",
         key: "budgetAmount",
-        width: 150,
+        width: 108,
         align: "right",
         render: (v) => money(v),
       },
@@ -302,7 +369,7 @@ export default function InternalValueManagement() {
         title: t("costManagement.internal.table.internalAmount"),
         dataIndex: "internalAmount",
         key: "internalAmount",
-        width: 150,
+        width: 108,
         align: "right",
         render: (v) => money(v),
       },
@@ -310,21 +377,21 @@ export default function InternalValueManagement() {
         title: t("costManagement.internal.table.processAmount"),
         dataIndex: "processAmount",
         key: "processAmount",
-        width: 150,
+        width: 108,
         align: "right",
         render: (v) => money(v),
       },
       {
         title: t("costManagement.internal.table.bcDiff"),
         key: "bcDiff",
-        width: 160,
+        width: 118,
         align: "right",
         render: (_, record) => money((Number(record.internalAmount) || 0) - (Number(record.processAmount) || 0)),
       },
       {
         title: t("costManagement.internal.table.cbRate"),
         key: "cbRate",
-        width: 150,
+        width: 102,
         align: "right",
         render: (_, record) => {
           const b = Number(record.internalAmount) || 0;
@@ -335,7 +402,7 @@ export default function InternalValueManagement() {
       {
         title: t("costManagement.internal.table.caRate"),
         key: "caRate",
-        width: 150,
+        width: 102,
         align: "right",
         render: (_, record) => {
           const a = Number(record.budgetAmount) || 0;
@@ -344,16 +411,10 @@ export default function InternalValueManagement() {
         },
       },
       {
-        title: t("costManagement.internal.table.remark"),
-        dataIndex: "remark",
-        key: "remark",
-        width: 220,
-        ellipsis: true,
-      },
-      {
         title: t("costManagement.internal.table.actions"),
         key: "actions",
-        width: 170,
+        width: 88,
+        fixed: "right",
         render: (_, record) => {
           if (!record.isLeaf) return null;
           return (
@@ -364,8 +425,8 @@ export default function InternalValueManagement() {
                 setModalOpen(true);
                 form.setFieldsValue({
                   newAmount: record.internalAmount,
-                  processAmount: record.processAmount,
                   remark: record.remark || "",
+                  attachment: [],
                 });
               }}
             >
@@ -374,16 +435,105 @@ export default function InternalValueManagement() {
           );
         },
       },
+      {
+        title: t("costManagement.internal.table.remark"),
+        dataIndex: "remark",
+        key: "remark",
+        width: 140,
+        ellipsis: true,
+      },
     ],
     [t, form] // eslint-disable-line react-hooks/exhaustive-deps
+  );
+
+  const logColumns = useMemo(
+    () => [
+      {
+        title: t("costManagement.internal.logColTime"),
+        dataIndex: "created_at",
+        key: "created_at",
+        width: 168,
+        fixed: "left",
+        render: (v) =>
+          v
+            ? dayjs(v).format("YYYY-MM-DD HH:mm:ss")
+            : "—",
+      },
+      {
+        title: t("costManagement.internal.logColSubject"),
+        dataIndex: "subject_name",
+        key: "subject_name",
+        width: 200,
+        ellipsis: true,
+      },
+      {
+        title: t("costManagement.internal.logColOperator"),
+        dataIndex: "changed_by_username",
+        key: "changed_by_username",
+        width: 100,
+        ellipsis: true,
+      },
+      {
+        title: t("costManagement.internal.logColOldInternal"),
+        dataIndex: "old_internal_amount",
+        key: "old_internal_amount",
+        width: 120,
+        align: "right",
+        render: (v) => money(v),
+      },
+      {
+        title: t("costManagement.internal.logColNewInternal"),
+        dataIndex: "new_internal_amount",
+        key: "new_internal_amount",
+        width: 120,
+        align: "right",
+        render: (v) => money(v),
+      },
+      {
+        title: t("costManagement.internal.logColRemark"),
+        dataIndex: "remark",
+        key: "remark",
+        width: 160,
+        ellipsis: true,
+      },
+      {
+        title: t("costManagement.internal.logColAttach"),
+        dataIndex: "attachment_info",
+        key: "attachment_info",
+        width: 200,
+        ellipsis: true,
+        render: (v) => {
+          if (!v) return "—";
+          try {
+            const arr = JSON.parse(v);
+            if (Array.isArray(arr)) {
+              const names = arr.map((x) => x?.name).filter(Boolean);
+              return names.length ? names.join("，") : "—";
+            }
+          } catch {
+            /* plain text */
+          }
+          return v;
+        },
+      },
+    ],
+    [t]
   );
 
   const submitModify = async () => {
     if (!selectedRow) return;
     const values = await form.validateFields();
     const newAmount = Number(values.newAmount);
-    const newProcess = Number(values.processAmount);
     const newRemark = String(values.remark ?? "");
+    const fileList = values.attachment ?? [];
+    const attachmentInfo =
+      fileList.length > 0
+        ? JSON.stringify(
+            fileList.map((f) => ({
+              name: f.name || f.originFileObj?.name || "file",
+            }))
+          )
+        : null;
 
     const currentRowInternal = Number(selectedRow.internalAmount) || 0;
     const delta = newAmount - currentRowInternal;
@@ -397,22 +547,37 @@ export default function InternalValueManagement() {
 
     setModalLoading(true);
     try {
+      await http.post("/api/cost/internal-value-logs", {
+        projectId: selectedRow.projectId,
+        year: selectedRow.year,
+        subjectId: selectedRow.subjectId,
+        subjectName: selectedRow.subjectName,
+        oldInternalAmount: currentRowInternal,
+        newInternalAmount: newAmount,
+        remark: newRemark,
+        attachmentInfo,
+      });
       setLeafRows((prev) =>
         prev.map((r) => {
           if (String(r.key) !== String(selectedRow.leafKey)) return r;
-          return { ...r, internalAmount: newAmount, processAmount: newProcess, remark: newRemark };
+          return { ...r, internalAmount: newAmount, remark: newRemark };
         })
       );
       setModalOpen(false);
       message.success(t("costManagement.internal.modifySuccess"));
+      if (logDrawerOpen) loadChangeLogs();
+    } catch (e) {
+      message.error(
+        e?.response?.data?.message || e?.message || t("costManagement.internal.logSaveError")
+      );
     } finally {
       setModalLoading(false);
     }
   };
 
   return (
-    <div>
-      <Card style={{ borderRadius: 12, marginBottom: 16 }}>
+    <Space direction="vertical" size="large" style={{ width: "100%" }}>
+      <Card className="app-stat-card">
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12} lg={8}>
             <StatisticCard title={t("costManagement.internal.totalBudget")} value={totals.budget} money={money} />
@@ -429,10 +594,11 @@ export default function InternalValueManagement() {
       <Card
         size="small"
         title={t("costManagement.internal.searchTitle")}
-        style={{ borderRadius: 12, marginBottom: 16 }}
+        className="app-card"
       >
         <Form layout="inline">
-          <Form.Item label={t("costManagement.internal.search.project")}>
+          <Space wrap size="middle" align="center">
+          <Form.Item label={t("costManagement.internal.search.project")} style={{ marginBottom: 0 }}>
             <Select
               style={{ width: 220 }}
               loading={loadingProjects}
@@ -448,7 +614,7 @@ export default function InternalValueManagement() {
             </Select>
           </Form.Item>
 
-          <Form.Item label={t("costManagement.internal.search.year")}>
+          <Form.Item label={t("costManagement.internal.search.year")} style={{ marginBottom: 0 }}>
             <Select
               allowClear
               style={{ width: 160 }}
@@ -464,7 +630,7 @@ export default function InternalValueManagement() {
             </Select>
           </Form.Item>
 
-          <Form.Item label={t("costManagement.internal.search.subject")}>
+          <Form.Item label={t("costManagement.internal.search.subject")} style={{ marginBottom: 0 }}>
             <Select
               showSearch
               allowClear
@@ -483,10 +649,32 @@ export default function InternalValueManagement() {
               }}
             />
           </Form.Item>
+          </Space>
         </Form>
       </Card>
 
-      <Card size="small" title={t("costManagement.internal.listTitle")} style={{ borderRadius: 12 }}>
+      <Card
+        size="small"
+        title={t("costManagement.internal.listTitle")}
+        className="app-card"
+        extra={
+          <Space>
+            <Button
+              type="primary"
+              icon={<UploadOutlined />}
+              onClick={() => message.info(t("costManagement.internal.importHint"))}
+            >
+              {t("costManagement.internal.importBtn")}
+            </Button>
+            <Button
+              icon={<HistoryOutlined />}
+              onClick={() => setLogDrawerOpen(true)}
+            >
+              {t("costManagement.internal.changeLog")}
+            </Button>
+          </Space>
+        }
+      >
         <Table
           rowKey="key"
           size="small"
@@ -496,9 +684,59 @@ export default function InternalValueManagement() {
           pagination={false}
           loading={loadingProjects}
           expandable={{ defaultExpandAllRows: true }}
-          scroll={{ x: 1700 }}
+          scroll={{ x: 1180 }}
         />
       </Card>
+
+      <Drawer
+        title={t("costManagement.internal.logDrawerTitle")}
+        placement="right"
+        width={Math.min(960, typeof window !== "undefined" ? window.innerWidth - 48 : 960)}
+        open={logDrawerOpen}
+        onClose={() => setLogDrawerOpen(false)}
+        destroyOnClose
+      >
+        <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+          <Space wrap align="start">
+            <span style={{ lineHeight: "32px" }}>
+              {t("costManagement.internal.logFilterSubject")}：
+            </span>
+            <Select
+              allowClear
+              showSearch
+              placeholder={t("costManagement.internal.search.subjectAll")}
+              style={{ minWidth: 220, maxWidth: 360 }}
+              options={logSubjectSelectOptions}
+              optionFilterProp="label"
+              value={logFilterSubjectId}
+              onChange={(v) => setLogFilterSubjectId(v)}
+            />
+            <span style={{ lineHeight: "32px" }}>
+              {t("costManagement.internal.logFilterTime")}：
+            </span>
+            <DatePicker.RangePicker
+              value={logTimeRange}
+              onChange={(v) => setLogTimeRange(v)}
+              style={{ maxWidth: "100%" }}
+            />
+            <Button type="primary" onClick={() => loadChangeLogs()}>
+              {t("costManagement.internal.logSearch")}
+            </Button>
+          </Space>
+          <Table
+            rowKey={(r) =>
+              String(r.id ?? `${r.created_at}_${r.subject_id}_${r.changed_by_username}`)
+            }
+            size="small"
+            bordered
+            loading={logLoading}
+            columns={logColumns}
+            dataSource={logRows}
+            pagination={{ pageSize: 10, showSizeChanger: true }}
+            scroll={{ x: 980 }}
+          />
+        </Space>
+      </Drawer>
 
       <Modal
         open={modalOpen}
@@ -510,15 +748,8 @@ export default function InternalValueManagement() {
       >
         <Form form={form} layout="vertical" preserve={false}>
           <Form.Item
-            label={t("costManagement.internal.form.newAmount")}
+            label={t("costManagement.internal.form.internalAmount")}
             name="newAmount"
-            rules={[{ required: true, message: t("common.required") }]}
-          >
-            <InputNumber min={0} style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item
-            label={t("costManagement.internal.form.processAmount")}
-            name="processAmount"
             rules={[{ required: true, message: t("common.required") }]}
           >
             <InputNumber min={0} style={{ width: "100%" }} />
@@ -530,9 +761,21 @@ export default function InternalValueManagement() {
           >
             <Input.TextArea rows={3} />
           </Form.Item>
+          <Form.Item
+            label={t("costManagement.internal.form.attach")}
+            name="attachment"
+            valuePropName="fileList"
+            getValueFromEvent={(e) => e?.fileList ?? []}
+          >
+            <Upload beforeUpload={() => false} multiple>
+              <Button icon={<PaperClipOutlined />}>
+                {t("costManagement.internal.form.selectAttach")}
+              </Button>
+            </Upload>
+          </Form.Item>
         </Form>
       </Modal>
-    </div>
+    </Space>
   );
 }
 

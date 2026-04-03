@@ -5,6 +5,7 @@ import {
   Col,
   DatePicker,
   Form,
+  Input,
   Row,
   Select,
   Space,
@@ -13,6 +14,7 @@ import {
   Typography,
 } from "antd";
 import { useTranslation } from "react-i18next";
+import { getTablePagination } from "../../utils/tablePagination.js";
 
 const { Text } = Typography;
 
@@ -150,6 +152,13 @@ export default function CostSummary() {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [statMode, setStatMode] = useState("project");
+  const [tableSearch, setTableSearch] = useState("");
+
+  const displayTableData = useMemo(() => {
+    const q = tableSearch.trim().toLowerCase();
+    if (!q) return TABLE_DATA;
+    return TABLE_DATA.filter((r) => String(r.rowName).toLowerCase().includes(q));
+  }, [tableSearch]);
 
   const projectOptions = useMemo(
     () => [
@@ -446,15 +455,15 @@ export default function CostSummary() {
   );
 
   return (
-    <div>
-      <Typography.Title level={4} style={{ marginTop: 0 }}>
+    <Space direction="vertical" size="large" style={{ width: "100%" }}>
+      <Typography.Title level={4} style={{ marginTop: 0, marginBottom: 0 }}>
         {t("costSummary.pageTitle")}
       </Typography.Title>
 
-      <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
+      <Row gutter={[16, 16]}>
         {summaryCards.map((item) => (
           <Col xs={24} sm={12} lg={6} key={item.key}>
-            <Card size="small" bordered>
+            <Card size="small" bordered className="app-stat-card">
               <Statistic
                 title={item.label}
                 value={item.value}
@@ -473,7 +482,7 @@ export default function CostSummary() {
         ))}
       </Row>
 
-      <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
+      <Row gutter={[16, 16]}>
         {(() => {
           const totalArea = SHOPPING_CENTER_AREA + OFFICE_AREA;
           const budgetUnit = totalArea === 0 ? null : TOTAL_ALL.i_a / totalArea;
@@ -515,7 +524,7 @@ export default function CostSummary() {
 
           return items.map((item) => (
             <Col xs={24} sm={12} lg={4} key={item.key}>
-              <Card size="small" bordered>
+              <Card size="small" bordered className="app-stat-card">
                 <Statistic
                   title={item.label}
                   value={item.value}
@@ -535,8 +544,9 @@ export default function CostSummary() {
         })()}
       </Row>
 
-      <Card size="small" title={t("costSummary.searchTitle")} style={{ marginBottom: 16 }}>
+      <Card className="app-card" size="small" title={t("costSummary.searchTitle")}>
         <Form form={form} layout="inline" initialValues={{ project: "all", category: "all" }}>
+          <Space wrap size="middle" align="start">
           <Form.Item name="project" label={t("costSummary.fieldProject")}>
             <Select
               style={{ width: 180 }}
@@ -574,17 +584,31 @@ export default function CostSummary() {
               </Button>
             </Space>
           </Form.Item>
+          </Space>
         </Form>
       </Card>
 
-      <Card size="small" title={t("costSummary.tableTitle")}>
+      <Card
+        className="app-card"
+        size="small"
+        title={t("costSummary.tableTitle")}
+        extra={
+          <Input.Search
+            allowClear
+            placeholder={t("common.searchKeyword")}
+            value={tableSearch}
+            onChange={(e) => setTableSearch(e.target.value)}
+            style={{ width: 240 }}
+          />
+        }
+      >
         <Table
           size="small"
           bordered
           scroll={{ x: 2200 }}
-          pagination={false}
+          pagination={getTablePagination(t, { pageSize: 20 })}
           columns={columns}
-          dataSource={TABLE_DATA}
+          dataSource={displayTableData}
           rowClassName={(record) => {
             if (record?.rowKind === "totalNoEnergy") return "cost-total-noenergy";
             if (record?.rowKind === "totalAll") return "cost-total-all";
@@ -592,6 +616,6 @@ export default function CostSummary() {
           }}
         />
       </Card>
-    </div>
+    </Space>
   );
 }

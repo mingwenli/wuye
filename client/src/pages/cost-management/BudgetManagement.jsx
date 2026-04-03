@@ -5,6 +5,7 @@ import {
   Drawer,
   Col,
   Form,
+  Input,
   Modal,
   Row,
   Select,
@@ -18,6 +19,7 @@ import {
 import { UploadOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { http } from "../../api/http.js";
+import { getTablePagination } from "../../utils/tablePagination.js";
 
 const ROOT_SUBJECTS = [
   { id: 1, name: "管理、服务人员的工资和福利费" },
@@ -127,6 +129,18 @@ export default function BudgetManagement() {
       return true;
     });
   }, [budgets, filters]);
+
+  const [listKeyword, setListKeyword] = useState("");
+
+  const filteredBudgetsForTable = useMemo(() => {
+    const q = listKeyword.trim().toLowerCase();
+    if (!q) return filteredBudgets;
+    return filteredBudgets.filter(
+      (b) =>
+        String(b.baseSubjectName).toLowerCase().includes(q) ||
+        String(b.projectName).toLowerCase().includes(q)
+    );
+  }, [filteredBudgets, listKeyword]);
 
   // “去年/今年/下一年”预算统计：不受 filters.year 影响
   const summaryTotals = useMemo(() => {
@@ -317,12 +331,12 @@ export default function BudgetManagement() {
   };
 
   return (
-    <div>
+    <Space direction="vertical" size="large" style={{ width: "100%" }}>
       <TypographyTitle level={4}>{t("costManagement.budget.title")}</TypographyTitle>
 
-      <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
+      <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} lg={8}>
-          <Card size="small" bordered>
+          <Card size="small" bordered className="app-stat-card">
             <Statistic
               title={`${t("costManagement.budget.lastYear")}（${summaryTotals.lastYear}）`}
               value={summaryTotals.lastTotal}
@@ -332,7 +346,7 @@ export default function BudgetManagement() {
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={8}>
-          <Card size="small" bordered>
+          <Card size="small" bordered className="app-stat-card">
             <Statistic
               title={`${t("costManagement.budget.thisYear")}（${summaryTotals.thisYear}）`}
               value={summaryTotals.thisTotal}
@@ -342,7 +356,7 @@ export default function BudgetManagement() {
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={8}>
-          <Card size="small" bordered>
+          <Card size="small" bordered className="app-stat-card">
             <Statistic
               title={`${t("costManagement.budget.nextYear")}（${summaryTotals.nextYear}）`}
               value={summaryTotals.hasNext ? summaryTotals.nextTotal : t("costManagement.budget.notPlanned")}
@@ -354,12 +368,13 @@ export default function BudgetManagement() {
       </Row>
 
       <Card
+        className="app-card"
         size="small"
         title={t("costManagement.budget.searchTitle")}
-        style={{ marginBottom: 16 }}
       >
         <Form layout="inline">
-          <Form.Item label={t("costManagement.budget.search.project")}>
+          <Space wrap size="middle" align="center">
+          <Form.Item label={t("costManagement.budget.search.project")} style={{ marginBottom: 0 }}>
             <Select
               allowClear
               style={{ width: 220 }}
@@ -376,7 +391,7 @@ export default function BudgetManagement() {
             </Select>
           </Form.Item>
 
-          <Form.Item label={t("costManagement.budget.search.year")}>
+          <Form.Item label={t("costManagement.budget.search.year")} style={{ marginBottom: 0 }}>
             <Select
               allowClear
               style={{ width: 160 }}
@@ -392,7 +407,7 @@ export default function BudgetManagement() {
             </Select>
           </Form.Item>
 
-          <Form.Item label={t("costManagement.budget.search.subject")}>
+          <Form.Item label={t("costManagement.budget.search.subject")} style={{ marginBottom: 0 }}>
             <Select
               allowClear
               style={{ width: 320 }}
@@ -410,12 +425,12 @@ export default function BudgetManagement() {
             </Select>
           </Form.Item>
 
-          <Form.Item>
+          <Form.Item style={{ marginBottom: 0 }}>
             <Space>
               <Button
                 type="primary"
                 onClick={() => {
-                  // mock：表格已自动按 state 过滤
+                  /* mock：表格已按筛选条件过滤 */
                 }}
               >
                 {t("costManagement.budget.search.btn")}
@@ -433,23 +448,34 @@ export default function BudgetManagement() {
               </Button>
             </Space>
           </Form.Item>
+          </Space>
         </Form>
       </Card>
 
       <Card
+        className="app-card"
         size="small"
         title={t("costManagement.budget.listTitle")}
         extra={
-          <Button type="primary" onClick={openImport}>
-            {t("costManagement.budget.import.btn")}
-          </Button>
+          <Space wrap>
+            <Input.Search
+              allowClear
+              placeholder={t("common.searchKeyword")}
+              value={listKeyword}
+              onChange={(e) => setListKeyword(e.target.value)}
+              style={{ width: 220 }}
+            />
+            <Button type="primary" onClick={openImport}>
+              {t("costManagement.budget.import.btn")}
+            </Button>
+          </Space>
         }
       >
         <Table
           rowKey="key"
           columns={columns}
-          dataSource={filteredBudgets}
-          pagination={{ pageSize: 10 }}
+          dataSource={filteredBudgetsForTable}
+          pagination={getTablePagination(t)}
           size="small"
         />
       </Card>
@@ -540,7 +566,7 @@ export default function BudgetManagement() {
           />
         ) : null}
       </Drawer>
-    </div>
+    </Space>
   );
 }
 
