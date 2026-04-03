@@ -23,3 +23,13 @@ body {
   background: #e6f4ff !important;
 }
 
+.ledger-total-row td {
+  font-weight: 700;
+  background: #e6f4ff !important;
+}
+
+.energy-summary-row td {
+  font-weight: 700;
+  background: #f0fdf4 !important;
+}
+
