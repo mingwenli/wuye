@@ -8,6 +8,7 @@ dotenv.config({
 });
 import express from "express";
 import cors from "cors";
+import { logInfo } from "./logger.js";
 import { authRouter } from "./routes/auth.js";
 import { initDbAndSeed, ensureInternalValueLogsTable } from "./db.js";
 import { projectsRouter } from "./routes/projects.js";
@@ -41,7 +42,6 @@ await initDbAndSeed();
 await ensureInternalValueLogsTable();
 
 app.listen(port, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Server listening on http://localhost:${port}`);
+  logInfo(`Server listening on http://localhost:${port}`);
 });
 

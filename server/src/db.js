@@ -1,6 +1,7 @@
 import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
 import fs from "node:fs/promises";
+import { logInfo } from "./logger.js";
 
 export const isMockDb = String(process.env.USE_MOCK_DB ?? "1") === "1";
 
@@ -203,10 +204,18 @@ async function seedBaseSubjects() {
 }
 
 export async function initDbAndSeed() {
-  if (isMockDb) return;
+  if (isMockDb) {
+    logInfo("[db] USE_MOCK_DB=1，未连接 MySQL（仅内存/mock）");
+    return;
+  }
 
   await ensureDatabaseExists();
   pool = mysql.createPool(poolOptions());
+
+  const cfg = getMysqlConfig();
+  logInfo(
+    `[db] MySQL → ${cfg.host}:${cfg.port} / ${cfg.database} (user: ${cfg.user})`
+  );
 
   const SEED_USERNAME = process.env.SEED_USERNAME ?? "limingwen";
   const SEED_PASSWORD = process.env.SEED_PASSWORD ?? "limingwen";

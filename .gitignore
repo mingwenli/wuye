@@ -12,6 +12,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# 服务端运行日志
+server/log/
+
 成本还原.xlsx
 明细台账.xlsx
 物业成本管理系统产品说明书_更新.docx
