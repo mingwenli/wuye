@@ -3,8 +3,12 @@ import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { pool } from "../db.js";
 import { requireAuth } from "../middleware/auth.js";
+import { requireDb } from "../middleware/dbReady.js";
 
 export const usersRouter = express.Router();
+
+usersRouter.use(requireAuth);
+usersRouter.use(requireDb);
 
 const listQuerySchema = z
   .object({
@@ -25,7 +29,7 @@ const userUpdateSchema = z.object({
   project_id: z.number().int().positive().nullable().optional(),
 });
 
-usersRouter.get("/", requireAuth, async (req, res) => {
+usersRouter.get("/", async (req, res) => {
   const parsed = listQuerySchema.safeParse(req.query);
   if (!parsed.success) return res.status(400).json({ message: "参数不正确" });
 
@@ -53,7 +57,7 @@ usersRouter.get("/", requireAuth, async (req, res) => {
   return res.json({ data: rows });
 });
 
-usersRouter.post("/", requireAuth, async (req, res) => {
+usersRouter.post("/", async (req, res) => {
   const parsed = userCreateSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ message: "参数不正确" });
 
@@ -74,7 +78,7 @@ usersRouter.post("/", requireAuth, async (req, res) => {
   return res.json({ data: rows[0] });
 });
 
-usersRouter.put("/:id", requireAuth, async (req, res) => {
+usersRouter.put("/:id", async (req, res) => {
   const parsed = userUpdateSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ message: "参数不正确" });
 
@@ -111,7 +115,7 @@ usersRouter.put("/:id", requireAuth, async (req, res) => {
   return res.json({ data: rows[0] ?? null });
 });
 
-usersRouter.delete("/:id", requireAuth, async (req, res) => {
+usersRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
   await pool.query("DELETE FROM users WHERE id = ?", [id]);
   return res.json({ message: "ok" });

@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { ConfigProvider } from "antd";
 import { antdTheme } from "./theme/antdTheme.js";
@@ -7,7 +7,6 @@ import enUS from "antd/locale/en_US";
 import { useTranslation } from "react-i18next";
 import Login from "./pages/Login.jsx";
 import MainLayout from "./layouts/MainLayout.jsx";
-import PageLoading from "./components/PageLoading.jsx";
 import { getToken } from "./auth.js";
 
 const CostSummary = lazy(() => import("./pages/overview/CostSummary.jsx"));
@@ -41,7 +40,6 @@ function RequireAuth({ children }) {
 
 function AppRoutes() {
   return (
-    <Suspense fallback={<PageLoading />}>
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route
@@ -75,7 +73,6 @@ function AppRoutes() {
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-    </Suspense>
   );
 }
 

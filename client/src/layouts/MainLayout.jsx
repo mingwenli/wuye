@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { Suspense, useMemo, useState } from "react";
 import {
   Layout,
   Menu,
@@ -26,6 +26,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { clearToken } from "../auth.js";
 import LanguageSwitcher from "../components/LanguageSwitcher.jsx";
+import PageLoading from "../components/PageLoading.jsx";
 
 const { Header, Sider, Content } = Layout;
 
@@ -192,7 +193,8 @@ export default function MainLayout() {
           openKeys={openKeys}
           items={menuItems}
           onOpenChange={(keys) => setOpenKeys(keys)}
-          onClick={({ key }) => {
+          onClick={({ key, domEvent }) => {
+            domEvent?.preventDefault();
             if (key.startsWith("/")) navigate(key);
           }}
         />
@@ -239,7 +241,9 @@ export default function MainLayout() {
             background: token.colorBgLayout,
           }}
         >
-          <Outlet />
+          <Suspense fallback={<PageLoading />}>
+            <Outlet />
+          </Suspense>
         </Content>
       </Layout>
     </Layout>

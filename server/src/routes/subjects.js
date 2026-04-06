@@ -2,10 +2,14 @@ import express from "express";
 import { z } from "zod";
 import { pool } from "../db.js";
 import { requireAuth } from "../middleware/auth.js";
+import { requireDb } from "../middleware/dbReady.js";
 
 export const subjectsRouter = express.Router();
 
-subjectsRouter.get("/tree", requireAuth, async (req, res) => {
+subjectsRouter.use(requireAuth);
+subjectsRouter.use(requireDb);
+
+subjectsRouter.get("/tree", async (req, res) => {
   const projectId = Number(req.query.projectId);
   if (!projectId) return res.status(400).json({ message: "projectId 必填" });
 
@@ -66,7 +70,7 @@ const addNodeSchema = z.object({
   taxRate: z.number().positive().max(1).optional(), // 0~1
 });
 
-subjectsRouter.post("/nodes", requireAuth, async (req, res) => {
+subjectsRouter.post("/nodes", async (req, res) => {
   const parsed = addNodeSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ message: "参数不正确" });
 
@@ -119,7 +123,7 @@ const taxUpdateSchema = z.object({
   taxRate: z.number().positive().max(1),
 });
 
-subjectsRouter.patch("/nodes/:id/tax-rate", requireAuth, async (req, res) => {
+subjectsRouter.patch("/nodes/:id/tax-rate", async (req, res) => {
   const parsed = taxUpdateSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ message: "参数不正确" });
 
@@ -142,7 +146,7 @@ subjectsRouter.patch("/nodes/:id/tax-rate", requireAuth, async (req, res) => {
   return res.json({ message: "ok" });
 });
 
-subjectsRouter.delete("/nodes/:id", requireAuth, async (req, res) => {
+subjectsRouter.delete("/nodes/:id", async (req, res) => {
   const nodeId = Number(req.params.id);
 
   const client = await pool.getConnection();

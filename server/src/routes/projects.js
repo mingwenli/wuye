@@ -2,8 +2,12 @@ import express from "express";
 import { z } from "zod";
 import { pool, initProjectSubjects } from "../db.js";
 import { requireAuth } from "../middleware/auth.js";
+import { requireDb } from "../middleware/dbReady.js";
 
 export const projectsRouter = express.Router();
+
+projectsRouter.use(requireAuth);
+projectsRouter.use(requireDb);
 
 /** 与前端、数据库约定一致 */
 export const PROJECT_REGIONS = [
@@ -49,7 +53,7 @@ const monthlyAreasPutSchema = z.object({
   leasable_area: z.coerce.number().nonnegative(),
 });
 
-projectsRouter.get("/", requireAuth, async (req, res) => {
+projectsRouter.get("/", async (req, res) => {
   const parsed = listQuerySchema.safeParse(req.query);
   if (!parsed.success) return res.status(400).json({ message: "参数不正确" });
 
@@ -83,7 +87,7 @@ projectsRouter.get("/", requireAuth, async (req, res) => {
 });
 
 /** 必须在 GET /:id 之前 */
-projectsRouter.get("/:id/monthly-areas", requireAuth, async (req, res) => {
+projectsRouter.get("/:id/monthly-areas", async (req, res) => {
   const id = req.params.id;
   const year = Number(req.query.year);
   if (!Number.isFinite(year) || year < 2000 || year > 2100) {
@@ -101,7 +105,7 @@ projectsRouter.get("/:id/monthly-areas", requireAuth, async (req, res) => {
   return res.json({ data: { year, months } });
 });
 
-projectsRouter.put("/:id/monthly-areas", requireAuth, async (req, res) => {
+projectsRouter.put("/:id/monthly-areas", async (req, res) => {
   const parsed = monthlyAreasPutSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ message: "参数不正确" });
 
@@ -131,7 +135,7 @@ projectsRouter.put("/:id/monthly-areas", requireAuth, async (req, res) => {
   return res.json({ data: row });
 });
 
-projectsRouter.get("/:id", requireAuth, async (req, res) => {
+projectsRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
   const [rows] = await pool.query(
     `SELECT id, name, code, city, region, project_type, operating_area, created_at FROM projects WHERE id = ? LIMIT 1`,
@@ -141,7 +145,7 @@ projectsRouter.get("/:id", requireAuth, async (req, res) => {
   return res.json({ data: rows[0] });
 });
 
-projectsRouter.post("/", requireAuth, async (req, res) => {
+projectsRouter.post("/", async (req, res) => {
   const parsed = projectCreateSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ message: "参数不正确" });
 
@@ -162,7 +166,7 @@ projectsRouter.post("/", requireAuth, async (req, res) => {
   return res.json({ data: rows[0] });
 });
 
-projectsRouter.put("/:id", requireAuth, async (req, res) => {
+projectsRouter.put("/:id", async (req, res) => {
   const parsed = projectUpdateSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ message: "参数不正确" });
 
@@ -210,7 +214,7 @@ projectsRouter.put("/:id", requireAuth, async (req, res) => {
   return res.json({ data: rows[0] ?? null });
 });
 
-projectsRouter.delete("/:id", requireAuth, async (req, res) => {
+projectsRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
   await pool.query("UPDATE users SET project_id = NULL WHERE project_id = ?", [id]);
