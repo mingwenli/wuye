@@ -4,28 +4,64 @@ import fs from "node:fs/promises";
 
 export const isMockDb = String(process.env.USE_MOCK_DB ?? "1") === "1";
 
-const {
-  MYSQL_HOST = "localhost",
-  MYSQL_PORT = "3306",
-  MYSQL_USER = "limingwen",
-  MYSQL_PASSWORD = "limingwen",
-  MYSQL_DATABASE = "property_cost_control",
+function getMysqlConfig() {
+  const {
+    MYSQL_HOST = "localhost",
+    MYSQL_PORT = "3306",
+    MYSQL_USER = "root",
+    MYSQL_PASSWORD = "",
+    MYSQL_DATABASE = "property_cost_control",
+  } = process.env;
+  return {
+    host: MYSQL_HOST,
+    port: Number(MYSQL_PORT),
+    user: MYSQL_USER,
+    password: MYSQL_PASSWORD,
+    database: MYSQL_DATABASE.replace(/`/g, ""),
+  };
+}
 
-  // 用于初始化 seed 账号（可选）
-  SEED_USERNAME = "limingwen",
-  SEED_PASSWORD = "limingwen",
-} = process.env;
+/** 连接池在 initDbAndSeed 中创建（需先确保库存在）。mock 模式下为 null。 */
+export let pool = null;
 
-export const pool = isMockDb
-  ? null
-  : mysql.createPool({
-      host: MYSQL_HOST,
-      port: Number(MYSQL_PORT),
-      user: MYSQL_USER,
-      password: MYSQL_PASSWORD,
-      database: MYSQL_DATABASE,
-      connectionLimit: 10,
-    });
+function poolOptions() {
+  const c = getMysqlConfig();
+  const useSsl = String(process.env.MYSQL_SSL ?? "0") === "1";
+  return {
+    host: c.host,
+    port: c.port,
+    user: c.user,
+    password: c.password,
+    database: c.database,
+    connectionLimit: Number(process.env.MYSQL_POOL_SIZE ?? "10"),
+    connectTimeout: Number(process.env.MYSQL_CONNECT_TIMEOUT_MS ?? "30000"),
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 0,
+    ...(useSsl ? { ssl: { rejectUnauthorized: false } } : {}),
+  };
+}
+
+/** 不指定 database 连接，创建库后再建连接池（utf8mb4） */
+async function ensureDatabaseExists() {
+  const c = getMysqlConfig();
+  const conn = await mysql.createConnection({
+    host: c.host,
+    port: c.port,
+    user: c.user,
+    password: c.password,
+    connectTimeout: Number(process.env.MYSQL_CONNECT_TIMEOUT_MS ?? "30000"),
+    ...(String(process.env.MYSQL_SSL ?? "0") === "1"
+      ? { ssl: { rejectUnauthorized: false } }
+      : {}),
+  });
+  try {
+    await conn.query(
+      `CREATE DATABASE IF NOT EXISTS \`${c.database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
+    );
+  } finally {
+    await conn.end();
+  }
+}
 
 const TAX_RATE_DEFAULT = 0.06;
 
@@ -151,6 +187,12 @@ async function seedBaseSubjects() {
 export async function initDbAndSeed() {
   if (isMockDb) return;
 
+  await ensureDatabaseExists();
+  pool = mysql.createPool(poolOptions());
+
+  const SEED_USERNAME = process.env.SEED_USERNAME ?? "limingwen";
+  const SEED_PASSWORD = process.env.SEED_PASSWORD ?? "limingwen";
+
   // 业务基础表：项目、人员
   await pool.query(`
     CREATE TABLE IF NOT EXISTS projects (
@@ -192,8 +234,6 @@ export async function initDbAndSeed() {
     )
   `);
 
-  // 初始化默认账号：limingwen / limingwen
-  // 初始化默认账号：limingwen / limingwen
   const [rows] = await pool.query(
     "SELECT id FROM users WHERE username = ? LIMIT 1",
     [SEED_USERNAME]
