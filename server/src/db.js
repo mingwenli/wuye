@@ -41,19 +41,37 @@ function poolOptions() {
   };
 }
 
+function mysqlAuthHint(c, originalMessage) {
+  return [
+    "MySQL 登录失败（用户名或密码与主机不匹配）。",
+    `当前将连接: host=${c.host} port=${c.port} user=${c.user} database=${c.database}`,
+    "请确认 server/.env 中 MYSQL_HOST、MYSQL_USER、MYSQL_PASSWORD 正确，且该账号允许从你这台机器访问（本地 root 与远程账号不同）。",
+    "若 .env 未生效，请在 server 目录下执行: npm run dev",
+    `原始错误: ${originalMessage}`,
+  ].join("\n");
+}
+
 /** 不指定 database 连接，创建库后再建连接池（utf8mb4） */
 async function ensureDatabaseExists() {
   const c = getMysqlConfig();
-  const conn = await mysql.createConnection({
-    host: c.host,
-    port: c.port,
-    user: c.user,
-    password: c.password,
-    connectTimeout: Number(process.env.MYSQL_CONNECT_TIMEOUT_MS ?? "30000"),
-    ...(String(process.env.MYSQL_SSL ?? "0") === "1"
-      ? { ssl: { rejectUnauthorized: false } }
-      : {}),
-  });
+  let conn;
+  try {
+    conn = await mysql.createConnection({
+      host: c.host,
+      port: c.port,
+      user: c.user,
+      password: c.password,
+      connectTimeout: Number(process.env.MYSQL_CONNECT_TIMEOUT_MS ?? "30000"),
+      ...(String(process.env.MYSQL_SSL ?? "0") === "1"
+        ? { ssl: { rejectUnauthorized: false } }
+        : {}),
+    });
+  } catch (e) {
+    if (e && e.code === "ER_ACCESS_DENIED_ERROR") {
+      throw new Error(mysqlAuthHint(c, e.message));
+    }
+    throw e;
+  }
   try {
     await conn.query(
       `CREATE DATABASE IF NOT EXISTS \`${c.database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`

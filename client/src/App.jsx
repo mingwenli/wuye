@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { ConfigProvider } from "antd";
 import { antdTheme } from "./theme/antdTheme.js";
@@ -7,20 +7,28 @@ import enUS from "antd/locale/en_US";
 import { useTranslation } from "react-i18next";
 import Login from "./pages/Login.jsx";
 import MainLayout from "./layouts/MainLayout.jsx";
-import CostSummary from "./pages/overview/CostSummary.jsx";
-import DataAnalytics from "./pages/overview/DataAnalytics.jsx";
-import CostRestore from "./pages/overview/CostRestore.jsx";
-import DetailLedger from "./pages/overview/DetailLedger.jsx";
-import EnergyLedger from "./pages/overview/EnergyLedger.jsx";
-import ProcessControlWorkbench from "./pages/overview/ProcessControlWorkbench.jsx";
-import SubjectManagement from "./pages/settings/SubjectManagement.jsx";
-import PersonnelManagement from "./pages/settings/PersonnelManagement.jsx";
-import ProjectManagement from "./pages/settings/ProjectManagement.jsx";
-import ProjectDetail from "./pages/settings/ProjectDetail.jsx";
+import PageLoading from "./components/PageLoading.jsx";
 import { getToken } from "./auth.js";
-import BudgetManagement from "./pages/cost-management/BudgetManagement.jsx";
-import InternalValueManagement from "./pages/cost-management/InternalValueManagement.jsx";
-import ProcessControlManagement from "./pages/cost-management/ProcessControlManagement.jsx";
+
+const CostSummary = lazy(() => import("./pages/overview/CostSummary.jsx"));
+const DataAnalytics = lazy(() => import("./pages/overview/DataAnalytics.jsx"));
+const CostRestore = lazy(() => import("./pages/overview/CostRestore.jsx"));
+const DetailLedger = lazy(() => import("./pages/overview/DetailLedger.jsx"));
+const EnergyLedger = lazy(() => import("./pages/overview/EnergyLedger.jsx"));
+const ProcessControlWorkbench = lazy(() =>
+  import("./pages/overview/ProcessControlWorkbench.jsx")
+);
+const SubjectManagement = lazy(() => import("./pages/settings/SubjectManagement.jsx"));
+const PersonnelManagement = lazy(() => import("./pages/settings/PersonnelManagement.jsx"));
+const ProjectManagement = lazy(() => import("./pages/settings/ProjectManagement.jsx"));
+const ProjectDetail = lazy(() => import("./pages/settings/ProjectDetail.jsx"));
+const BudgetManagement = lazy(() => import("./pages/cost-management/BudgetManagement.jsx"));
+const InternalValueManagement = lazy(() =>
+  import("./pages/cost-management/InternalValueManagement.jsx")
+);
+const ProcessControlManagement = lazy(() =>
+  import("./pages/cost-management/ProcessControlManagement.jsx")
+);
 
 function RequireAuth({ children }) {
   const token = getToken();
@@ -33,6 +41,7 @@ function RequireAuth({ children }) {
 
 function AppRoutes() {
   return (
+    <Suspense fallback={<PageLoading />}>
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route
@@ -66,6 +75,7 @@ function AppRoutes() {
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </Suspense>
   );
 }
 
