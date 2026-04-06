@@ -1,0 +1,198 @@
+/* 工作台 — 过程管控指标 */
+
+.workbench-metrics {
+  margin-bottom: 8px;
+}
+
+.workbench-metrics__hint {
+  display: block;
+  margin-bottom: 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 920px;
+}
+
+.workbench-kpi-row {
+  margin-bottom: 8px;
+}
+
+.workbench-kpi-card.ant-card {
+  border-radius: 12px;
+  overflow: hidden;
+  height: 100%;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.workbench-kpi-card.ant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+}
+
+.workbench-kpi-card .ant-card-body {
+  padding: 18px 20px;
+}
+
+.workbench-kpi-card__inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.workbench-kpi-card__icon-wrap {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.workbench-kpi-card--info .workbench-kpi-card__icon-wrap {
+  background: linear-gradient(135deg, rgba(22, 93, 255, 0.12), rgba(22, 93, 255, 0.06));
+  color: #165dff;
+}
+
+.workbench-kpi-card--success .workbench-kpi-card__icon-wrap {
+  background: linear-gradient(135deg, rgba(0, 180, 42, 0.18), rgba(0, 180, 42, 0.06));
+  color: #00b42a;
+}
+
+.workbench-kpi-card--warn .workbench-kpi-card__icon-wrap {
+  background: linear-gradient(135deg, rgba(255, 125, 0, 0.18), rgba(255, 125, 0, 0.06));
+  color: #ff7d00;
+}
+
+.workbench-kpi-card__label {
+  font-size: 13px;
+  color: #8c8c8c;
+  line-height: 1.45;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.workbench-kpi-card__value-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+.workbench-kpi-card__num {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: #1f2329;
+}
+
+.workbench-kpi-card--info .workbench-kpi-card__num {
+  color: #165dff;
+}
+
+.workbench-kpi-card--success .workbench-kpi-card__num {
+  color: #00a854;
+}
+
+.workbench-kpi-card--warn .workbench-kpi-card__num {
+  color: #d46b08;
+}
+
+.workbench-kpi-card__unit {
+  font-size: 13px;
+  color: #999;
+  font-weight: 500;
+}
+
+.workbench-type-row {
+  margin-top: 4px;
+}
+
+.workbench-type-card.ant-card {
+  border-radius: 12px;
+  height: 100%;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.workbench-type-card.ant-card:hover {
+  border-color: rgba(22, 93, 255, 0.2);
+  box-shadow: 0 6px 20px rgba(22, 93, 255, 0.08);
+}
+
+.workbench-type-card .ant-card-body {
+  padding: 16px 18px;
+}
+
+.workbench-type-card__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.workbench-type-card__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  background: linear-gradient(145deg, #f0f5ff, #e8f3ff);
+  color: #165dff;
+}
+
+.workbench-type-card__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2329;
+}
+
+.workbench-type-card__stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.workbench-stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.workbench-stat-pill--ok {
+  background: linear-gradient(90deg, rgba(0, 180, 42, 0.1), rgba(0, 180, 42, 0.04));
+  color: #237804;
+  border: 1px solid rgba(0, 180, 42, 0.18);
+}
+
+.workbench-stat-pill--ok .anticon {
+  color: #52c41a;
+  font-size: 16px;
+}
+
+.workbench-stat-pill--pending {
+  background: linear-gradient(90deg, rgba(250, 173, 20, 0.12), rgba(250, 173, 20, 0.04));
+  color: #ad6800;
+  border: 1px solid rgba(250, 173, 20, 0.28);
+}
+
+.workbench-stat-pill--pending .anticon {
+  color: #fa8c16;
+  font-size: 16px;
+}
+
+.workbench-stat-pill strong {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-left: 4px;
+}

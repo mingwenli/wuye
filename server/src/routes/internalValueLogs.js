@@ -65,7 +65,7 @@ internalValueLogsRouter.post("/", requireAuth, async (req, res) => {
     return res.json({ data: row });
   }
 
-  const { rows } = await pool.query(
+  const [rows] = await pool.query(
     `
     INSERT INTO internal_value_change_logs (
       project_id, year, subject_id, subject_name,
@@ -73,11 +73,7 @@ internalValueLogsRouter.post("/", requireAuth, async (req, res) => {
       old_process_amount, new_process_amount,
       remark, attachment_info, changed_by_user_id, changed_by_username
     )
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
-    RETURNING id, project_id, year, subject_id, subject_name,
-      old_internal_amount, new_internal_amount,
-      old_process_amount, new_process_amount,
-      remark, attachment_info, changed_by_user_id, changed_by_username, created_at
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
     `,
     [
       d.projectId,
@@ -95,7 +91,21 @@ internalValueLogsRouter.post("/", requireAuth, async (req, res) => {
     ]
   );
 
-  return res.json({ data: rows[0] });
+  // 再查一遍最新记录返回（带 created_at）
+  const insertedId = rows.insertId ?? rows[0]?.id;
+  const [rows2] = await pool.query(
+    `
+      SELECT id, project_id, year, subject_id, subject_name,
+        old_internal_amount, new_internal_amount,
+        old_process_amount, new_process_amount,
+        remark, attachment_info, changed_by_user_id, changed_by_username, created_at
+      FROM internal_value_change_logs
+      WHERE id = ?
+    `,
+    [insertedId]
+  );
+
+  return res.json({ data: rows2[0] });
 });
 
 internalValueLogsRouter.get("/", requireAuth, async (req, res) => {
@@ -127,23 +137,22 @@ internalValueLogsRouter.get("/", requireAuth, async (req, res) => {
   }
 
   const values = [projectId];
-  let idx = 2;
-  const where = [`project_id = $1`];
+  const where = [`project_id = ?`];
 
   if (q.year != null) {
-    where.push(`year = $${idx++}`);
+    where.push(`year = ?`);
     values.push(q.year);
   }
   if (q.subjectId != null) {
-    where.push(`subject_id = $${idx++}`);
+    where.push(`subject_id = ?`);
     values.push(q.subjectId);
   }
   if (q.startTime) {
-    where.push(`created_at >= $${idx++}::timestamp`);
+    where.push(`created_at >= ?`);
     values.push(q.startTime);
   }
   if (q.endTime) {
-    where.push(`created_at <= $${idx++}::timestamp`);
+    where.push(`created_at <= ?`);
     values.push(q.endTime);
   }
 
@@ -158,6 +167,6 @@ internalValueLogsRouter.get("/", requireAuth, async (req, res) => {
     LIMIT 500
   `;
 
-  const { rows } = await pool.query(sql, values);
+  const [rows] = await pool.query(sql, values);
   return res.json({ data: rows });
 });

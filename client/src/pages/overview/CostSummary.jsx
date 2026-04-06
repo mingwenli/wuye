@@ -9,12 +9,29 @@ import {
   Row,
   Select,
   Space,
-  Statistic,
   Table,
   Typography,
 } from "antd";
+import {
+  AccountBookOutlined,
+  AlertOutlined,
+  AreaChartOutlined,
+  BuildOutlined,
+  CheckCircleOutlined,
+  DownloadOutlined,
+  FundOutlined,
+  MinusCircleOutlined,
+  PayCircleOutlined,
+  PlusCircleOutlined,
+  RiseOutlined,
+  ShopOutlined,
+  ThunderboltOutlined,
+  WalletOutlined,
+} from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { getTablePagination } from "../../utils/tablePagination.js";
+import { downloadCsv } from "../../utils/exportCsv.js";
+import { MetricStatCard, MetricStatCardSection } from "../../components/MetricStatCard/index.js";
 
 const { Text } = Typography;
 
@@ -191,41 +208,61 @@ export default function CostSummary() {
     const paidSideDiff = TOTAL_ALL.u_paid_ctl - internalExpectedDiff;
 
     return [
-      { key: "a", label: t("costSummary.stats.budgetA"), value: budgetA },
+      {
+        key: "a",
+        label: t("costSummary.stats.budgetA"),
+        value: budgetA,
+        Icon: WalletOutlined,
+        accent: "#165DFF",
+      },
       {
         key: "b",
         label: t("costSummary.stats.internalBudgetB"),
         value: internalBudgetB,
+        Icon: AccountBookOutlined,
+        accent: "#00B42A",
       },
       {
         key: "payable",
         label: t("costSummary.stats.accruedPayable"),
         value: accruedPayable,
+        Icon: RiseOutlined,
+        accent: "#165DFF",
       },
       {
         key: "paid",
         label: t("costSummary.stats.accruedPaid"),
         value: accruedPaid,
+        Icon: CheckCircleOutlined,
+        accent: "#00B42A",
       },
       {
         key: "unpaid",
         label: t("costSummary.stats.payableUnpaid"),
         value: payableUnpaid,
+        Icon: AlertOutlined,
+        accent: "#FF7D00",
       },
       {
         key: "internalDiff",
         label: t("costSummary.stats.internalExpectedDiff"),
         value: internalExpectedDiff,
+        Icon: MinusCircleOutlined,
+        accent: "#00B42A",
       },
       {
         key: "payableSide",
         label: t("costSummary.stats.payableSideDiff"),
         value: payableSideDiff,
+        Icon: PlusCircleOutlined,
+        accent: "#165DFF",
       },
       {
         key: "paidSide",
         label: t("costSummary.stats.paidSideDiff"),
         value: paidSideDiff,
+        Icon: PayCircleOutlined,
+        accent: "#00B42A",
       },
     ];
   }, [t]);
@@ -454,33 +491,57 @@ export default function CostSummary() {
     [t]
   );
 
+  const handleExport = () => {
+    const cols = [
+      { title: t("costSummary.table.rowProject"), getValue: (r) => r.rowName ?? "" },
+
+      { title: t("costSummary.table.colBudgetA"), getValue: (r) => fmtMoney(r.i_a) },
+      { title: t("costSummary.table.colInternalB"), getValue: (r) => fmtMoney(r.i_b) },
+      { title: t("costSummary.table.colProcessC"), getValue: (r) => fmtMoney(r.i_c) },
+      { title: t("costSummary.table.colBcDiff"), getValue: (r) => fmtMoney(r.i_bc) },
+      { title: t("costSummary.table.colCbRate"), getValue: (r) => fmtPct(r.i_cb) },
+      { title: t("costSummary.table.colCaRate"), getValue: (r) => fmtPct(r.i_ca) },
+
+      { title: t("costSummary.table.colApCtl"), getValue: (r) => fmtMoney(r.r_ap_ctl) },
+      { title: t("costSummary.table.colPayable"), getValue: (r) => fmtMoney(r.r_payable) },
+      { title: t("costSummary.table.colDiff"), getValue: (r) => fmtMoney(r.r_diff) },
+      { title: t("costSummary.table.colPaid"), getValue: (r) => fmtMoney(r.r_paid) },
+      { title: t("costSummary.table.colUnpaid"), getValue: (r) => fmtMoney(r.r_unpaid) },
+
+      { title: t("costSummary.table.colUApCtl"), getValue: (r) => fmtMoney(r.u_ap_ctl) },
+      { title: t("costSummary.table.colUPaidCtl"), getValue: (r) => fmtMoney(r.u_paid_ctl) },
+      { title: t("costSummary.table.colUDiff"), getValue: (r) => fmtMoney(r.u_diff) },
+    ];
+
+    downloadCsv({
+      filename: `成本概览_${new Date().toISOString().slice(0, 10)}.csv`,
+      columns: cols,
+      data: displayTableData,
+    });
+  };
+
   return (
     <Space direction="vertical" size="large" style={{ width: "100%" }}>
       <Typography.Title level={4} style={{ marginTop: 0, marginBottom: 0 }}>
         {t("costSummary.pageTitle")}
       </Typography.Title>
 
-      <Row gutter={[16, 16]}>
-        {summaryCards.map((item) => (
-          <Col xs={24} sm={12} lg={6} key={item.key}>
-            <Card size="small" bordered className="app-stat-card">
-              <Statistic
+      <MetricStatCardSection>
+        <Row gutter={[16, 16]}>
+          {summaryCards.map((item) => (
+            <Col xs={24} sm={12} md={12} lg={6} key={item.key}>
+              <MetricStatCard
                 title={item.label}
+                icon={item.Icon}
+                accent={item.accent}
                 value={item.value}
                 precision={2}
-                formatter={(value) =>
-                  typeof value === "number"
-                    ? value.toLocaleString("zh-CN", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })
-                    : value
-                }
+                unit={t("costSummary.statCurrencyUnit")}
               />
-            </Card>
-          </Col>
-        ))}
-      </Row>
+            </Col>
+          ))}
+        </Row>
+      </MetricStatCardSection>
 
       <Row gutter={[16, 16]}>
         {(() => {
@@ -495,50 +556,52 @@ export default function CostSummary() {
               label: t("costSummary.areaShopping"),
               value: SHOPPING_CENTER_AREA,
               precision: 0,
+              Icon: ShopOutlined,
+              accent: "#165DFF",
             },
             {
               key: "officeArea",
               label: t("costSummary.areaOffice"),
               value: OFFICE_AREA,
               precision: 0,
+              Icon: BuildOutlined,
+              accent: "#00B42A",
             },
             {
               key: "budgetUnit",
               label: t("costSummary.unitBudget"),
               value: budgetUnit,
               precision: 2,
+              Icon: AreaChartOutlined,
+              accent: "#165DFF",
             },
             {
               key: "internalUnit",
               label: t("costSummary.unitInternal"),
               value: internalUnit,
               precision: 2,
+              Icon: FundOutlined,
+              accent: "#00B42A",
             },
             {
               key: "processUnit",
               label: t("costSummary.unitProcess"),
               value: processUnit,
               precision: 2,
+              Icon: ThunderboltOutlined,
+              accent: "#165DFF",
             },
           ];
 
           return items.map((item) => (
             <Col xs={24} sm={12} lg={4} key={item.key}>
-              <Card size="small" bordered className="app-stat-card">
-                <Statistic
-                  title={item.label}
-                  value={item.value}
-                  precision={item.precision}
-                  formatter={(value) =>
-                    typeof value === "number"
-                      ? value.toLocaleString("zh-CN", {
-                          minimumFractionDigits: item.precision,
-                          maximumFractionDigits: item.precision,
-                        })
-                      : value
-                  }
-                />
-              </Card>
+              <MetricStatCard
+                title={item.label}
+                icon={item.Icon}
+                accent={item.accent}
+                value={item.value}
+                precision={item.precision}
+              />
             </Col>
           ));
         })()}
@@ -593,18 +656,23 @@ export default function CostSummary() {
         size="small"
         title={t("costSummary.tableTitle")}
         extra={
-          <Input.Search
-            allowClear
-            placeholder={t("common.searchKeyword")}
-            value={tableSearch}
-            onChange={(e) => setTableSearch(e.target.value)}
-            style={{ width: 240 }}
-          />
+          <Space>
+            <Button icon={<DownloadOutlined />} onClick={handleExport}>
+              导出报表
+            </Button>
+            <Input.Search
+              allowClear
+              placeholder={t("common.searchKeyword")}
+              value={tableSearch}
+              onChange={(e) => setTableSearch(e.target.value)}
+              style={{ width: 240 }}
+            />
+          </Space>
         }
       >
         <Table
-          size="small"
-          bordered
+          className="app-table"
+          size="middle"
           scroll={{ x: 2200 }}
           pagination={getTablePagination(t, { pageSize: 20 })}
           columns={columns}

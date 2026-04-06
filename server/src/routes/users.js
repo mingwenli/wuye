@@ -32,14 +32,13 @@ usersRouter.get("/", requireAuth, async (req, res) => {
   const { username, projectId } = parsed.data;
   const where = [];
   const values = [];
-  let idx = 1;
 
   if (username) {
-    where.push(`username ILIKE $${idx++}`);
+    where.push(`username LIKE ?`);
     values.push(`%${username}%`);
   }
   if (projectId) {
-    where.push(`project_id = $${idx++}`);
+    where.push(`project_id = ?`);
     values.push(Number(projectId));
   }
 
@@ -50,7 +49,7 @@ usersRouter.get("/", requireAuth, async (req, res) => {
         )} ORDER BY id DESC`
       : `SELECT id, username, project_id, created_at FROM users ORDER BY id DESC`;
 
-  const { rows } = await pool.query(sql, values);
+  const [rows] = await pool.query(sql, values);
   return res.json({ data: rows });
 });
 
@@ -61,9 +60,15 @@ usersRouter.post("/", requireAuth, async (req, res) => {
   const { username, password, project_id } = parsed.data;
   const passwordHash = await bcrypt.hash(password, 10);
 
-  const { rows } = await pool.query(
-    "INSERT INTO users (username, password_hash, project_id) VALUES ($1, $2, $3) RETURNING id, username, project_id, created_at",
+  const [result] = await pool.query(
+    "INSERT INTO users (username, password_hash, project_id) VALUES (?, ?, ?)",
     [username, passwordHash, project_id ?? null]
+  );
+
+  const insertedId = result.insertId;
+  const [rows] = await pool.query(
+    "SELECT id, username, project_id, created_at FROM users WHERE id = ? LIMIT 1",
+    [insertedId]
   );
 
   return res.json({ data: rows[0] });
@@ -78,34 +83,37 @@ usersRouter.put("/:id", requireAuth, async (req, res) => {
 
   const patches = [];
   const values = [];
-  let idx = 1;
 
   if (username !== undefined) {
-    patches.push(`username = $${idx++}`);
+    patches.push(`username = ?`);
     values.push(username);
   }
   if (project_id !== undefined) {
-    patches.push(`project_id = $${idx++}`);
+    patches.push(`project_id = ?`);
     values.push(project_id);
   }
   if (password !== undefined) {
     const passwordHash = await bcrypt.hash(password, 10);
-    patches.push(`password_hash = $${idx++}`);
+    patches.push(`password_hash = ?`);
     values.push(passwordHash);
   }
 
   if (patches.length === 0) return res.status(400).json({ message: "未提供更新字段" });
 
   values.push(id);
-  const sql = `UPDATE users SET ${patches.join(", ")} WHERE id = $${idx} RETURNING id, username, project_id, created_at`;
+  const sql = `UPDATE users SET ${patches.join(", ")} WHERE id = ?`;
 
-  const { rows } = await pool.query(sql, values);
+  await pool.query(sql, values);
+  const [rows] = await pool.query(
+    "SELECT id, username, project_id, created_at FROM users WHERE id = ? LIMIT 1",
+    [id]
+  );
   return res.json({ data: rows[0] ?? null });
 });
 
 usersRouter.delete("/:id", requireAuth, async (req, res) => {
   const { id } = req.params;
-  await pool.query("DELETE FROM users WHERE id = $1", [id]);
+  await pool.query("DELETE FROM users WHERE id = ?", [id]);
   return res.json({ message: "ok" });
 });
 

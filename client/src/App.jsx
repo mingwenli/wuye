@@ -8,12 +8,15 @@ import { useTranslation } from "react-i18next";
 import Login from "./pages/Login.jsx";
 import MainLayout from "./layouts/MainLayout.jsx";
 import CostSummary from "./pages/overview/CostSummary.jsx";
+import DataAnalytics from "./pages/overview/DataAnalytics.jsx";
 import CostRestore from "./pages/overview/CostRestore.jsx";
 import DetailLedger from "./pages/overview/DetailLedger.jsx";
 import EnergyLedger from "./pages/overview/EnergyLedger.jsx";
+import ProcessControlWorkbench from "./pages/overview/ProcessControlWorkbench.jsx";
 import SubjectManagement from "./pages/settings/SubjectManagement.jsx";
 import PersonnelManagement from "./pages/settings/PersonnelManagement.jsx";
 import ProjectManagement from "./pages/settings/ProjectManagement.jsx";
+import ProjectDetail from "./pages/settings/ProjectDetail.jsx";
 import { getToken } from "./auth.js";
 import BudgetManagement from "./pages/cost-management/BudgetManagement.jsx";
 import InternalValueManagement from "./pages/cost-management/InternalValueManagement.jsx";
@@ -41,13 +44,16 @@ function AppRoutes() {
         }
       >
         <Route index element={<Navigate to="/overview/cost-summary" replace />} />
+        <Route path="overview/workbench" element={<ProcessControlWorkbench />} />
         <Route path="overview/cost-summary" element={<CostSummary />} />
+        <Route path="overview/data-analytics" element={<DataAnalytics />} />
         <Route path="overview/cost-restore" element={<CostRestore />} />
         <Route path="overview/detail-ledger" element={<DetailLedger />} />
         <Route path="overview/energy-ledger" element={<EnergyLedger />} />
         <Route path="settings/subjects" element={<SubjectManagement />} />
         <Route path="settings/users" element={<PersonnelManagement />} />
         <Route path="settings/projects" element={<ProjectManagement />} />
+        <Route path="settings/projects/:id" element={<ProjectDetail />} />
         <Route path="cost-management/budget" element={<BudgetManagement />} />
         <Route
           path="cost-management/internal"

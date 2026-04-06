@@ -1,7 +1,25 @@
 import React, { useMemo } from "react";
-import { Card, Col, DatePicker, Form, Row, Select, Statistic, Table, Typography } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  DatePicker,
+  Form,
+  Row,
+  Select,
+  Table,
+  Typography,
+} from "antd";
+import {
+  AlertOutlined,
+  CheckCircleOutlined,
+  DownloadOutlined,
+  WalletOutlined,
+} from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import costRestoreData from "./costRestoreData.json";
+import { downloadCsv } from "../../utils/exportCsv.js";
+import { MetricStatCard } from "../../components/MetricStatCard/index.js";
 
 const { Text } = Typography;
 
@@ -59,16 +77,26 @@ export default function CostRestore() {
     const sumField = (field) =>
       internalRows.reduce((acc, row) => acc + numOrZero(row[field]), 0);
     return [
-      { key: "year", label: t("overview.costRestore.stats.yearTotal"), value: sumField("yearlyTotal") },
+      {
+        key: "year",
+        label: t("overview.costRestore.stats.yearTotal"),
+        value: sumField("yearlyTotal"),
+        Icon: WalletOutlined,
+        accent: "#165DFF",
+      },
       {
         key: "occurred",
         label: t("overview.costRestore.stats.occurredPaid"),
         value: sumField("occurredPaid"),
+        Icon: CheckCircleOutlined,
+        accent: "#00B42A",
       },
       {
         key: "unoccurred",
         label: t("overview.costRestore.stats.unoccurredUnpaid"),
         value: sumField("unoccurredUnpaid"),
+        Icon: AlertOutlined,
+        accent: "#FF7D00",
       },
     ];
   }, [t, tableData]);
@@ -163,6 +191,42 @@ export default function CostRestore() {
 
   const scrollX = 620 + monthKeys.length * 360;
 
+  const handleExport = () => {
+    const cols = [
+      { title: t("overview.costRestore.colSubject"), getValue: (r) => r.subject ?? "" },
+      { title: t("overview.costRestore.colMetric"), getValue: (r) => r.metricType ?? "" },
+      { title: t("overview.costRestore.colYearTotal"), getValue: (r) => fmtNumber(r.yearlyTotal) },
+      { title: t("overview.costRestore.colOccurred"), getValue: (r) => fmtNumber(r.occurredPaid) },
+      {
+        title: t("overview.costRestore.colUnoccurred"),
+        getValue: (r) => fmtNumber(r.unoccurredUnpaid),
+      },
+    ];
+
+    for (const month of monthKeys) {
+      cols.push(
+        {
+          title: `${month}-${t("overview.costRestore.monthCol.paid")}`,
+          getValue: (r) => fmtNumber(r.monthByKey?.[month]?.paid),
+        },
+        {
+          title: `${month}-${t("overview.costRestore.monthCol.expected")}`,
+          getValue: (r) => fmtNumber(r.monthByKey?.[month]?.expected),
+        },
+        {
+          title: `${month}-${t("overview.costRestore.monthCol.unpaid")}`,
+          getValue: (r) => fmtNumber(r.monthByKey?.[month]?.unpaid),
+        }
+      );
+    }
+
+    downloadCsv({
+      filename: `成本还原_${new Date().toISOString().slice(0, 10)}.csv`,
+      columns: cols,
+      data: tableData,
+    });
+  };
+
   return (
     <div>
       <Typography.Title level={4} style={{ marginTop: 0 }}>
@@ -172,21 +236,13 @@ export default function CostRestore() {
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         {summary.map((item) => (
           <Col xs={24} sm={12} lg={8} key={item.key}>
-            <Card size="small" bordered>
-              <Statistic
-                title={item.label}
-                value={item.value}
-                precision={2}
-                formatter={(value) =>
-                  typeof value === "number"
-                    ? value.toLocaleString("zh-CN", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })
-                    : value
-                }
-              />
-            </Card>
+            <MetricStatCard
+              title={item.label}
+              icon={item.Icon}
+              accent={item.accent}
+              value={item.value}
+              precision={2}
+            />
           </Col>
         ))}
       </Row>
@@ -202,10 +258,18 @@ export default function CostRestore() {
         </Form>
       </Card>
 
-      <Card size="small" title={t("overview.costRestore.tableTitle")}>
+      <Card
+        size="small"
+        title={t("overview.costRestore.tableTitle")}
+        extra={
+          <Button icon={<DownloadOutlined />} onClick={handleExport}>
+            导出报表
+          </Button>
+        }
+      >
         <Table
-          size="small"
-          bordered
+          className="app-table"
+          size="middle"
           pagination={false}
           columns={columns}
           dataSource={tableData}

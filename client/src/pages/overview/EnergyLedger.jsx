@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import {
+  Button,
   Card,
   Col,
   DatePicker,
@@ -7,12 +8,22 @@ import {
   Row,
   Select,
   Space,
-  Statistic,
   Table,
   Typography,
 } from "antd";
+import {
+  AccountBookOutlined,
+  BarChartOutlined,
+  CheckCircleOutlined,
+  DownloadOutlined,
+  FundOutlined,
+  PieChartOutlined,
+  WalletOutlined,
+} from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import energyLedgerData from "./energyLedgerData.json";
+import { downloadCsv } from "../../utils/exportCsv.js";
+import { MetricStatCard } from "../../components/MetricStatCard/index.js";
 
 const { Text } = Typography;
 
@@ -71,12 +82,48 @@ export default function EnergyLedger() {
     const y = summaryRow.annualYearMix;
     const roll = summaryRow.annualRolling;
     return [
-      { key: "yb", label: t("overview.energyLedger.stats.yearBudget"), display: fmtNumber(y.budget) },
-      { key: "ym", label: t("overview.energyLedger.stats.yearManage"), display: fmtNumber(y.manage) },
-      { key: "yr", label: t("overview.energyLedger.stats.yearRate"), display: fmtRate(y.completionRate) },
-      { key: "rb", label: t("overview.energyLedger.stats.rollBudget"), display: fmtNumber(roll.budget) },
-      { key: "ra", label: t("overview.energyLedger.stats.rollActual"), display: fmtNumber(roll.actualOccur) },
-      { key: "rr", label: t("overview.energyLedger.stats.rollRemain"), display: fmtNumber(roll.remainDiff) },
+      {
+        key: "yb",
+        label: t("overview.energyLedger.stats.yearBudget"),
+        valueDisplay: fmtNumber(y.budget),
+        Icon: WalletOutlined,
+        accent: "#165DFF",
+      },
+      {
+        key: "ym",
+        label: t("overview.energyLedger.stats.yearManage"),
+        valueDisplay: fmtNumber(y.manage),
+        Icon: AccountBookOutlined,
+        accent: "#00B42A",
+      },
+      {
+        key: "yr",
+        label: t("overview.energyLedger.stats.yearRate"),
+        valueDisplay: fmtRate(y.completionRate),
+        Icon: PieChartOutlined,
+        accent: "#165DFF",
+      },
+      {
+        key: "rb",
+        label: t("overview.energyLedger.stats.rollBudget"),
+        valueDisplay: fmtNumber(roll.budget),
+        Icon: BarChartOutlined,
+        accent: "#00B42A",
+      },
+      {
+        key: "ra",
+        label: t("overview.energyLedger.stats.rollActual"),
+        valueDisplay: fmtNumber(roll.actualOccur),
+        Icon: CheckCircleOutlined,
+        accent: "#165DFF",
+      },
+      {
+        key: "rr",
+        label: t("overview.energyLedger.stats.rollRemain"),
+        valueDisplay: fmtNumber(roll.remainDiff),
+        Icon: FundOutlined,
+        accent: "#00B42A",
+      },
     ];
   }, [t, summaryRow]);
 
@@ -248,6 +295,43 @@ export default function EnergyLedger() {
 
   const scrollX = 360 + 3 * 120 + 3 * 130 + 3 * 120 + monthLabels.length * 5 * 108;
 
+  const handleExport = () => {
+    const cols = [
+      { title: t("overview.energyLedger.colMetricName"), getValue: (r) => r.metricName ?? "" },
+      { title: t("overview.energyLedger.colEnergyType"), getValue: (r) => r.energyType ?? "" },
+      { title: t("overview.energyLedger.colMetricKind"), getValue: (r) => r.metricKind ?? "" },
+
+      { title: `${meta.groupYearMix}-${t("overview.energyLedger.yearMix.budget")}`, getValue: (r) => fmtNumber(r.annualYearMix?.budget) },
+      { title: `${meta.groupYearMix}-${t("overview.energyLedger.yearMix.manage")}`, getValue: (r) => fmtNumber(r.annualYearMix?.manage) },
+      { title: `${meta.groupYearMix}-${t("overview.energyLedger.yearMix.completionRate")}`, getValue: (r) => fmtRate(r.annualYearMix?.completionRate) },
+
+      { title: `${meta.groupRolling}-${t("overview.energyLedger.rolling.budget")}`, getValue: (r) => fmtNumber(r.annualRolling?.budget) },
+      { title: `${meta.groupRolling}-${t("overview.energyLedger.rolling.actualOccur")}`, getValue: (r) => fmtNumber(r.annualRolling?.actualOccur) },
+      { title: `${meta.groupRolling}-${t("overview.energyLedger.rolling.remainDiff")}`, getValue: (r) => fmtNumber(r.annualRolling?.remainDiff) },
+
+      { title: `${meta.groupUnoccurred}-${t("overview.energyLedger.unoccurred.budget")}`, getValue: (r) => fmtNumber(r.annualUnoccurred?.budget) },
+      { title: `${meta.groupUnoccurred}-${t("overview.energyLedger.unoccurred.expectedOccur")}`, getValue: (r) => fmtNumber(r.annualUnoccurred?.expectedOccur) },
+      { title: `${meta.groupUnoccurred}-${t("overview.energyLedger.unoccurred.remainDiff")}`, getValue: (r) => fmtNumber(r.annualUnoccurred?.remainDiff) },
+    ];
+
+    for (const ml of monthLabels) {
+      cols.push(
+        { title: `${ml}-${t("overview.energyLedger.monthly.budget")}`, getValue: (r) => fmtNumber(r.monthByKey?.[ml]?.budget) },
+        { title: `${ml}-${t("overview.energyLedger.monthly.expectedOccur")}`, getValue: (r) => fmtNumber(r.monthByKey?.[ml]?.expectedOccur) },
+        { title: `${ml}-${t("overview.energyLedger.monthly.actualOccur")}`, getValue: (r) => fmtNumber(r.monthByKey?.[ml]?.actualOccur) },
+        { title: `${ml}-${t("overview.energyLedger.monthly.completionRate")}`, getValue: (r) => fmtRate(r.monthByKey?.[ml]?.completionRate) },
+        { title: `${ml}-${t("overview.energyLedger.monthly.actualPaid")}`, getValue: (r) => fmtNumber(r.monthByKey?.[ml]?.actualPaid) }
+      );
+    }
+
+    const safeTitle = String(meta.title ?? "energy-ledger").replace(/[\\/:*?"<>|]+/g, "_");
+    downloadCsv({
+      filename: `能源台账_${safeTitle}.csv`,
+      columns: cols,
+      data: tableData,
+    });
+  };
+
   return (
     <div>
       <Typography.Title level={4} style={{ marginTop: 0 }}>
@@ -263,9 +347,12 @@ export default function EnergyLedger() {
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         {summaryCards.map((item) => (
           <Col xs={24} sm={12} lg={8} key={item.key}>
-            <Card size="small" bordered>
-              <Statistic title={item.label} value={item.display} />
-            </Card>
+            <MetricStatCard
+              title={item.label}
+              icon={item.Icon}
+              accent={item.accent}
+              valueDisplay={item.valueDisplay}
+            />
           </Col>
         ))}
       </Row>
@@ -281,10 +368,18 @@ export default function EnergyLedger() {
         </Form>
       </Card>
 
-      <Card size="small" title={t("overview.energyLedger.tableTitle")}>
+      <Card
+        size="small"
+        title={t("overview.energyLedger.tableTitle")}
+        extra={
+          <Button icon={<DownloadOutlined />} onClick={handleExport}>
+            导出报表
+          </Button>
+        }
+      >
         <Table
-          size="small"
-          bordered
+          className="app-table"
+          size="middle"
           pagination={false}
           columns={columns}
           dataSource={tableData}

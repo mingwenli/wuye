@@ -1,0 +1,126 @@
+/* 数据分析页 */
+
+.data-analytics-hero {
+  border-radius: 16px;
+  padding: 28px 32px 24px;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 45%, #165dff 100%);
+  color: #fff;
+  box-shadow: 0 12px 40px rgba(22, 93, 255, 0.25);
+}
+
+.data-analytics-hero .ant-typography {
+  color: inherit;
+}
+
+.data-analytics-hero__subtitle {
+  opacity: 0.88;
+  font-size: 14px;
+  margin-top: 8px !important;
+  max-width: 720px;
+}
+
+.data-analytics-filter-card.ant-card {
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+}
+
+.data-analytics-filter-divider {
+  max-width: 280px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.data-analytics-kpi-row {
+  margin-bottom: 20px;
+}
+
+.data-analytics-kpi {
+  border-radius: 12px;
+  padding: 16px 18px;
+  height: 100%;
+  background: linear-gradient(180deg, #fafbff 0%, #fff 100%);
+  border: 1px solid rgba(22, 93, 255, 0.12);
+}
+
+.data-analytics-kpi__label {
+  font-size: 13px;
+  color: #8c8c8c;
+  margin-bottom: 4px;
+}
+
+.data-analytics-kpi__value {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #1f2329;
+}
+
+.data-analytics-kpi__unit {
+  font-size: 13px;
+  color: #999;
+  margin-left: 4px;
+}
+
+.data-analytics-kpi--accent {
+  background: linear-gradient(180deg, #f6faff 0%, #fff 100%);
+  border-color: rgba(114, 46, 209, 0.18);
+}
+
+.data-analytics-section-card.ant-card {
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 14px rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.data-analytics-section-card .ant-card-head {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(180deg, #fafbfc 0%, #fff 100%);
+}
+
+.data-analytics-section-card .ant-card-head-title {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.data-analytics-section-card--overview .ant-card-head {
+  background: linear-gradient(180deg, #f0f5ff 0%, #fff 100%);
+}
+
+.data-analytics-chart-subtitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #595959;
+  margin-bottom: 8px;
+}
+
+.data-analytics-chart-wrap {
+  min-height: 300px;
+  width: 100%;
+}
+
+.data-analytics-chart-wrap--pie {
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.data-analytics-anchor .ant-anchor-link {
+  padding: 6px 0 6px 12px;
+}
+
+.data-analytics-layout .data-analytics-sider {
+  position: sticky;
+  top: 88px;
+  align-self: flex-start;
+}
+
+@media (max-width: 991px) {
+  .data-analytics-sider {
+    display: none;
+  }
+}

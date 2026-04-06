@@ -20,30 +20,30 @@ authRouter.post("/bootstrap", async (req, res) => {
   const { username, password } = parsed.data;
 
   if (isMockDb) {
-    // mock 模式：不连接 MySQL，仅返回 ok（方便前端跑通）
+    // mock 模式：不连接数据库，仅返回 ok（方便前端跑通）
     return res.json({ message: "ok" });
   }
 
   await pool.query(
     `CREATE TABLE IF NOT EXISTS users (
-      id BIGSERIAL PRIMARY KEY,
+      id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
       username VARCHAR(50) NOT NULL UNIQUE,
       password_hash VARCHAR(255) NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );`
+    )`
   );
 
-  const { rows } = await pool.query(
-    "SELECT id FROM users WHERE username = $1 LIMIT 1",
+  const [rows] = await pool.query(
+    "SELECT id FROM users WHERE username = ? LIMIT 1",
     [username]
   );
-  if (rows && rows.length > 0) {
+  if (Array.isArray(rows) && rows.length > 0) {
     return res.status(409).json({ message: "用户已存在" });
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
   await pool.query(
-    "INSERT INTO users (username, password_hash) VALUES ($1, $2)",
+    "INSERT INTO users (username, password_hash) VALUES (?, ?)",
     [username, passwordHash]
   );
 
@@ -77,12 +77,12 @@ authRouter.post("/login", async (req, res) => {
     });
   }
 
-  const { rows } = await pool.query(
-    "SELECT id, username, password_hash FROM users WHERE username = $1 LIMIT 1",
+  const [rows] = await pool.query(
+    "SELECT id, username, password_hash FROM users WHERE username = ? LIMIT 1",
     [username]
   );
 
-  const user = rows && rows.length > 0 ? rows[0] : null;
+  const user = Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
   if (!user) return res.status(401).json({ message: "账号或密码错误" });
 
   const ok = await bcrypt.compare(password, user.password_hash);

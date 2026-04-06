@@ -1,0 +1,190 @@
+/* 预算管理抽屉：物业成本科目树 — 蓝主绿辅、企业级清爽、适配 1–5 级科目 */
+
+.budget-subject-tree-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 200px;
+}
+
+.budget-subject-tree-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.budget-subject-tree-toolbar .ant-input-search {
+  flex: 1;
+  min-width: 180px;
+  max-width: 100%;
+}
+
+.budget-subject-tree-toolbar .ant-btn {
+  border-radius: 8px;
+}
+
+/* 树容器：圆角、柔和阴影、浅底 */
+.budget-subject-tree.ant-tree {
+  background: linear-gradient(180deg, #fbfcff 0%, #f6f8fc 100%);
+  border-radius: 12px;
+  padding: 10px 8px 14px 6px;
+  border: 1px solid rgba(22, 93, 255, 0.1);
+  box-shadow:
+    0 2px 8px rgba(22, 93, 255, 0.06),
+    0 1px 2px rgba(15, 23, 42, 0.04);
+  font-size: 13px;
+  max-height: min(70vh, 640px);
+  overflow: auto;
+}
+
+.budget-subject-tree.ant-tree .ant-tree-list-holder-inner {
+  padding: 4px 0;
+}
+
+.budget-subject-tree.ant-tree .ant-tree-treenode {
+  padding: 3px 0;
+  align-items: flex-start;
+}
+
+/* 缩进：每级略增，层级清晰 */
+.budget-subject-tree.ant-tree .ant-tree-indent-unit {
+  width: 20px;
+}
+
+.budget-subject-tree.ant-tree .ant-tree-switcher {
+  line-height: 32px;
+  width: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.budget-subject-tree.ant-tree .ant-tree-switcher .ant-tree-switcher-icon {
+  font-size: 11px;
+  color: #165dff;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.budget-subject-tree.ant-tree .ant-tree-treenode:hover .ant-tree-switcher .ant-tree-switcher-icon {
+  color: #00b42a;
+}
+
+/* 节点行：圆角、hover 渐变高亮 */
+.budget-subject-tree.ant-tree .ant-tree-node-content-wrapper {
+  border-radius: 10px;
+  padding: 5px 10px 5px 8px;
+  min-height: 32px;
+  line-height: 24px;
+  flex: 1;
+  transition:
+    background 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.18s ease;
+}
+
+.budget-subject-tree.ant-tree .ant-tree-node-content-wrapper:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(22, 93, 255, 0.09) 0%,
+    rgba(0, 180, 42, 0.06) 55%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  box-shadow: 0 1px 0 rgba(22, 93, 255, 0.12);
+}
+
+.budget-subject-tree.ant-tree .ant-tree-node-selected .ant-tree-node-content-wrapper {
+  background: rgba(22, 93, 255, 0.11) !important;
+  box-shadow: inset 0 0 0 1px rgba(22, 93, 255, 0.22);
+}
+
+.budget-subject-tree.ant-tree .ant-tree-node-selected .ant-tree-node-content-wrapper:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(22, 93, 255, 0.12) 0%,
+    rgba(0, 180, 42, 0.08) 100%
+  ) !important;
+}
+
+/* 连线：蓝主、绿尾点缀 */
+.budget-subject-tree.ant-tree-show-line .ant-tree-indent-unit::before {
+  border-inline-end: 1px solid rgba(22, 93, 255, 0.18);
+}
+
+.budget-subject-tree.ant-tree-show-line .ant-tree-indent-unit-end::before {
+  border-inline-end: 1px solid rgba(0, 180, 42, 0.28);
+}
+
+.budget-subject-tree__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  padding-right: 2px;
+}
+
+.budget-subject-tree__icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.budget-subject-tree.ant-tree .ant-tree-node-content-wrapper:hover .budget-subject-tree__icon {
+  transform: scale(1.04);
+}
+
+.budget-subject-tree__icon--branch {
+  color: #165dff;
+  background: linear-gradient(145deg, rgba(22, 93, 255, 0.14), rgba(22, 93, 255, 0.06));
+  box-shadow: 0 1px 2px rgba(22, 93, 255, 0.15);
+}
+
+.budget-subject-tree__icon--leaf {
+  color: #00a854;
+  background: linear-gradient(145deg, rgba(0, 180, 66, 0.16), rgba(0, 180, 66, 0.05));
+  box-shadow: 0 1px 2px rgba(0, 180, 66, 0.12);
+}
+
+.budget-subject-tree__name-wrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.budget-subject-tree__name {
+  color: #1f2329;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.budget-subject-tree__level {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #165dff;
+  background: rgba(22, 93, 255, 0.08);
+  border: 1px solid rgba(22, 93, 255, 0.15);
+  border-radius: 6px;
+  padding: 0 6px;
+  line-height: 18px;
+}
+
+.budget-subject-tree__amt {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: #111827;
+  font-size: 13px;
+  padding-left: 4px;
+}

@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import {
+  Button,
   Card,
   Col,
   DatePicker,
@@ -7,12 +8,21 @@ import {
   Row,
   Select,
   Space,
-  Statistic,
   Table,
   Typography,
 } from "antd";
+import {
+  AccountBookOutlined,
+  CheckCircleOutlined,
+  DollarOutlined,
+  DownloadOutlined,
+  FundOutlined,
+  RiseOutlined,
+} from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import detailLedgerData from "./detailLedgerData.json";
+import { downloadCsv } from "../../utils/exportCsv.js";
+import { MetricStatCard } from "../../components/MetricStatCard/index.js";
 
 const { Text } = Typography;
 
@@ -68,19 +78,41 @@ export default function DetailLedger() {
     if (!totalRow) return [];
     const a = totalRow.annual;
     return [
-      { key: "budgetYear", label: t("overview.detailLedger.stats.budgetYear"), value: a.budgetYear },
-      { key: "internal", label: t("overview.detailLedger.stats.internal"), value: a.internal },
+      {
+        key: "budgetYear",
+        label: t("overview.detailLedger.stats.budgetYear"),
+        value: a.budgetYear,
+        Icon: DollarOutlined,
+        accent: "#165DFF",
+      },
+      {
+        key: "internal",
+        label: t("overview.detailLedger.stats.internal"),
+        value: a.internal,
+        Icon: AccountBookOutlined,
+        accent: "#00B42A",
+      },
       {
         key: "expectedOccur",
         label: t("overview.detailLedger.stats.expectedOccur"),
         value: a.expectedOccur,
+        Icon: FundOutlined,
+        accent: "#165DFF",
       },
       {
         key: "actualOccur",
         label: t("overview.detailLedger.stats.actualOccur"),
         value: a.actualOccur,
+        Icon: RiseOutlined,
+        accent: "#00B42A",
       },
-      { key: "actualPaid", label: t("overview.detailLedger.stats.actualPaid"), value: a.actualPaid },
+      {
+        key: "actualPaid",
+        label: t("overview.detailLedger.stats.actualPaid"),
+        value: a.actualPaid,
+        Icon: CheckCircleOutlined,
+        accent: "#165DFF",
+      },
     ];
   }, [t, totalRow]);
 
@@ -219,6 +251,37 @@ export default function DetailLedger() {
 
   const scrollX = 520 + 5 * 130 + monthKeys.length * 5 * 115;
 
+  const handleExport = () => {
+    const cols = [
+      { title: t("overview.detailLedger.colSubject"), getValue: (r) => r.subject ?? "" },
+      { title: t("overview.detailLedger.colExTax"), getValue: (r) => fmtNumber(r.amountExTax) },
+      { title: t("overview.detailLedger.colTaxRate"), getValue: (r) => fmtTaxRate(r.taxRate) },
+
+      { title: `${meta.annualLabel || t("overview.detailLedger.groupAnnual")}-${t("overview.detailLedger.annual.budgetYear")}`, getValue: (r) => fmtNumber(r.annual?.budgetYear) },
+      { title: `${meta.annualLabel || t("overview.detailLedger.groupAnnual")}-${t("overview.detailLedger.annual.internal")}`, getValue: (r) => fmtNumber(r.annual?.internal) },
+      { title: `${meta.annualLabel || t("overview.detailLedger.groupAnnual")}-${t("overview.detailLedger.annual.expectedOccur")}`, getValue: (r) => fmtNumber(r.annual?.expectedOccur) },
+      { title: `${meta.annualLabel || t("overview.detailLedger.groupAnnual")}-${t("overview.detailLedger.annual.actualOccur")}`, getValue: (r) => fmtNumber(r.annual?.actualOccur) },
+      { title: `${meta.annualLabel || t("overview.detailLedger.groupAnnual")}-${t("overview.detailLedger.annual.actualPaid")}`, getValue: (r) => fmtNumber(r.annual?.actualPaid) },
+    ];
+
+    for (const month of monthKeys) {
+      cols.push(
+        { title: `${month}-${t("overview.detailLedger.monthly.internal")}`, getValue: (r) => fmtNumber(r.monthByKey?.[month]?.internal) },
+        { title: `${month}-${t("overview.detailLedger.monthly.expectedOccur")}`, getValue: (r) => fmtNumber(r.monthByKey?.[month]?.expectedOccur) },
+        { title: `${month}-${t("overview.detailLedger.monthly.actualOccur")}`, getValue: (r) => fmtNumber(r.monthByKey?.[month]?.actualOccur) },
+        { title: `${month}-${t("overview.detailLedger.monthly.actualPaid")}`, getValue: (r) => fmtNumber(r.monthByKey?.[month]?.actualPaid) },
+        { title: `${month}-${t("overview.detailLedger.monthly.unpaid")}`, getValue: (r) => fmtNumber(r.monthByKey?.[month]?.unpaid) }
+      );
+    }
+
+    const safeTitle = String(meta.projectTitle ?? "detail-ledger").replace(/[\\/:*?"<>|]+/g, "_");
+    downloadCsv({
+      filename: `明细台账_${safeTitle}.csv`,
+      columns: cols,
+      data: tableData,
+    });
+  };
+
   return (
     <div>
       <Typography.Title level={4} style={{ marginTop: 0 }}>
@@ -237,21 +300,13 @@ export default function DetailLedger() {
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         {summaryCards.map((item) => (
           <Col xs={24} sm={12} lg={8} xl={6} key={item.key}>
-            <Card size="small" bordered>
-              <Statistic
-                title={item.label}
-                value={typeof item.value === "number" ? item.value : undefined}
-                precision={2}
-                formatter={(value) =>
-                  typeof value === "number"
-                    ? value.toLocaleString("zh-CN", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })
-                    : "—"
-                }
-              />
-            </Card>
+            <MetricStatCard
+              title={item.label}
+              icon={item.Icon}
+              accent={item.accent}
+              value={item.value}
+              precision={2}
+            />
           </Col>
         ))}
       </Row>
@@ -267,10 +322,18 @@ export default function DetailLedger() {
         </Form>
       </Card>
 
-      <Card size="small" title={t("overview.detailLedger.tableTitle")}>
+      <Card
+        size="small"
+        title={t("overview.detailLedger.tableTitle")}
+        extra={
+          <Button icon={<DownloadOutlined />} onClick={handleExport}>
+            导出报表
+          </Button>
+        }
+      >
         <Table
-          size="small"
-          bordered
+          className="app-table"
+          size="middle"
           pagination={false}
           columns={columns}
           dataSource={tableData}

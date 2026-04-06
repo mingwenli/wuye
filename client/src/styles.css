@@ -24,11 +24,6 @@ body {
   min-height: 48px;
 }
 
-.app-stat-card.ant-card {
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-}
-
 .cost-total-noenergy td {
   font-weight: 700;
   background: #f3f4f6 !important;
@@ -47,5 +42,140 @@ body {
 .energy-summary-row td {
   font-weight: 700;
   background: #f0fdf4 !important;
+}
+
+/* ========== 全局表格 .app-table：无边框、斑马纹、柔和 hover、8px 圆角 ========== */
+.app-table.ant-table-wrapper {
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+.app-table .ant-table {
+  border-radius: 8px;
+  background: transparent;
+}
+
+.app-table .ant-table-container {
+  border: none !important;
+  border-radius: 8px;
+}
+
+.app-table .ant-table-header {
+  border-radius: 8px 8px 0 0;
+}
+
+.app-table table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.app-table .ant-table-thead > tr > th {
+  background: #f4f5f7 !important;
+  color: rgba(0, 0, 0, 0.78);
+  font-weight: 600;
+  font-size: 13px;
+  border: none !important;
+  border-bottom: 1px solid #e8eaef !important;
+  padding: 13px 16px !important;
+  text-align: left;
+  letter-spacing: 0.02em;
+}
+
+.app-table .ant-table-tbody > tr > td {
+  border: none !important;
+  border-bottom: 1px solid transparent !important;
+  padding: 13px 16px !important;
+  font-size: 14px;
+  line-height: 1.55;
+  vertical-align: middle;
+  transition: background-color 0.2s ease;
+  text-align: left;
+}
+
+.app-table .ant-table-tbody > tr.ant-table-row:nth-child(even) > td {
+  background-color: #f9fafb !important;
+}
+
+.app-table .ant-table-tbody > tr.ant-table-row:nth-child(odd) > td {
+  background-color: #ffffff !important;
+}
+
+.app-table .ant-table-tbody > tr.ant-table-row:hover > td {
+  background-color: #f0f5ff !important;
+}
+
+.app-table .ant-table-tbody > tr.ant-table-row:nth-child(even) > td.ant-table-cell-fix-left,
+.app-table .ant-table-tbody > tr.ant-table-row:nth-child(even) > td.ant-table-cell-fix-right {
+  background-color: #f9fafb !important;
+}
+
+.app-table .ant-table-tbody > tr.ant-table-row:nth-child(odd) > td.ant-table-cell-fix-left,
+.app-table .ant-table-tbody > tr.ant-table-row:nth-child(odd) > td.ant-table-cell-fix-right {
+  background-color: #ffffff !important;
+}
+
+.app-table .ant-table-tbody > tr.ant-table-row:hover > td.ant-table-cell-fix-left,
+.app-table .ant-table-tbody > tr.ant-table-row:hover > td.ant-table-cell-fix-right {
+  background-color: #f0f5ff !important;
+}
+
+.app-table .ant-table-cell.ant-table-cell-align-center {
+  text-align: center !important;
+}
+
+.app-table .ant-table-cell.ant-table-cell-align-right {
+  text-align: right !important;
+}
+
+/* 合计 / 强调行（覆盖斑马纹与 hover） */
+.app-table .ant-table-tbody > tr.cost-total-noenergy > td {
+  background: #f3f4f6 !important;
+  font-weight: 700;
+}
+
+.app-table .ant-table-tbody > tr.cost-total-all > td {
+  background: #e6f4ff !important;
+  font-weight: 800;
+}
+
+.app-table .ant-table-tbody > tr.ledger-total-row > td {
+  font-weight: 700;
+  background: #e6f4ff !important;
+}
+
+.app-table .ant-table-tbody > tr.energy-summary-row > td {
+  font-weight: 700;
+  background: #f0fdf4 !important;
+}
+
+.app-table .ant-table-tbody > tr.cost-total-noenergy:hover > td,
+.app-table .ant-table-tbody > tr.cost-total-all:hover > td,
+.app-table .ant-table-tbody > tr.ledger-total-row:hover > td,
+.app-table .ant-table-tbody > tr.energy-summary-row:hover > td {
+  background-color: #e5edf8 !important;
+}
+
+.app-table .ant-table-tbody > tr.cost-total-all:hover > td {
+  background-color: #d6e8ff !important;
+}
+
+.app-table .ant-table-tbody > tr.ledger-total-row:hover > td {
+  background-color: #d6e8ff !important;
+}
+
+.app-table .ant-table-tbody > tr.energy-summary-row:hover > td {
+  background-color: #dcfce7 !important;
+}
+
+.app-table .ant-pagination {
+  margin: 16px 0 4px !important;
+  padding: 0 8px 4px;
+}
+
+.app-table .ant-table-placeholder .ant-table-cell {
+  border: none !important;
+  background: #fafafa;
 }
 

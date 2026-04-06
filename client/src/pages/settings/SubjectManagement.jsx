@@ -8,7 +8,8 @@ import {
   Modal,
   Select,
   Space,
-  Tree,
+  Table,
+  Tag,
   Typography,
   message,
 } from "antd";
@@ -25,24 +26,30 @@ function buildNodeIndex(nodes, map = new Map()) {
   return map;
 }
 
-function toTreeData(nodes) {
-  return nodes.map((n) => {
-    const showTax = n.isLeaf && typeof n.taxRate === "number";
-    return {
-      key: String(n.id),
-      title: (
-        <span>
-          {n.name}
-          {showTax ? (
-            <Text type="secondary" style={{ marginLeft: 8 }}>
-              （税率{(n.taxRate * 100).toFixed(0)}%）
-            </Text>
-          ) : null}
-        </span>
-      ),
-      children: n.children && n.children.length > 0 ? toTreeData(n.children) : undefined,
-    };
-  });
+/** 模糊匹配科目名称：命中节点保留整棵子树；否则只保留含匹配后代的分支 */
+function filterSubjectTree(nodes, qLower) {
+  if (!qLower) return nodes;
+  const out = [];
+  for (const n of nodes) {
+    const nameMatch = String(n.name ?? "").toLowerCase().includes(qLower);
+    const children = n.children?.length ? filterSubjectTree(n.children, qLower) : [];
+    if (nameMatch) {
+      out.push({ ...n, children: n.children });
+    } else if (children.length) {
+      out.push({ ...n, children });
+    }
+  }
+  return out;
+}
+
+/** 叶子节点不传空 children，避免树形 Table 出现多余展开图标 */
+function sanitizeTreeForTable(nodes) {
+  if (!nodes?.length) return [];
+  return nodes.map((n) => ({
+    ...n,
+    children:
+      n.children && n.children.length > 0 ? sanitizeTreeForTable(n.children) : undefined,
+  }));
 }
 
 export default function SubjectManagement() {
@@ -53,6 +60,7 @@ export default function SubjectManagement() {
   const [treeNodes, setTreeNodes] = useState([]);
   const [selectedKey, setSelectedKey] = useState(null);
   const [nodeIndex, setNodeIndex] = useState(new Map());
+  const [nameKeyword, setNameKeyword] = useState("");
 
   const refreshProjects = async () => {
     const res = await http.get("/api/settings/projects");
@@ -90,11 +98,66 @@ export default function SubjectManagement() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
-  const selectedNode = selectedKey ? nodeIndex.get(selectedKey) : null;
+  useEffect(() => {
+    setSelectedKey(null);
+  }, [nameKeyword]);
+
+  const selectedNode = selectedKey ? nodeIndex.get(String(selectedKey)) : null;
   const canEditTax = !!selectedNode?.isLeaf;
   const canAddChild = !!selectedNode?.isLeaf;
 
-  const treeData = useMemo(() => toTreeData(treeNodes), [treeNodes]);
+  const tableData = useMemo(() => {
+    const q = nameKeyword.trim().toLowerCase();
+    const filtered = filterSubjectTree(treeNodes, q);
+    return sanitizeTreeForTable(filtered);
+  }, [treeNodes, nameKeyword]);
+
+  const columns = useMemo(
+    () => [
+      {
+        title: t("settings.subjects.table.name"),
+        dataIndex: "name",
+        key: "name",
+        ellipsis: true,
+        width: "36%",
+      },
+      {
+        title: t("settings.subjects.table.nodeKind"),
+        dataIndex: "isLeaf",
+        key: "isLeaf",
+        width: 120,
+        render: (v) =>
+          v ? (
+            <Tag color="blue">{t("settings.subjects.table.leaf")}</Tag>
+          ) : (
+            <Tag>{t("settings.subjects.table.branch")}</Tag>
+          ),
+      },
+      {
+        title: t("settings.subjects.table.tax"),
+        dataIndex: "taxRate",
+        key: "taxRate",
+        width: 100,
+        render: (v, record) =>
+          record.isLeaf && v != null && v !== undefined
+            ? `${(Number(v) * 100).toFixed(0)}%`
+            : "—",
+      },
+      {
+        title: t("settings.subjects.table.source"),
+        dataIndex: "custom",
+        key: "custom",
+        width: 120,
+        render: (v) =>
+          v ? (
+            <Tag color="processing">{t("settings.subjects.table.custom")}</Tag>
+          ) : (
+            <Tag color="default">{t("settings.subjects.table.base")}</Tag>
+          ),
+      },
+    ],
+    [t]
+  );
 
   const [taxModalOpen, setTaxModalOpen] = useState(false);
   const [taxForm] = Form.useForm();
@@ -161,38 +224,71 @@ export default function SubjectManagement() {
   };
 
   return (
-    <Card
-      className="app-card"
-      title={t("settings.subjects.title")}
-      extra={
-        <Space>
+    <Space direction="vertical" size="large" style={{ width: "100%" }}>
+      <Typography.Title level={4} style={{ margin: 0 }}>
+        {t("settings.subjects.title")}
+      </Typography.Title>
+
+      <Card className="app-card" size="small" title={t("settings.subjects.filterTitle")}>
+        <Space wrap size="middle" align="center">
+          <Typography.Text type="secondary">
+            {t("costManagement.budget.search.project")}
+          </Typography.Text>
           <Select
-            style={{ width: 240 }}
+            style={{ minWidth: 240 }}
             value={projectId ?? undefined}
             onChange={(v) => setProjectId(v)}
             options={projects.map((p) => ({ value: p.id, label: p.name }))}
             placeholder={t("settings.subjects.selectProject")}
           />
-          <Button
-            onClick={openTaxModal}
-            disabled={!canEditTax}
-            type="primary"
-          >
-            {t("settings.subjects.editTax")}
-          </Button>
-          <Button onClick={openAddModal} disabled={!canAddChild}>
-            {t("settings.subjects.addChild")}
-          </Button>
+          <Input.Search
+            allowClear
+            placeholder={t("settings.subjects.searchNamePlaceholder")}
+            value={nameKeyword}
+            onChange={(e) => setNameKeyword(e.target.value)}
+            style={{ width: 280 }}
+          />
         </Space>
-      }
-    >
-      <Tree
-        selectable
-        defaultExpandAll
-        treeData={treeData}
-        onSelect={(keys) => setSelectedKey(keys[0] ?? null)}
-        showLine
-      />
+      </Card>
+
+      <Card
+        className="app-card"
+        extra={
+          <Space wrap>
+            <Button onClick={openTaxModal} disabled={!canEditTax} type="primary">
+              {t("settings.subjects.editTax")}
+            </Button>
+            <Button onClick={openAddModal} disabled={!canAddChild}>
+              {t("settings.subjects.addChild")}
+            </Button>
+          </Space>
+        }
+      >
+        <Text type="secondary" style={{ display: "block", marginBottom: 12 }}>
+          {t("settings.subjects.tableHint")}
+        </Text>
+        <Table
+          className="app-table"
+          size="middle"
+          loading={loading}
+          columns={columns}
+          dataSource={tableData}
+          rowKey="id"
+          pagination={false}
+          scroll={{ x: 720 }}
+          defaultExpandAllRows
+          rowSelection={{
+            type: "radio",
+            selectedRowKeys: selectedKey ? [Number(selectedKey)] : [],
+            onChange: (keys) => {
+              setSelectedKey(keys.length ? String(keys[0]) : null);
+            },
+          }}
+          onRow={(record) => ({
+            onClick: () => setSelectedKey(String(record.id)),
+          })}
+        />
+      </Card>
 
       <Modal
         open={taxModalOpen}
@@ -210,9 +306,7 @@ export default function SubjectManagement() {
           >
             <InputNumber min={0} max={100} step={0.5} style={{ width: "100%" }} />
           </Form.Item>
-          <Text type="secondary">
-            {t("settings.subjects.taxPercentHint")}
-          </Text>
+          <Text type="secondary">{t("settings.subjects.taxPercentHint")}</Text>
         </Form>
       </Modal>
 
@@ -241,7 +335,6 @@ export default function SubjectManagement() {
           </Form.Item>
         </Form>
       </Modal>
-    </Card>
+    </Space>
   );
 }
-

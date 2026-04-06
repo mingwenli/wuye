@@ -10,23 +10,40 @@ import {
   Row,
   Select,
   Space,
-  Statistic,
   Table,
+  Tag,
   Tree,
   Typography,
   Upload,
   message,
 } from "antd";
 import {
+  AccountBookOutlined,
+  AlertOutlined,
+  CheckCircleOutlined,
+  DownloadOutlined,
+  FundOutlined,
   PaperClipOutlined,
   PlusOutlined,
+  RiseOutlined,
   SearchOutlined,
+  WalletOutlined,
 } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { http } from "../../api/http.js";
 import { getTablePagination } from "../../utils/tablePagination.js";
+import { downloadCsv, csvFilename } from "../../utils/exportCsv.js";
+import { MetricStatCard, MetricStatCardSection } from "../../components/MetricStatCard/index.js";
+import {
+  PROCESS_SUBMIT_MONTH_INDEX,
+  periodYearMonth,
+  loadSubmittedMonthsArray,
+  loadAuditedMonthsArray,
+  saveSubmittedMonthsArray,
+  revokeProcessControlMonth,
+} from "../../utils/processControlStorage.js";
 
-import classTree from "../../../../class.json";
+import classTree from "@classTree";
 
 function flattenSubjects(
   nodes,
@@ -95,6 +112,21 @@ function money(n) {
   });
 }
 
+function sumNum(v) {
+  if (v === null || v === undefined || v === "") return 0;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 0;
+}
+
+/** 过程发生比 = (预估 + 实际) / 内控，内控为 0 时无意义 */
+function formatProcessOccurRatio(internal, estimate, actual) {
+  const int = Number(internal);
+  if (!Number.isFinite(int) || int === 0) return "—";
+  const sum = (Number(actual) || 0) + (Number(estimate) || 0);
+  const r = sum / int;
+  return `${(r * 100).toFixed(2)}%`;
+}
+
 const emptyMonth = () => ({
   internal: 0,
   estimate: 0,
@@ -103,26 +135,36 @@ const emptyMonth = () => ({
   unpaid: 0,
 });
 
-/** 统计周期：第 0 月为 2025-12，第 11 月为 2026-11 */
-function periodYearMonth(monthIndex) {
-  const d = new Date(2025, 11 + monthIndex, 1);
-  return { y: d.getFullYear(), m: d.getMonth() + 1 };
-}
+/** monthIndex ≥ 4 即 2026年4 月起：未发生月，实际发生为空，仅有预估 */
+const FIRST_FUTURE_MONTH_INDEX = 4;
 
-/** 确定性测试数据：预估发生金额默认等于内控金额 */
+/** 确定性测试数据：4 月及以后仅预估；此前月份预估默认同内控 */
 function testMonthValues(projectId, leafId, month) {
   const seed = projectId * 7919 + leafId * 9973 + month * 104729;
   const wave = 0.82 + 0.18 * Math.sin(((month + 1) / 12) * Math.PI * 2);
   const base = 2800 + (Math.abs(seed) % 14000) * 0.12;
   const internal = Math.round(base * wave * 100) / 100;
   const estimate = internal;
+
+  if (month >= FIRST_FUTURE_MONTH_INDEX) {
+    return {
+      internal,
+      estimate,
+      actual: null,
+      paid: 0,
+      unpaid: 0,
+    };
+  }
+
   const actual =
     Math.round(estimate * (0.86 + (month % 6) * 0.018) * 100) / 100;
   let paid =
     Math.round(actual * (0.32 + (seed % 11) * 0.045) * 100) / 100;
   if (paid > actual) paid = actual;
   const unpaid = Math.round(Math.max(0, actual - paid) * 100) / 100;
-  return { internal, estimate, actual, paid, unpaid };
+  /** 实际发生金额有值时，预估金额为 0 */
+  const estimateFinal = actual > 0 ? 0 : estimate;
+  return { internal, estimate: estimateFinal, actual, paid, unpaid };
 }
 
 const DEFAULT_ROOT_SUBJECT_KEY = classTree[0] ? String(classTree[0].id) : null;
@@ -150,6 +192,18 @@ export default function ProcessControlManagement() {
 
   /** 每行附件展示：key 同上，value 为 fileList */
   const [rowAttachments, setRowAttachments] = useState({});
+
+  /** 已提交审核的月份（monthIndex），本地持久化 */
+  const [submittedMonths, setSubmittedMonths] = useState(() => new Set());
+  /** 已审核通过的月份（只读，默认含 1、2 月） */
+  const [auditedMonths, setAuditedMonths] = useState(() => new Set());
+  const [submitMonthModalOpen, setSubmitMonthModalOpen] = useState(false);
+
+  const isMonthLocked = useCallback(
+    (monthIndex) =>
+      submittedMonths.has(monthIndex) || auditedMonths.has(monthIndex),
+    [submittedMonths, auditedMonths]
+  );
 
   const allSubjects = useMemo(() => {
     const flat = flattenSubjects(classTree);
@@ -204,11 +258,11 @@ export default function ProcessControlManagement() {
       const acc = emptyMonth();
       for (const ch of kids) {
         const v = aggregateMonthForNode(proj, String(ch.id), month);
-        acc.internal += v.internal;
-        acc.estimate += v.estimate;
-        acc.actual += v.actual;
-        acc.paid += v.paid;
-        acc.unpaid += v.unpaid;
+        acc.internal += Number(v.internal) || 0;
+        acc.estimate += Number(v.estimate) || 0;
+        acc.actual += sumNum(v.actual);
+        acc.paid += Number(v.paid) || 0;
+        acc.unpaid += Number(v.unpaid) || 0;
       }
       return acc;
     },
@@ -242,14 +296,26 @@ export default function ProcessControlManagement() {
   const summaryForSelection = useMemo(() => {
     const acc = emptyMonth();
     for (const r of monthlyRowsForSelection) {
-      acc.internal += r.internal;
-      acc.estimate += r.estimate;
-      acc.actual += r.actual;
-      acc.paid += r.paid;
-      acc.unpaid += r.unpaid;
+      acc.internal += Number(r.internal) || 0;
+      acc.estimate += Number(r.estimate) || 0;
+      acc.actual += sumNum(r.actual);
+      acc.paid += Number(r.paid) || 0;
+      acc.unpaid += Number(r.unpaid) || 0;
     }
     return acc;
   }, [monthlyRowsForSelection]);
+
+  /** 汇总区指标：动态金额 = 预估+实际；应付金额 = 实际 */
+  const summaryMetrics = useMemo(() => {
+    const s = summaryForSelection;
+    return {
+      internal: s.internal,
+      dynamic: s.estimate + s.actual,
+      payable: s.actual,
+      paid: s.paid,
+      unpaid: s.unpaid,
+    };
+  }, [summaryForSelection]);
 
   /** 项目级顶部 6 项：对所有叶子 12 个月汇总 + 预算 mock */
   const projectTopStats = useMemo(() => {
@@ -267,11 +333,11 @@ export default function ProcessControlManagement() {
     for (const leaf of leaves) {
       for (let m = 0; m < 12; m++) {
         const v = aggregateMonthForNode(projectId, String(leaf.id), m);
-        acc.internal += v.internal;
-        acc.estimate += v.estimate;
-        acc.actual += v.actual;
-        acc.paid += v.paid;
-        acc.unpaid += v.unpaid;
+        acc.internal += Number(v.internal) || 0;
+        acc.estimate += Number(v.estimate) || 0;
+        acc.actual += sumNum(v.actual);
+        acc.paid += Number(v.paid) || 0;
+        acc.unpaid += Number(v.unpaid) || 0;
       }
     }
     const budget = acc.internal * 1.08 + randInt(10000, 50000, projectId);
@@ -312,6 +378,30 @@ export default function ProcessControlManagement() {
     };
   }, [t]);
 
+  useEffect(() => {
+    if (!projectId) return;
+    setSubmittedMonths(new Set(loadSubmittedMonthsArray(projectId)));
+    setAuditedMonths(new Set(loadAuditedMonthsArray(projectId)));
+  }, [projectId]);
+
+  /** 一次性：将 4 月及以后月份刷成「仅预估、实际为空」的口径 */
+  useEffect(() => {
+    if (!projectId || !leaves.length) return;
+    const flag = `processControl_futureSeed_v1_${projectId}`;
+    if (localStorage.getItem(flag)) return;
+    setLeafMonthData((prev) => {
+      const next = { ...prev };
+      for (const leaf of leaves) {
+        for (let m = FIRST_FUTURE_MONTH_INDEX; m < 12; m++) {
+          const k = leafKey(projectId, leaf.id, m);
+          next[k] = testMonthValues(projectId, leaf.id, m);
+        }
+      }
+      return next;
+    });
+    localStorage.setItem(flag, "1");
+  }, [projectId, leaves, leafKey]);
+
   /** 初始化叶子 12 月 mock */
   useEffect(() => {
     if (!projectId || !leaves.length) return;
@@ -333,20 +423,96 @@ export default function ProcessControlManagement() {
   const updateLeafMonth = useCallback(
     (leafId, monthIndex, field, value) => {
       if (!projectId) return;
+      if (submittedMonths.has(monthIndex) || auditedMonths.has(monthIndex)) return;
       const k = leafKey(projectId, leafId, monthIndex);
       setLeafMonthData((prev) => {
         const cur = prev[k] || emptyMonth();
-        const n = { ...cur, [field]: value };
+        const n = { ...cur };
+        if (field === "actual") {
+          const raw = value;
+          if (raw === null || raw === undefined || raw === "") {
+            n.actual = null;
+          } else {
+            const av = Number(raw);
+            n.actual = Number.isNaN(av) ? null : av;
+            if (av > 0) {
+              n.estimate = 0;
+            }
+          }
+        } else if (field === "estimate") {
+          const av = sumNum(cur.actual);
+          if (av > 0) {
+            n.estimate = 0;
+          } else {
+            n.estimate = Number(value) || 0;
+          }
+        } else {
+          n[field] = value;
+        }
         if (field === "actual" || field === "paid") {
-          n.unpaid = Math.max(0, (n.actual || 0) - (n.paid || 0));
+          const act = sumNum(n.actual);
+          n.unpaid = Math.max(0, act - (n.paid || 0));
         }
         return { ...prev, [k]: n };
       });
     },
-    [projectId, leafKey]
+    [projectId, leafKey, submittedMonths, auditedMonths]
   );
 
+  const handleConfirmSubmitMonth = useCallback(() => {
+    if (!projectId) return;
+    const snapshot = {};
+    for (const leaf of leaves) {
+      const k = leafKey(projectId, leaf.id, PROCESS_SUBMIT_MONTH_INDEX);
+      snapshot[k] = leafMonthData[k] ?? null;
+    }
+    try {
+      localStorage.setItem(
+        `processControl_report_${projectId}_${PROCESS_SUBMIT_MONTH_INDEX}`,
+        JSON.stringify({
+          savedAt: new Date().toISOString(),
+          projectId,
+          monthIndex: PROCESS_SUBMIT_MONTH_INDEX,
+          data: snapshot,
+        })
+      );
+    } catch {
+      message.error(t("common.error"));
+      return;
+    }
+    setSubmittedMonths((prev) => {
+      const next = new Set(prev);
+      next.add(PROCESS_SUBMIT_MONTH_INDEX);
+      try {
+        saveSubmittedMonthsArray(projectId, [...next]);
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+    setSubmitMonthModalOpen(false);
+    message.success(t("costManagement.process.submitMonthSuccess"));
+  }, [projectId, leaves, leafKey, leafMonthData, t]);
+
+  const handleRevokeAudit = useCallback(() => {
+    if (!projectId) return;
+    Modal.confirm({
+      title: t("costManagement.process.revokeConfirmTitle"),
+      content: t("costManagement.process.revokeConfirmContent", {
+        m: periodYearMonth(PROCESS_SUBMIT_MONTH_INDEX).m,
+      }),
+      okText: t("settings.common.ok"),
+      cancelText: t("settings.common.cancel"),
+      onOk: () => {
+        revokeProcessControlMonth(projectId, PROCESS_SUBMIT_MONTH_INDEX);
+        setSubmittedMonths(new Set(loadSubmittedMonthsArray(projectId)));
+        message.success(t("costManagement.process.revokeSuccess"));
+      },
+    });
+  }, [projectId, t]);
+
   const openPaidModal = (monthIndex) => {
+    if (submittedMonths.has(monthIndex) || auditedMonths.has(monthIndex)) return;
     setPaidModal({ open: true, monthIndex });
     paidForm.resetFields();
     setFileListForPaidModal([]);
@@ -360,13 +526,17 @@ export default function ProcessControlManagement() {
         setPaidModal({ open: false, monthIndex: null });
         return;
       }
-      const leafId = Number(selectedNodeId);
       const m = paidModal.monthIndex;
+      if (submittedMonths.has(m) || auditedMonths.has(m)) {
+        setPaidModal({ open: false, monthIndex: null });
+        return;
+      }
+      const leafId = Number(selectedNodeId);
       const k = leafKey(projectId, leafId, m);
       setLeafMonthData((prev) => {
         const cur = prev[k] || emptyMonth();
         const paid = (cur.paid || 0) + add;
-        const unpaid = Math.max(0, (cur.actual || 0) - paid);
+        const unpaid = Math.max(0, sumNum(cur.actual) - paid);
         return {
           ...prev,
           [k]: { ...cur, paid, unpaid },
@@ -393,9 +563,18 @@ export default function ProcessControlManagement() {
       {
         title: t("costManagement.process.colMonth"),
         dataIndex: "monthIndex",
-        width: 128,
+        width: 168,
         fixed: "left",
-        render: (mi) => monthLabels[mi] ?? `M${mi + 1}`,
+        render: (mi) => (
+          <Space size={4} wrap align="center">
+            <span>{monthLabels[mi] ?? `M${mi + 1}`}</span>
+            {auditedMonths.has(mi) ? (
+              <Tag color="success">{t("costManagement.process.tagAudited")}</Tag>
+            ) : submittedMonths.has(mi) ? (
+              <Tag color="processing">{t("costManagement.process.tagAudit")}</Tag>
+            ) : null}
+          </Space>
+        ),
       },
       {
         title: t("costManagement.process.internal"),
@@ -404,19 +583,23 @@ export default function ProcessControlManagement() {
         render: (v) => money(v),
       },
       {
-        title: t("costManagement.process.estimate"),
+        title: t("costManagement.process.colEstimate"),
         dataIndex: "estimate",
         width: 140,
         render: (v, row) => {
           if (!isLeafSelected) {
             return money(v);
           }
+          const rowReadOnly = isMonthLocked(row.monthIndex);
+          const actualVal = sumNum(row.actual);
+          const locked = actualVal > 0;
           return (
             <InputNumber
               min={0}
               precision={2}
               style={{ width: "100%" }}
-              value={v}
+              value={locked ? 0 : v}
+              disabled={locked || rowReadOnly}
               onChange={(n) =>
                 updateLeafMonth(
                   Number(selectedNodeId),
@@ -430,25 +613,27 @@ export default function ProcessControlManagement() {
         },
       },
       {
-        title: t("costManagement.process.actual"),
+        title: t("costManagement.process.colActual"),
         dataIndex: "actual",
         width: 140,
         render: (v, row) => {
           if (!isLeafSelected) {
             return money(v);
           }
+          const rowReadOnly = isMonthLocked(row.monthIndex);
           return (
             <InputNumber
               min={0}
               precision={2}
               style={{ width: "100%" }}
-              value={v}
+              value={v ?? null}
+              disabled={rowReadOnly}
               onChange={(n) =>
                 updateLeafMonth(
                   Number(selectedNodeId),
                   row.monthIndex,
                   "actual",
-                  n ?? 0
+                  n === null ? null : n ?? 0
                 )
               }
             />
@@ -456,11 +641,19 @@ export default function ProcessControlManagement() {
         },
       },
       {
+        title: t("costManagement.process.processOccurRatio"),
+        key: "processOccurRatio",
+        width: 128,
+        render: (_, row) =>
+          formatProcessOccurRatio(row.internal, row.estimate, row.actual),
+      },
+      {
         title: t("costManagement.process.paid"),
         dataIndex: "paid",
         width: 240,
         render: (v, row) => {
           if (isLeafSelected) {
+            const rowReadOnly = isMonthLocked(row.monthIndex);
             return (
               <Space wrap align="center">
                 <InputNumber
@@ -475,6 +668,7 @@ export default function ProcessControlManagement() {
                   type="link"
                   size="small"
                   icon={<PlusOutlined />}
+                  disabled={rowReadOnly}
                   onClick={() => openPaidModal(row.monthIndex)}
                 >
                   {t("costManagement.process.addPaid")}
@@ -498,8 +692,10 @@ export default function ProcessControlManagement() {
         render: (_, row) => {
           if (!projectId || !selectedNodeId) return null;
           const rk = `${projectId}_${selectedNodeId}_${row.monthIndex}`;
+          const rowReadOnly = isMonthLocked(row.monthIndex);
           return (
             <Upload
+              disabled={rowReadOnly}
               showUploadList={{ showRemoveIcon: true }}
               fileList={rowAttachments[rk] || []}
               beforeUpload={() => false}
@@ -507,7 +703,12 @@ export default function ProcessControlManagement() {
                 setRowAttachments((prev) => ({ ...prev, [rk]: fileList }))
               }
             >
-              <Button type="default" size="small" icon={<PaperClipOutlined />}>
+              <Button
+                type="default"
+                size="small"
+                icon={<PaperClipOutlined />}
+                disabled={rowReadOnly}
+              >
                 {t("costManagement.process.addAttach")}
               </Button>
             </Upload>
@@ -524,6 +725,9 @@ export default function ProcessControlManagement() {
     updateLeafMonth,
     projectId,
     rowAttachments,
+    submittedMonths,
+    auditedMonths,
+    isMonthLocked,
   ]);
 
   const tableDataSource = useMemo(() => {
@@ -533,58 +737,115 @@ export default function ProcessControlManagement() {
     }));
   }, [monthlyRowsForSelection]);
 
+  const handleExportProcess = () => {
+    const list = monthlyRowsForSelection;
+    if (!list.length) {
+      message.warning(t("costManagement.exportEmpty"));
+      return;
+    }
+    const headers = [
+      t("costManagement.process.colMonth"),
+      t("costManagement.process.internal"),
+      t("costManagement.process.colEstimate"),
+      t("costManagement.process.colActual"),
+      t("costManagement.process.processOccurRatio"),
+      t("costManagement.process.paid"),
+      t("costManagement.process.unpaid"),
+      t("costManagement.process.exportColStatus"),
+    ];
+    const rows = list.map((r) => {
+      const mi = r.monthIndex;
+      let status = "";
+      if (auditedMonths.has(mi)) status = t("costManagement.process.tagAudited");
+      else if (submittedMonths.has(mi)) status = t("costManagement.process.tagAudit");
+      return [
+        monthLabels[mi] ?? `M${mi + 1}`,
+        money(r.internal),
+        money(r.estimate),
+        money(r.actual),
+        formatProcessOccurRatio(r.internal, r.estimate, r.actual),
+        money(r.paid),
+        money(r.unpaid),
+        status,
+      ];
+    });
+    const proj = projects.find((p) => String(p.id) === String(projectId));
+    const prefix = proj?.name || proj?.code || "process-control";
+    const safe = String(prefix).replace(/[/\\?%*:|"<>]/g, "_");
+    downloadCsv(csvFilename(safe), headers, rows);
+    message.success(t("costManagement.exportSuccess"));
+  };
+
   return (
     <Space direction="vertical" size="large" style={{ width: "100%" }}>
       <Typography.Title level={4} style={{ margin: 0 }}>
         {t("costManagement.process.title")}
       </Typography.Title>
 
-      <Card className="app-stat-card">
+      <MetricStatCardSection>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12} md={8} lg={4}>
-            <Statistic
+            <MetricStatCard
               title={t("costManagement.process.statBudget")}
+              icon={WalletOutlined}
+              accent="#165DFF"
               value={projectTopStats.budget}
               precision={2}
+              unit={t("common.currencyUnit")}
             />
           </Col>
           <Col xs={24} sm={12} md={8} lg={4}>
-            <Statistic
+            <MetricStatCard
               title={t("costManagement.process.statInternal")}
+              icon={AccountBookOutlined}
+              accent="#00B42A"
               value={projectTopStats.internal}
               precision={2}
+              unit={t("common.currencyUnit")}
             />
           </Col>
           <Col xs={24} sm={12} md={8} lg={4}>
-            <Statistic
+            <MetricStatCard
               title={t("costManagement.process.statEstimate")}
+              icon={FundOutlined}
+              accent="#165DFF"
               value={projectTopStats.estimate}
               precision={2}
+              unit={t("common.currencyUnit")}
             />
           </Col>
           <Col xs={24} sm={12} md={8} lg={4}>
-            <Statistic
+            <MetricStatCard
               title={t("costManagement.process.statActual")}
+              icon={RiseOutlined}
+              accent="#00B42A"
               value={projectTopStats.actual}
               precision={2}
+              unit={t("common.currencyUnit")}
             />
           </Col>
           <Col xs={24} sm={12} md={8} lg={4}>
-            <Statistic
+            <MetricStatCard
               title={t("costManagement.process.statPaid")}
+              icon={CheckCircleOutlined}
+              accent="#165DFF"
               value={projectTopStats.paid}
               precision={2}
+              unit={t("common.currencyUnit")}
             />
           </Col>
           <Col xs={24} sm={12} md={8} lg={4}>
-            <Statistic
+            <MetricStatCard
               title={t("costManagement.process.statUnpaid")}
+              icon={AlertOutlined}
+              accent="#FF7D00"
               value={projectTopStats.unpaid}
               precision={2}
+              unit={t("common.currencyUnit")}
             />
           </Col>
         </Row>
-      </Card>
+      </MetricStatCardSection>
 
       <Card
         className="app-card"
@@ -616,13 +877,53 @@ export default function ProcessControlManagement() {
         </Space>
       </Card>
 
-      <Card className="app-card" title={t("costManagement.process.detailTitle")}>
+      <Card
+        className="app-card"
+        title={
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: 8,
+              width: "100%",
+              paddingRight: 4,
+            }}
+          >
+            <span>{t("costManagement.process.detailTitle")}</span>
+            {projectId && submittedMonths.has(PROCESS_SUBMIT_MONTH_INDEX) ? (
+              <Space wrap align="center" size="small">
+                <Typography.Text type="secondary" style={{ fontSize: 13 }}>
+                  {t("costManagement.process.auditMonthStatus", {
+                    m: periodYearMonth(PROCESS_SUBMIT_MONTH_INDEX).m,
+                  })}
+                </Typography.Text>
+                <Button type="link" size="small" onClick={handleRevokeAudit}>
+                  {t("costManagement.process.revokeAudit")}
+                </Button>
+              </Space>
+            ) : (
+              <Button
+                type="primary"
+                size="small"
+                disabled={!projectId}
+                onClick={() => setSubmitMonthModalOpen(true)}
+              >
+                {t("costManagement.process.submitMonthBtn", {
+                  m: periodYearMonth(PROCESS_SUBMIT_MONTH_INDEX).m,
+                })}
+              </Button>
+            )}
+          </div>
+        }
+      >
         <Row gutter={[16, 16]} align="top">
           <Col xs={24} md={7} lg={6}>
             <Card
               size="small"
               bordered
-              className="app-stat-card"
+              className="app-card"
               title={t("costManagement.process.subjectTree")}
             >
               <Input
@@ -651,55 +952,65 @@ export default function ProcessControlManagement() {
           </Col>
           <Col xs={24} md={17} lg={18}>
             <Space direction="vertical" size="middle" style={{ width: "100%" }}>
-              <Card size="small" bordered className="app-stat-card">
-                <Row gutter={[12, 12]}>
-                  <Col span={24}>
-                    <Typography.Text strong>
-                      {selectedSubject?.name ?? "—"} —{" "}
-                      {t("costManagement.process.summaryTitle")}
-                    </Typography.Text>
-                  </Col>
-                  <Col xs={12} sm={8} md={6} lg={4}>
-                    <Statistic
+              <Card size="small" bordered className="app-card">
+                <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+                  <Typography.Text strong>
+                    {selectedSubject?.name ?? "—"} —{" "}
+                    {t("costManagement.process.summaryTitle")}
+                  </Typography.Text>
+                  <div className="metric-stat-row-equal-5">
+                    <MetricStatCard
                       title={t("costManagement.process.internal")}
-                      value={summaryForSelection.internal}
+                      icon={AccountBookOutlined}
+                      accent="#00B42A"
+                      value={summaryMetrics.internal}
                       precision={2}
+                      unit={t("common.currencyUnit")}
                     />
-                  </Col>
-                  <Col xs={12} sm={8} md={6} lg={4}>
-                    <Statistic
-                      title={t("costManagement.process.estimate")}
-                      value={summaryForSelection.estimate}
+                    <MetricStatCard
+                      title={t("costManagement.process.summaryDynamic")}
+                      icon={FundOutlined}
+                      accent="#165DFF"
+                      value={summaryMetrics.dynamic}
                       precision={2}
+                      unit={t("common.currencyUnit")}
                     />
-                  </Col>
-                  <Col xs={12} sm={8} md={6} lg={4}>
-                    <Statistic
-                      title={t("costManagement.process.actual")}
-                      value={summaryForSelection.actual}
+                    <MetricStatCard
+                      title={t("costManagement.process.summaryPayable")}
+                      icon={RiseOutlined}
+                      accent="#00B42A"
+                      value={summaryMetrics.payable}
                       precision={2}
+                      unit={t("common.currencyUnit")}
                     />
-                  </Col>
-                  <Col xs={12} sm={8} md={6} lg={4}>
-                    <Statistic
+                    <MetricStatCard
                       title={t("costManagement.process.paid")}
-                      value={summaryForSelection.paid}
+                      icon={CheckCircleOutlined}
+                      accent="#165DFF"
+                      value={summaryMetrics.paid}
                       precision={2}
+                      unit={t("common.currencyUnit")}
                     />
-                  </Col>
-                  <Col xs={12} sm={8} md={6} lg={4}>
-                    <Statistic
+                    <MetricStatCard
                       title={t("costManagement.process.unpaid")}
-                      value={summaryForSelection.unpaid}
+                      icon={AlertOutlined}
+                      accent="#FF7D00"
+                      value={summaryMetrics.unpaid}
                       precision={2}
+                      unit={t("common.currencyUnit")}
                     />
-                  </Col>
-                </Row>
+                  </div>
+                </Space>
               </Card>
+              <Space style={{ width: "100%", justifyContent: "flex-end" }}>
+                <Button icon={<DownloadOutlined />} onClick={handleExportProcess}>
+                  {t("costManagement.exportReport")}
+                </Button>
+              </Space>
               <Table
-                size="small"
-                bordered
-                scroll={{ x: 1100 }}
+                className="app-table"
+                size="middle"
+                scroll={{ x: 1280 }}
                 pagination={getTablePagination(t, {
                   pageSize: 12,
                   hideOnSinglePage: true,
@@ -712,6 +1023,23 @@ export default function ProcessControlManagement() {
           </Col>
         </Row>
       </Card>
+
+      <Modal
+        title={t("costManagement.process.submitMonthConfirmTitle")}
+        open={submitMonthModalOpen}
+        onOk={handleConfirmSubmitMonth}
+        onCancel={() => setSubmitMonthModalOpen(false)}
+        okText={t("settings.common.ok")}
+        cancelText={t("settings.common.cancel")}
+        destroyOnClose
+      >
+        <Typography.Text>
+          {t("costManagement.process.submitMonthConfirmContent", {
+            y: periodYearMonth(PROCESS_SUBMIT_MONTH_INDEX).y,
+            m: periodYearMonth(PROCESS_SUBMIT_MONTH_INDEX).m,
+          })}
+        </Typography.Text>
+      </Modal>
 
       <Modal
         title={t("costManagement.process.paidModalTitle")}

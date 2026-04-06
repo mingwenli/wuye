@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Button,
   Card,
@@ -13,22 +13,60 @@ import {
   Select,
   Space,
   Table,
+  Typography,
   Upload,
   message,
 } from "antd";
 import {
+  AccountBookOutlined,
+  DownloadOutlined,
   HistoryOutlined,
+  MinusCircleOutlined,
   PaperClipOutlined,
   UploadOutlined,
+  WalletOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { http } from "../../api/http.js";
+import { MetricStatCard, MetricStatCardSection } from "../../components/MetricStatCard/index.js";
+import { downloadCsv, csvFilename } from "../../utils/exportCsv.js";
 
-import classTree from "../../../../class.json";
+import classTree from "@classTree";
+
+/** 导出用：与表格同口径的扁平化树 */
+function flattenInternalTreeForExport(nodes, depth, moneyFn, out = []) {
+  if (!nodes?.length) return out;
+  for (const n of nodes) {
+    const b = Number(n.budgetAmount) || 0;
+    const i = Number(n.internalAmount) || 0;
+    const p = Number(n.processAmount) || 0;
+    const bcDiff = i - p;
+    const cbRate = i === 0 ? "—" : `${((p / i) * 100).toFixed(2)}%`;
+    const caRate = b === 0 ? "—" : `${((p / b) * 100).toFixed(2)}%`;
+    out.push([
+      `${"  ".repeat(depth)}${n.subjectName ?? ""}`,
+      moneyFn(n.budgetAmount),
+      moneyFn(n.internalAmount),
+      moneyFn(n.processAmount),
+      moneyFn(bcDiff),
+      cbRate,
+      caRate,
+      String(n.remark ?? ""),
+    ]);
+    if (n.children?.length) flattenInternalTreeForExport(n.children, depth + 1, moneyFn, out);
+  }
+  return out;
+}
+
+import "./InternalValueManagement.css";
+
+const { Text } = Typography;
 
 export default function InternalValueManagement() {
   const { t } = useTranslation();
+  const remarkTextRef = useRef(null);
+  const [modalFocusRemark, setModalFocusRemark] = useState(false);
 
   const years = useMemo(() => {
     const y = new Date().getFullYear();
@@ -166,9 +204,7 @@ export default function InternalValueManagement() {
   useEffect(() => {
     if (!logDrawerOpen) return;
     loadChangeLogs();
-    // 打开抽屉时拉取；筛选变更请点「查询」
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [logDrawerOpen]);
+  }, [logDrawerOpen, logFilterSubjectId, filters.projectId, filters.year, loadChangeLogs]);
 
   const childrenByParent = useMemo(() => {
     const m = new Map();
@@ -278,6 +314,34 @@ export default function InternalValueManagement() {
     };
   }, [leafScope]);
 
+  const openModifyModal = useCallback(
+    (record, focusRemark = false) => {
+      setSelectedRow(record);
+      setModalFocusRemark(focusRemark);
+      setModalOpen(true);
+      form.setFieldsValue({
+        newAmount: record.internalAmount,
+        remark: record.remark || "",
+        attachment: [],
+      });
+    },
+    [form]
+  );
+
+  useEffect(() => {
+    if (!modalOpen || !modalFocusRemark) return;
+    const timer = setTimeout(() => {
+      remarkTextRef.current?.focus?.({ cursor: "end" });
+      setModalFocusRemark(false);
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [modalOpen, modalFocusRemark]);
+
+  const openLogForSubject = useCallback((subjectId) => {
+    setLogFilterSubjectId(subjectId);
+    setLogDrawerOpen(true);
+  }, []);
+
   function aggregateForSubject(subjectId) {
     const node = subjectById.get(String(subjectId));
     if (!node) return { budgetAmount: 0, internalAmount: 0, processAmount: 0 };
@@ -348,102 +412,161 @@ export default function InternalValueManagement() {
     return findSubtree(roots) || [];
   }, [filters.projectId, filters.subjectId, childrenByParent, leafScope, subjectById]);
 
+  const handleExportInternal = () => {
+    if (!treeData.length) {
+      message.warning(t("costManagement.exportEmpty"));
+      return;
+    }
+    const headers = [
+      t("costManagement.internal.table.subject"),
+      t("costManagement.internal.table.budgetAmount"),
+      t("costManagement.internal.table.internalAmount"),
+      t("costManagement.internal.table.processAmount"),
+      t("costManagement.internal.table.bcDiff"),
+      t("costManagement.internal.table.cbRate"),
+      t("costManagement.internal.table.caRate"),
+      t("costManagement.internal.table.remark"),
+    ];
+    const rows = flattenInternalTreeForExport(treeData, 0, money, []);
+    downloadCsv(csvFilename("internal-value"), headers, rows);
+    message.success(t("costManagement.exportSuccess"));
+  };
+
   const columns = useMemo(
     () => [
       {
         title: t("costManagement.internal.table.subject"),
         dataIndex: "subjectName",
         key: "subjectName",
-        width: 240,
-        ellipsis: true,
+        width: 260,
+        minWidth: 200,
+        className: "internal-value-col-subject",
+        ellipsis: { showTitle: false },
+        render: (text) => (
+          <Text ellipsis={{ tooltip: text }} className="internal-value-subject-text">
+            {text ?? "—"}
+          </Text>
+        ),
       },
       {
         title: t("costManagement.internal.table.budgetAmount"),
         dataIndex: "budgetAmount",
         key: "budgetAmount",
-        width: 108,
+        width: 120,
         align: "right",
-        render: (v) => money(v),
+        className: "app-table-col-amount",
+        render: (v) => <span className="internal-value-amount">{money(v)}</span>,
       },
       {
         title: t("costManagement.internal.table.internalAmount"),
         dataIndex: "internalAmount",
         key: "internalAmount",
-        width: 108,
+        width: 120,
         align: "right",
-        render: (v) => money(v),
+        className: "app-table-col-amount",
+        render: (v) => <span className="internal-value-amount">{money(v)}</span>,
       },
       {
         title: t("costManagement.internal.table.processAmount"),
         dataIndex: "processAmount",
         key: "processAmount",
-        width: 108,
+        width: 120,
         align: "right",
-        render: (v) => money(v),
+        className: "app-table-col-amount",
+        render: (v) => <span className="internal-value-amount">{money(v)}</span>,
       },
       {
         title: t("costManagement.internal.table.bcDiff"),
         key: "bcDiff",
-        width: 118,
+        width: 128,
         align: "right",
-        render: (_, record) => money((Number(record.internalAmount) || 0) - (Number(record.processAmount) || 0)),
+        className: "app-table-col-amount",
+        render: (_, record) => (
+          <span className="internal-value-amount">
+            {money((Number(record.internalAmount) || 0) - (Number(record.processAmount) || 0))}
+          </span>
+        ),
       },
       {
         title: t("costManagement.internal.table.cbRate"),
         key: "cbRate",
-        width: 102,
-        align: "right",
+        width: 108,
+        align: "center",
+        className: "app-table-col-rate",
         render: (_, record) => {
           const b = Number(record.internalAmount) || 0;
           const c = Number(record.processAmount) || 0;
-          return b === 0 ? "—" : `${((c / b) * 100).toFixed(2)}%`;
+          const txt = b === 0 ? "—" : `${((c / b) * 100).toFixed(2)}%`;
+          return <span className="internal-value-rate-cell">{txt}</span>;
         },
       },
       {
         title: t("costManagement.internal.table.caRate"),
         key: "caRate",
-        width: 102,
-        align: "right",
+        width: 108,
+        align: "center",
+        className: "app-table-col-rate",
         render: (_, record) => {
           const a = Number(record.budgetAmount) || 0;
           const c = Number(record.processAmount) || 0;
-          return a === 0 ? "—" : `${((c / a) * 100).toFixed(2)}%`;
-        },
-      },
-      {
-        title: t("costManagement.internal.table.actions"),
-        key: "actions",
-        width: 88,
-        fixed: "right",
-        render: (_, record) => {
-          if (!record.isLeaf) return null;
-          return (
-            <Button
-              size="small"
-              onClick={() => {
-                setSelectedRow(record);
-                setModalOpen(true);
-                form.setFieldsValue({
-                  newAmount: record.internalAmount,
-                  remark: record.remark || "",
-                  attachment: [],
-                });
-              }}
-            >
-              {t("costManagement.internal.modify")}
-            </Button>
-          );
+          const txt = a === 0 ? "—" : `${((c / a) * 100).toFixed(2)}%`;
+          return <span className="internal-value-rate-cell">{txt}</span>;
         },
       },
       {
         title: t("costManagement.internal.table.remark"),
         dataIndex: "remark",
         key: "remark",
-        width: 140,
-        ellipsis: true,
+        width: 160,
+        minWidth: 120,
+        className: "internal-value-col-remark",
+        ellipsis: { showTitle: false },
+        render: (v) => (
+          <Text ellipsis={{ tooltip: v }} type="secondary" className="internal-value-remark-text">
+            {v || "—"}
+          </Text>
+        ),
+      },
+      {
+        title: t("costManagement.internal.table.actions"),
+        key: "actions",
+        width: 208,
+        fixed: "right",
+        align: "center",
+        className: "internal-value-col-actions",
+        render: (_, record) => {
+          if (!record.isLeaf) return null;
+          return (
+            <Space size={8} wrap className="internal-value-actions" onClick={(e) => e.stopPropagation()}>
+              <Button
+                type="primary"
+                size="small"
+                className="internal-value-btn-modify"
+                onClick={() => openModifyModal(record, false)}
+              >
+                {t("costManagement.internal.modify")}
+              </Button>
+              <Button
+                size="small"
+                className="internal-value-btn-remark"
+                onClick={() => openModifyModal(record, true)}
+              >
+                {t("costManagement.internal.remarkBtn")}
+              </Button>
+              <Button
+                size="small"
+                icon={<HistoryOutlined />}
+                className="internal-value-btn-log"
+                onClick={() => openLogForSubject(record.subjectId)}
+              >
+                {t("costManagement.internal.logBtnShort")}
+              </Button>
+            </Space>
+          );
+        },
       },
     ],
-    [t, form] // eslint-disable-line react-hooks/exhaustive-deps
+    [t, openModifyModal, openLogForSubject]
   );
 
   const logColumns = useMemo(
@@ -479,7 +602,8 @@ export default function InternalValueManagement() {
         key: "old_internal_amount",
         width: 120,
         align: "right",
-        render: (v) => money(v),
+        className: "app-table-col-amount",
+        render: (v) => <span className="internal-value-amount">{money(v)}</span>,
       },
       {
         title: t("costManagement.internal.logColNewInternal"),
@@ -487,7 +611,8 @@ export default function InternalValueManagement() {
         key: "new_internal_amount",
         width: 120,
         align: "right",
-        render: (v) => money(v),
+        className: "app-table-col-amount",
+        render: (v) => <span className="internal-value-amount">{money(v)}</span>,
       },
       {
         title: t("costManagement.internal.logColRemark"),
@@ -576,20 +701,42 @@ export default function InternalValueManagement() {
   };
 
   return (
+    <div className="internal-value-page">
     <Space direction="vertical" size="large" style={{ width: "100%" }}>
-      <Card className="app-stat-card">
+      <MetricStatCardSection>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12} lg={8}>
-            <StatisticCard title={t("costManagement.internal.totalBudget")} value={totals.budget} money={money} />
+            <MetricStatCard
+              title={t("costManagement.internal.totalBudget")}
+              icon={WalletOutlined}
+              accent="#165DFF"
+              value={totals.budget}
+              precision={2}
+              unit={t("common.currencyUnit")}
+            />
           </Col>
           <Col xs={24} sm={12} lg={8}>
-            <StatisticCard title={t("costManagement.internal.totalInternal")} value={totals.internal} money={money} />
+            <MetricStatCard
+              title={t("costManagement.internal.totalInternal")}
+              icon={AccountBookOutlined}
+              accent="#00B42A"
+              value={totals.internal}
+              precision={2}
+              unit={t("common.currencyUnit")}
+            />
           </Col>
           <Col xs={24} sm={12} lg={8}>
-            <StatisticCard title={t("costManagement.internal.totalDiff")} value={totals.budget - totals.internal} money={money} />
+            <MetricStatCard
+              title={t("costManagement.internal.totalDiff")}
+              icon={MinusCircleOutlined}
+              accent="#FF7D00"
+              value={totals.budget - totals.internal}
+              precision={2}
+              unit={t("common.currencyUnit")}
+            />
           </Col>
         </Row>
-      </Card>
+      </MetricStatCardSection>
 
       <Card
         size="small"
@@ -656,19 +803,27 @@ export default function InternalValueManagement() {
       <Card
         size="small"
         title={t("costManagement.internal.listTitle")}
-        className="app-card"
+        className="app-card internal-value-table-card"
         extra={
           <Space>
+            <Button icon={<DownloadOutlined />} onClick={handleExportInternal}>
+              {t("costManagement.exportReport")}
+            </Button>
             <Button
               type="primary"
               icon={<UploadOutlined />}
+              className="internal-value-btn-import"
               onClick={() => message.info(t("costManagement.internal.importHint"))}
             >
               {t("costManagement.internal.importBtn")}
             </Button>
             <Button
               icon={<HistoryOutlined />}
-              onClick={() => setLogDrawerOpen(true)}
+              className="internal-value-btn-log"
+              onClick={() => {
+                setLogFilterSubjectId(undefined);
+                setLogDrawerOpen(true);
+              }}
             >
               {t("costManagement.internal.changeLog")}
             </Button>
@@ -676,15 +831,15 @@ export default function InternalValueManagement() {
         }
       >
         <Table
+          className="app-table internal-value-main-table"
+          size="middle"
           rowKey="key"
-          size="small"
-          bordered
           columns={columns}
           dataSource={treeData}
           pagination={false}
           loading={loadingProjects}
           expandable={{ defaultExpandAllRows: true }}
-          scroll={{ x: 1180 }}
+          scroll={{ x: 1480 }}
         />
       </Card>
 
@@ -696,7 +851,7 @@ export default function InternalValueManagement() {
         onClose={() => setLogDrawerOpen(false)}
         destroyOnClose
       >
-        <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+        <Space direction="vertical" size="middle" style={{ width: "100%" }} className="internal-value-log-drawer">
           <Space wrap align="start">
             <span style={{ lineHeight: "32px" }}>
               {t("costManagement.internal.logFilterSubject")}：
@@ -724,11 +879,11 @@ export default function InternalValueManagement() {
             </Button>
           </Space>
           <Table
+            className="app-table"
+            size="middle"
             rowKey={(r) =>
               String(r.id ?? `${r.created_at}_${r.subject_id}_${r.changed_by_username}`)
             }
-            size="small"
-            bordered
             loading={logLoading}
             columns={logColumns}
             dataSource={logRows}
@@ -759,7 +914,7 @@ export default function InternalValueManagement() {
             name="remark"
             rules={[{ required: false }]}
           >
-            <Input.TextArea rows={3} />
+            <Input.TextArea ref={remarkTextRef} rows={3} placeholder={t("costManagement.internal.form.remarkPlaceholder")} />
           </Form.Item>
           <Form.Item
             label={t("costManagement.internal.form.attach")}
@@ -776,15 +931,7 @@ export default function InternalValueManagement() {
         </Form>
       </Modal>
     </Space>
-  );
-}
-
-function StatisticCard({ title, value, money }) {
-  return (
-    <Card size="small" bordered>
-      <div style={{ marginBottom: 8, color: "#6b7280", fontSize: 12 }}>{title}</div>
-      <div style={{ fontSize: 20, fontWeight: 800 }}>{money(value)}</div>
-    </Card>
+    </div>
   );
 }
 

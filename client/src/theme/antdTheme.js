@@ -29,7 +29,9 @@ export const antdTheme = {
     },
     Table: {
       borderRadius: 8,
-      headerBg: "#fafafa",
+      headerBg: "#f4f5f7",
+      borderColor: "transparent",
+      headerSplitColor: "transparent",
     },
     Button: {
       borderRadius: 8,

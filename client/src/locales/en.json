@@ -3,9 +3,11 @@
     "language": "Language",
     "chinese": "中文",
     "english": "English",
+    "currencyUnit": "CNY",
     "error": "Request failed, please try again",
     "paginationTotal": "{{total}} items in total",
-    "searchKeyword": "Search"
+    "searchKeyword": "Search",
+    "required": "This field is required"
   },
   "login": {
     "title": "Property Cost Control",
@@ -30,6 +32,7 @@
     "logout": "Sign out",
     "menu": {
       "dataOverview": "Data overview",
+      "dataAnalytics": "Data analytics",
       "costSummary": "Cost summary",
       "costRestore": "Cost restoration",
       "detailLedger": "Detail ledger",
@@ -41,8 +44,77 @@
       "costManagement": "Cost management",
       "budgetManagement": "Budget management",
       "internalValueManagement": "Internal value management",
-      "processControlManagement": "Process control"
+      "processControlManagement": "Process control",
+      "workbench": "Workbench"
     }
+  },
+  "workbench": {
+    "title": "Workbench (process control review)",
+    "metricsHint": "Metrics use last month and March submission counts from local records; type breakdowns are for March.",
+    "statPrevMonthSubmitted": "Submitted (previous month {{y}}-{{m}})",
+    "statMarchSubmitted": "Submitted (March {{y}}-{{m}})",
+    "statMarchNotSubmitted": "Not submitted (March {{y}}-{{m}})",
+    "typeSubmittedPair": "Submitted {{submitted}} / not submitted {{unsubmitted}}",
+    "pillSubmitted": "Submitted",
+    "pillUnsubmitted": "Pending",
+    "unitProjects": " projects",
+    "filterTitle": "Filters",
+    "filterMonth": "Month",
+    "resetFilters": "Reset",
+    "tableTitle": "Projects — process control review",
+    "colProjectName": "Project",
+    "colProjectType": "Type",
+    "colSubmitted": "Submitted for review",
+    "colRemark": "Remarks",
+    "submittedYes": "Yes",
+    "submittedNo": "No",
+    "remarkPlaceholder": "Notes"
+  },
+  "dataAnalytics": {
+    "title": "Data analytics",
+    "subtitle": "Compare budget, internal control, process (dynamic) and unit cost by project, time and region. Turn on demo data for richer mock samples; real APIs can be wired later.",
+    "demoMode": "Demo data",
+    "demoModeHint": "When on, merges mock projects with API results for a fuller chart demo.",
+    "demoTag": "Demo",
+    "filterYear": "Year",
+    "filterRegion": "Region",
+    "filterProject": "Project",
+    "all": "All",
+    "emptyProjects": "No projects match the filters, or enable “Demo data”",
+    "kpiBudget": "Filtered total · Budget",
+    "kpiInternal": "Filtered total · Internal control",
+    "kpiProcess": "Filtered total · Process (dynamic)",
+    "kpiActual": "Filtered total · Actual spend",
+    "kpiArea": "Filtered total · Operating area (㎡)",
+    "anchorTitle": "Sections",
+    "sec0": "Overview · Share & mix (donut)",
+    "pieStructTitle": "Three-way mix (budget / internal / process)",
+    "pieRegionTitle": "Budget share by region",
+    "pieTypeTitle": "Budget share by project type",
+    "barSubjectTitle": "Primary subjects · Budget (bar)",
+    "roseSubjectTitle": "Primary subjects · TOP (rose)",
+    "lineMonthTitle": "Monthly trend · Line",
+    "areaMonthTitle": "Monthly trend · Stacked area",
+    "sec1": "① By project · Budget",
+    "sec2": "② By primary subject · Budget",
+    "sec3": "③ By project × subject · Internal vs process (dynamic)",
+    "sec4": "④ By project × category · Dynamic vs actual",
+    "sec5": "⑤ By month · Budget / internal / process",
+    "sec6": "⑥ By project · Budget unit cost (per ㎡)",
+    "sec7": "⑦ By project type · Budget unit cost (per ㎡)",
+    "sec8": "⑧ By region · Budget / internal / process & unit cost",
+    "sec8Hint": "Columns compare three amounts per region; the table shows budget unit cost per ㎡.",
+    "regionUnitTable": "Regional unit cost (budget)",
+    "colUnitBudget": "Budget unit (per ㎡)",
+    "legendBudget": "Budget",
+    "legendInternal": "Internal control",
+    "legendProcess": "Process control",
+    "seriesInternal": "Internal",
+    "seriesProcess": "Process (dynamic)",
+    "seriesDynamic": "Dynamic",
+    "seriesActual": "Actual",
+    "typeUnknown": "Unknown type",
+    "regionUnknown": "No region"
   },
   "costSummary": {
     "pageTitle": "Cost summary",
@@ -69,6 +141,7 @@
     "btnByProject": "By project",
     "btnByCategory": "By category",
     "btnByCategoryDetail": "By category detail",
+    "statCurrencyUnit": "CNY",
     "stats": {
       "budgetA": "Budget A (annual total)",
       "internalBudgetB": "Internal budget B (annual internal)",
@@ -100,6 +173,9 @@
     }
   },
   "costManagement": {
+    "exportReport": "Export report",
+    "exportEmpty": "No data to export",
+    "exportSuccess": "Report exported",
     "budget": {
       "title": "Budget management",
       "totalTitle": "Total budget amount",
@@ -111,6 +187,13 @@
       "listTitle": "Budget list",
       "expand": "Expand",
       "drawerTitle": "Sub-subject budget",
+      "treeSearchPlaceholder": "Search subject name",
+      "treeExpandAll": "Expand all",
+      "treeCollapseAll": "Collapse all",
+      "treeHint": "Subject hierarchy matches class.json; totals are split to leaves by weight, parents sum children. When searching, parent amounts are recalculated from visible nodes.",
+      "treeLevelHint": "Depth of this node in the subject tree (relative to the expanded root)",
+      "treeNotFound": "Subject not found in class.json. Check primary category configuration.",
+      "treeNoMatch": "No matching subjects. Try another keyword.",
       "table": {
         "projectName": "Project name",
         "year": "Year",
@@ -170,6 +253,8 @@
         "actions": "Actions"
       },
       "modify": "Modify",
+      "remarkBtn": "Note",
+      "logBtnShort": "Log",
       "modifyModalTitle": "Modify internal value",
       "save": "Save",
       "form": {
@@ -177,6 +262,7 @@
         "internalAmount": "Internal value",
         "processAmount": "Process control C",
         "remark": "Remark",
+        "remarkPlaceholder": "Optional adjustment notes",
         "attach": "Attachments",
         "selectAttach": "Choose files"
       },
@@ -218,8 +304,11 @@
       "summaryTitle": "Summary",
       "colMonth": "Month",
       "internal": "Internal control",
-      "estimate": "Estimated incurred",
-      "actual": "Actual incurred",
+      "colEstimate": "Estimated amount",
+      "colActual": "Actual incurred",
+      "summaryDynamic": "Dynamic amount",
+      "summaryPayable": "Payable amount",
+      "processOccurRatio": "Process ratio",
       "paid": "Paid",
       "unpaid": "Unpaid",
       "addPaid": "Add",
@@ -232,7 +321,19 @@
       "paidAmountRequired": "Please enter amount",
       "attach": "Attachment",
       "selectFile": "Choose file",
-      "paidAddSuccess": "Paid amount updated"
+      "paidAddSuccess": "Paid amount updated",
+      "submitMonthBtn": "Submit {{m}} month process control data",
+      "submitMonthConfirmTitle": "Confirm submission",
+      "submitMonthConfirmContent": "Submit {{y}}-{{m}} process control data for approval?",
+      "submitMonthSuccess": "Submitted. This month is read-only pending review.",
+      "tagAudit": "In review",
+      "tagAudited": "Approved",
+      "exportColStatus": "Review status",
+      "auditMonthStatus": "{{m}} month data is under review. To edit, ",
+      "revokeAudit": "revoke review",
+      "revokeConfirmTitle": "Revoke review",
+      "revokeConfirmContent": "Revoke {{m}} month review? You can edit and submit again.",
+      "revokeSuccess": "Review revoked. You can edit again."
     }
   },
   "overview": {
@@ -363,10 +464,13 @@
       "addBtn": "Add project",
       "addTitle": "Add project",
       "editTitle": "Edit project",
+      "detailLink": "Details",
       "table": {
         "name": "Name",
         "code": "Code",
-        "city": "City"
+        "city": "City",
+        "region": "Region",
+        "projectType": "Project type"
       },
       "search": {
         "name": "Search by name",
@@ -376,7 +480,40 @@
       "form": {
         "name": "Name",
         "code": "Code",
-        "city": "City"
+        "city": "City",
+        "region": "Region",
+        "regionPlaceholder": "Select region",
+        "projectType": "Project type",
+        "projectTypePlaceholder": "Select project type"
+      },
+      "region": {
+        "north_china": "North China",
+        "east_china": "East China",
+        "south_china": "South China",
+        "central_china": "Central China",
+        "southwest": "Southwest",
+        "northwest": "Northwest",
+        "northeast": "Northeast",
+        "hk_mo_tw": "HK / Macao / Taiwan"
+      },
+      "projectType": {
+        "shopping_mall": "Shopping mall",
+        "office": "Office building",
+        "industrial_park": "Industrial park",
+        "long_term_rental": "Long-term rental housing"
+      },
+      "detail": {
+        "back": "Back",
+        "notFound": "Project not found",
+        "year": "Year",
+        "colMonth": "Month",
+        "colLeasableArea": "Leasable area (㎡)",
+        "colOperatingArea": "Operating area (㎡)",
+        "monthN": "Month {{n}}",
+        "editArea": "Edit",
+        "editLeasableTitle": "Edit leasable area",
+        "editOperatingTitle": "Edit operating area",
+        "saveSuccess": "Saved"
       },
       "createSuccess": "Project created",
       "updateSuccess": "Project updated"
@@ -407,6 +544,19 @@
     },
     "subjects": {
       "title": "Subject management",
+      "filterTitle": "Filters",
+      "searchNamePlaceholder": "Search by subject name",
+      "tableHint": "Select a row or use the radio column; only leaf nodes can edit tax or add children.",
+      "table": {
+        "name": "Subject",
+        "nodeKind": "Node type",
+        "leaf": "Leaf",
+        "branch": "Branch",
+        "tax": "Tax rate",
+        "source": "Source",
+        "base": "Base",
+        "custom": "Custom"
+      },
       "selectProject": "Select project",
       "editTax": "Edit tax rate",
       "addChild": "Add sub-subject",

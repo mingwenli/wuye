@@ -3,9 +3,11 @@
     "language": "语言",
     "chinese": "中文",
     "english": "English",
+    "currencyUnit": "元",
     "error": "请求失败，请稍后重试",
     "paginationTotal": "共 {{total}} 条",
-    "searchKeyword": "搜索"
+    "searchKeyword": "搜索",
+    "required": "此项为必填"
   },
   "login": {
     "title": "物业成本管控平台",
@@ -30,6 +32,7 @@
     "logout": "退出登录",
     "menu": {
       "dataOverview": "数据概览",
+      "dataAnalytics": "数据分析",
       "costSummary": "成本汇总",
       "costRestore": "成本还原",
       "detailLedger": "明细台账",
@@ -41,8 +44,77 @@
       "costManagement": "成本管理",
       "budgetManagement": "预算管理",
       "internalValueManagement": "内控值管理",
-      "processControlManagement": "过程管控"
+      "processControlManagement": "过程管控",
+      "workbench": "工作台"
     }
+  },
+  "workbench": {
+    "title": "工作台（过程管控审核）",
+    "metricsHint": "以下指标基于「上一月」及「3 月」过程管控提交情况（按当前项目列表与本地提交记录统计）；各类型为 3 月当月口径。",
+    "statPrevMonthSubmitted": "{{y}}年{{m}}月已提交项目数",
+    "statMarchSubmitted": "{{y}}年{{m}}月已提交项目数",
+    "statMarchNotSubmitted": "{{y}}年{{m}}月未提交项目数",
+    "typeSubmittedPair": "已提交 {{submitted}} / 未提交 {{unsubmitted}}",
+    "pillSubmitted": "已提交",
+    "pillUnsubmitted": "未提交",
+    "unitProjects": "个",
+    "filterTitle": "筛选条件",
+    "filterMonth": "统计月份",
+    "resetFilters": "重置筛选",
+    "tableTitle": "项目过程管控审核列表",
+    "colProjectName": "项目名称",
+    "colProjectType": "类型",
+    "colSubmitted": "是否提交过程管控审核",
+    "colRemark": "备注",
+    "submittedYes": "已提交",
+    "submittedNo": "未提交",
+    "remarkPlaceholder": "备注说明"
+  },
+  "dataAnalytics": {
+    "title": "数据分析",
+    "subtitle": "围绕项目、时间与区域，对预算、内控、过程管控（动态金额）与单方成本进行多维度对比。可开启演示数据查看丰富模拟样例，后续可对接真实汇总接口。",
+    "demoMode": "演示数据",
+    "demoModeHint": "开启后与接口项目合并模拟项目，图表更丰富，仅作演示",
+    "demoTag": "Demo",
+    "filterYear": "统计年度",
+    "filterRegion": "区域",
+    "filterProject": "项目",
+    "all": "全部",
+    "emptyProjects": "当前筛选下无项目，请调整条件或开启「演示数据」",
+    "kpiBudget": "筛选范围内 · 预算合计",
+    "kpiInternal": "筛选范围内 · 内控合计",
+    "kpiProcess": "筛选范围内 · 过程管控（动态）合计",
+    "kpiActual": "筛选范围内 · 实际发生合计",
+    "kpiArea": "筛选范围内 · 运营面积合计",
+    "anchorTitle": "分析维度",
+    "sec0": "概览 · 结构占比与分布（环形图）",
+    "pieStructTitle": "三费结构（预算 / 内控 / 过程）",
+    "pieRegionTitle": "区域预算占比",
+    "pieTypeTitle": "项目类型预算占比",
+    "barSubjectTitle": "一类科目 · 预算（横向柱）",
+    "roseSubjectTitle": "一类科目 · TOP 玫瑰图",
+    "lineMonthTitle": "月度趋势 · 折线",
+    "areaMonthTitle": "月度走势 · 堆叠面积",
+    "sec1": "① 按项目 · 预算值",
+    "sec2": "② 按一类科目 · 预算值",
+    "sec3": "③ 按项目 × 一类科目 · 内控值与过程管控（动态）",
+    "sec4": "④ 按项目 × 类目 · 动态金额与实际发生金额",
+    "sec5": "⑤ 按月份 · 预算 / 内控 / 过程管控",
+    "sec6": "⑥ 按项目 · 预算单方成本（元/㎡）",
+    "sec7": "⑦ 按项目类型 · 预算单方成本（元/㎡）",
+    "sec8": "⑧ 按区域 · 预算 / 内控 / 过程与单方成本",
+    "sec8Hint": "柱状图为各区域三项金额对比；下表为区域预算单方成本（元/㎡）。",
+    "regionUnitTable": "区域单方成本（预算口径）",
+    "colUnitBudget": "预算单方（元/㎡）",
+    "legendBudget": "预算",
+    "legendInternal": "内控",
+    "legendProcess": "过程管控",
+    "seriesInternal": "内控",
+    "seriesProcess": "过程（动态）",
+    "seriesDynamic": "动态金额",
+    "seriesActual": "实际发生",
+    "typeUnknown": "未分类",
+    "regionUnknown": "未设置区域"
   },
   "costSummary": {
     "pageTitle": "成本汇总",
@@ -69,6 +141,7 @@
     "btnByProject": "按项目统计",
     "btnByCategory": "按类目统计",
     "btnByCategoryDetail": "按类目明细统计",
+    "statCurrencyUnit": "元",
     "stats": {
       "budgetA": "预算值 A（全年总预算）",
       "internalBudgetB": "内控预算值 B（全年总内控）",
@@ -100,6 +173,9 @@
     }
   },
   "costManagement": {
+    "exportReport": "导出报表",
+    "exportEmpty": "暂无数据可导出",
+    "exportSuccess": "报表已导出",
     "budget": {
       "title": "预算管理",
       "totalTitle": "预算总金额",
@@ -111,6 +187,13 @@
       "listTitle": "预算清单",
       "expand": "展开",
       "drawerTitle": "下级科目预算",
+      "treeSearchPlaceholder": "搜索科目名称",
+      "treeExpandAll": "展开全部",
+      "treeCollapseAll": "收起全部",
+      "treeHint": "科目层级与 class.json 完全一致；总额按叶子节点权重模拟拆分，父级金额为子级合计。搜索时会按可见节点重算父级金额。",
+      "treeLevelHint": "科目在树中的层级深度（相对当前展开的一级科目根）",
+      "treeNotFound": "未在 class.json 中找到该科目，请检查一级科目配置。",
+      "treeNoMatch": "无匹配科目，请调整搜索关键词。",
       "table": {
         "projectName": "项目名称",
         "year": "所属年度",
@@ -170,6 +253,8 @@
         "actions": "操作"
       },
       "modify": "修改",
+      "remarkBtn": "备注",
+      "logBtnShort": "日志",
       "modifyModalTitle": "修改内控值",
       "save": "保存",
       "form": {
@@ -177,6 +262,7 @@
         "internalAmount": "内控值",
         "processAmount": "过程管控值 C",
         "remark": "备注",
+        "remarkPlaceholder": "选填，可填写调整说明",
         "attach": "附件",
         "selectAttach": "选择文件"
       },
@@ -218,8 +304,11 @@
       "summaryTitle": "汇总",
       "colMonth": "月份",
       "internal": "内控金额",
-      "estimate": "预估发生金额",
-      "actual": "实际发生金额",
+      "colEstimate": "预估金额",
+      "colActual": "实际发生金额",
+      "summaryDynamic": "动态金额",
+      "summaryPayable": "应付金额",
+      "processOccurRatio": "过程发生比",
       "paid": "实付金额",
       "unpaid": "未支付金额",
       "addPaid": "添加",
@@ -232,7 +321,19 @@
       "paidAmountRequired": "请输入金额",
       "attach": "附件",
       "selectFile": "选择文件",
-      "paidAddSuccess": "实付已累加"
+      "paidAddSuccess": "实付已累加",
+      "submitMonthBtn": "提交 {{m}} 月过程管控数据",
+      "submitMonthConfirmTitle": "确认提交",
+      "submitMonthConfirmContent": "确认将 {{y}} 年 {{m}} 月过程管控数据提交审核？",
+      "submitMonthSuccess": "已提交并保存，该月已锁定待审核",
+      "tagAudit": "审核中",
+      "tagAudited": "已审核",
+      "exportColStatus": "审核状态",
+      "auditMonthStatus": "{{m}} 月过程管控数据审核中，如需修改可",
+      "revokeAudit": "撤销审核",
+      "revokeConfirmTitle": "撤销审核",
+      "revokeConfirmContent": "确认撤销 {{m}} 月过程管控数据审核？撤销后可再次编辑并提交。",
+      "revokeSuccess": "已撤销审核，可继续编辑"
     }
   },
   "overview": {
@@ -363,10 +464,13 @@
       "addBtn": "添加项目",
       "addTitle": "新增项目",
       "editTitle": "编辑项目",
+      "detailLink": "详情",
       "table": {
         "name": "名称",
         "code": "编号",
-        "city": "城市"
+        "city": "城市",
+        "region": "区域",
+        "projectType": "项目类型"
       },
       "search": {
         "name": "按名称搜索",
@@ -376,7 +480,40 @@
       "form": {
         "name": "名称",
         "code": "编号",
-        "city": "城市"
+        "city": "城市",
+        "region": "区域",
+        "regionPlaceholder": "请选择区域",
+        "projectType": "项目类型",
+        "projectTypePlaceholder": "请选择项目类型"
+      },
+      "region": {
+        "north_china": "华北",
+        "east_china": "华东",
+        "south_china": "华南",
+        "central_china": "华中",
+        "southwest": "西南",
+        "northwest": "西北",
+        "northeast": "东北",
+        "hk_mo_tw": "港澳台"
+      },
+      "projectType": {
+        "shopping_mall": "购物中心",
+        "office": "写字楼",
+        "industrial_park": "产业园区",
+        "long_term_rental": "长租公寓"
+      },
+      "detail": {
+        "back": "返回",
+        "notFound": "未找到该项目",
+        "year": "年份",
+        "colMonth": "月份",
+        "colLeasableArea": "可出租面积（㎡）",
+        "colOperatingArea": "运营面积（㎡）",
+        "monthN": "{{n}} 月",
+        "editArea": "修改",
+        "editLeasableTitle": "修改可出租面积",
+        "editOperatingTitle": "修改运营面积",
+        "saveSuccess": "保存成功"
       },
       "createSuccess": "项目创建成功",
       "updateSuccess": "项目更新成功"
@@ -407,6 +544,19 @@
     },
     "subjects": {
       "title": "科目管理",
+      "filterTitle": "筛选条件",
+      "searchNamePlaceholder": "搜索科目名称",
+      "tableHint": "点击行或左侧单选框选择科目；仅叶子节点可编辑税率或添加子科目。",
+      "table": {
+        "name": "科目名称",
+        "nodeKind": "节点类型",
+        "leaf": "叶子",
+        "branch": "非叶子",
+        "tax": "税率",
+        "source": "来源",
+        "base": "基础",
+        "custom": "自定义"
+      },
       "selectProject": "选择项目",
       "editTax": "编辑税率",
       "addChild": "添加子科目",

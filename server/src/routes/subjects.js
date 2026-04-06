@@ -9,7 +9,7 @@ subjectsRouter.get("/tree", requireAuth, async (req, res) => {
   const projectId = Number(req.query.projectId);
   if (!projectId) return res.status(400).json({ message: "projectId 必填" });
 
-  const { rows } = await pool.query(
+  const [rows] = await pool.query(
     `
       SELECT
         id,
@@ -20,7 +20,7 @@ subjectsRouter.get("/tree", requireAuth, async (req, res) => {
         tax_rate,
         created_at
       FROM project_subjects
-      WHERE project_id = $1
+      WHERE project_id = ?
       ORDER BY created_at ASC
     `,
     [projectId]
@@ -72,44 +72,43 @@ subjectsRouter.post("/nodes", requireAuth, async (req, res) => {
 
   const { parentId, name, taxRate } = parsed.data;
 
-  const client = await pool.connect();
+  const client = await pool.getConnection();
   try {
-    await client.query("BEGIN");
+    await client.beginTransaction();
 
-    const parentRes = await client.query(
-      `SELECT id, project_id, is_leaf FROM project_subjects WHERE id = $1`,
+    const [parentRows] = await client.query(
+      `SELECT id, project_id, is_leaf FROM project_subjects WHERE id = ?`,
       [parentId]
     );
-    const parent = parentRes.rows[0];
+    const parent = parentRows[0];
     if (!parent) {
-      await client.query("ROLLBACK");
+      await client.rollback();
       return res.status(404).json({ message: "父节点不存在" });
     }
     if (!parent.is_leaf) {
-      await client.query("ROLLBACK");
+      await client.rollback();
       return res.status(400).json({ message: "只能在叶子节点下添加子科目" });
     }
 
     await client.query(
-      `UPDATE project_subjects SET is_leaf = FALSE, tax_rate = NULL WHERE id = $1`,
+      `UPDATE project_subjects SET is_leaf = 0, tax_rate = NULL WHERE id = ?`,
       [parentId]
     );
 
-    const insertRes = await client.query(
+    const [insertRes] = await client.query(
       `
         INSERT INTO project_subjects
           (project_id, base_subject_id, parent_project_subject_id, name, is_leaf, tax_rate)
         VALUES
-          ($1, NULL, $2, $3, TRUE, $4)
-        RETURNING id
+          (?, NULL, ?, ?, 1, ?)
       `,
       [parent.project_id, parentId, name, taxRate ?? 0.06]
     );
 
-    await client.query("COMMIT");
-    return res.json({ data: insertRes.rows[0].id });
+    await client.commit();
+    return res.json({ data: insertRes.insertId });
   } catch (e) {
-    await client.query("ROLLBACK");
+    await client.rollback();
     return res.status(500).json({ message: e.message ?? "server error" });
   } finally {
     client.release();
@@ -127,8 +126,8 @@ subjectsRouter.patch("/nodes/:id/tax-rate", requireAuth, async (req, res) => {
   const nodeId = Number(req.params.id);
   const { taxRate } = parsed.data;
 
-  const { rows } = await pool.query(
-    `SELECT id, is_leaf FROM project_subjects WHERE id = $1`,
+  const [rows] = await pool.query(
+    `SELECT id, is_leaf FROM project_subjects WHERE id = ?`,
     [nodeId]
   );
   const node = rows[0];
@@ -136,7 +135,7 @@ subjectsRouter.patch("/nodes/:id/tax-rate", requireAuth, async (req, res) => {
   if (!node.is_leaf) return res.status(400).json({ message: "非叶子节点不能设置税率" });
 
   await pool.query(
-    `UPDATE project_subjects SET tax_rate = $1 WHERE id = $2`,
+    `UPDATE project_subjects SET tax_rate = ? WHERE id = ?`,
     [taxRate, nodeId]
   );
 
@@ -146,21 +145,21 @@ subjectsRouter.patch("/nodes/:id/tax-rate", requireAuth, async (req, res) => {
 subjectsRouter.delete("/nodes/:id", requireAuth, async (req, res) => {
   const nodeId = Number(req.params.id);
 
-  const client = await pool.connect();
+  const client = await pool.getConnection();
   try {
-    await client.query("BEGIN");
+    await client.beginTransaction();
 
-    const nodeRes = await client.query(
-      `SELECT id, parent_project_subject_id, is_leaf, base_subject_id FROM project_subjects WHERE id = $1`,
+    const [nodeRows] = await client.query(
+      `SELECT id, parent_project_subject_id, is_leaf, base_subject_id FROM project_subjects WHERE id = ?`,
       [nodeId]
     );
-    const node = nodeRes.rows[0];
+    const node = nodeRows[0];
     if (!node) {
-      await client.query("ROLLBACK");
+      await client.rollback();
       return res.status(404).json({ message: "节点不存在" });
     }
     if (node.base_subject_id !== null) {
-      await client.query("ROLLBACK");
+      await client.rollback();
       return res.status(400).json({ message: "基础科目节点不允许删除" });
     }
     if (!node.is_leaf) {
@@ -168,26 +167,26 @@ subjectsRouter.delete("/nodes/:id", requireAuth, async (req, res) => {
       return res.status(400).json({ message: "只能删除叶子节点（自定义节点）" });
     }
 
-    await client.query(`DELETE FROM project_subjects WHERE id = $1`, [nodeId]);
+    await client.query(`DELETE FROM project_subjects WHERE id = ?`, [nodeId]);
 
     if (node.parent_project_subject_id !== null) {
-      const siblingRes = await client.query(
-        `SELECT COUNT(*)::int AS cnt FROM project_subjects WHERE parent_project_subject_id = $1`,
+      const [siblingRows] = await client.query(
+        `SELECT COUNT(*) AS cnt FROM project_subjects WHERE parent_project_subject_id = ?`,
         [node.parent_project_subject_id]
       );
-      const cnt = siblingRes.rows[0].cnt;
+      const cnt = Number(siblingRows[0].cnt);
       if (cnt === 0) {
         await client.query(
-          `UPDATE project_subjects SET is_leaf = TRUE, tax_rate = $1 WHERE id = $2`,
+          `UPDATE project_subjects SET is_leaf = 1, tax_rate = ? WHERE id = ?`,
           [0.06, node.parent_project_subject_id]
         );
       }
     }
 
-    await client.query("COMMIT");
+    await client.commit();
     return res.json({ message: "ok" });
   } catch (e) {
-    await client.query("ROLLBACK");
+    await client.rollback();
     return res.status(500).json({ message: e.message ?? "server error" });
   } finally {
     client.release();

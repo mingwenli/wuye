@@ -11,6 +11,7 @@ import {
 } from "antd";
 import {
   BarChartOutlined,
+  DesktopOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -33,6 +34,7 @@ const SETTINGS_KEY = "sub-settings";
 const COST_KEY = "sub-cost-management";
 
 function pathToOpenKeys(pathname) {
+  if (pathname.startsWith("/overview/workbench")) return [];
   if (pathname.startsWith("/overview")) return [OVERVIEW_KEY];
   if (pathname.startsWith("/settings")) return [SETTINGS_KEY];
   if (pathname.startsWith("/cost-management")) return [COST_KEY];
@@ -50,6 +52,11 @@ export default function MainLayout() {
   const menuItems = useMemo(
     () => [
       {
+        key: "/overview/workbench",
+        icon: <DesktopOutlined />,
+        label: t("layout.menu.workbench"),
+      },
+      {
         key: OVERVIEW_KEY,
         icon: <BarChartOutlined />,
         label: t("layout.menu.dataOverview"),
@@ -57,6 +64,10 @@ export default function MainLayout() {
           {
             key: "/overview/cost-summary",
             label: t("layout.menu.costSummary"),
+          },
+          {
+            key: "/overview/data-analytics",
+            label: t("layout.menu.dataAnalytics"),
           },
           {
             key: "/overview/cost-restore",

@@ -9,14 +9,35 @@ import {
   Select,
   Space,
   Table,
+  Typography,
   message,
 } from "antd";
 import { http } from "../../api/http.js";
 import { useTranslation } from "react-i18next";
 import { getTablePagination } from "../../utils/tablePagination.js";
+import { useNavigate } from "react-router-dom";
+
+const REGION_KEYS = [
+  "north_china",
+  "east_china",
+  "south_china",
+  "central_china",
+  "southwest",
+  "northwest",
+  "northeast",
+  "hk_mo_tw",
+];
+
+const PROJECT_TYPE_KEYS = [
+  "shopping_mall",
+  "office",
+  "industrial_park",
+  "long_term_rental",
+];
 
 export default function ProjectManagement() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
 
@@ -64,6 +85,9 @@ export default function ProjectManagement() {
       name: record.name,
       code: record.code,
       city: record.city,
+      region: record.region || undefined,
+      project_type: record.project_type || undefined,
+      operating_area: record.operating_area != null ? Number(record.operating_area) : undefined,
     });
     setModalOpen(true);
   };
@@ -93,11 +117,29 @@ export default function ProjectManagement() {
     { title: t("settings.projects.table.code"), dataIndex: "code", key: "code" },
     { title: t("settings.projects.table.city"), dataIndex: "city", key: "city" },
     {
+      title: t("settings.projects.table.region"),
+      dataIndex: "region",
+      key: "region",
+      render: (v) => (v ? t(`settings.projects.region.${v}`) : "—"),
+    },
+    {
+      title: t("settings.projects.table.projectType"),
+      dataIndex: "project_type",
+      key: "project_type",
+      render: (v) => (v ? t(`settings.projects.projectType.${v}`) : "—"),
+    },
+    {
       title: t("settings.common.actions"),
       key: "actions",
-      width: 220,
+      width: 300,
       render: (_, record) => (
-        <Space>
+        <Space wrap>
+          <Button
+            type="link"
+            onClick={() => navigate(`/settings/projects/${record.id}`)}
+          >
+            {t("settings.projects.detailLink")}
+          </Button>
           <Button onClick={() => openEdit(record)}>{t("settings.common.edit")}</Button>
           <Popconfirm
             title={t("settings.common.deleteConfirm")}
@@ -126,16 +168,21 @@ export default function ProjectManagement() {
   ];
 
   return (
-    <Card
-      className="app-card"
-      title={t("settings.projects.title")}
-      extra={
+    <Space direction="vertical" size="large" style={{ width: "100%" }}>
+      <Space
+        align="center"
+        style={{ width: "100%", justifyContent: "space-between" }}
+      >
+        <Typography.Title level={4} style={{ margin: 0 }}>
+          {t("settings.projects.title")}
+        </Typography.Title>
         <Button type="primary" onClick={openCreate}>
           {t("settings.projects.addBtn")}
         </Button>
-      }
-    >
-      <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+      </Space>
+
+      <Card className="app-card">
+        <Space direction="vertical" size="middle" style={{ width: "100%" }}>
         <Form
           layout="inline"
           onFinish={() => fetchList()}
@@ -181,13 +228,16 @@ export default function ProjectManagement() {
         </Form>
 
         <Table
+          className="app-table"
+          size="middle"
           rowKey="id"
           loading={loading}
           dataSource={list}
           columns={columns}
           pagination={getTablePagination(t)}
         />
-      </Space>
+        </Space>
+      </Card>
 
       <Modal
         open={modalOpen}
@@ -218,9 +268,35 @@ export default function ProjectManagement() {
           >
             <Input />
           </Form.Item>
+          <Form.Item
+            label={t("settings.projects.form.region")}
+            name="region"
+            rules={[{ required: true, message: t("settings.common.required") }]}
+          >
+            <Select
+              placeholder={t("settings.projects.form.regionPlaceholder")}
+              options={REGION_KEYS.map((k) => ({
+                value: k,
+                label: t(`settings.projects.region.${k}`),
+              }))}
+            />
+          </Form.Item>
+          <Form.Item
+            label={t("settings.projects.form.projectType")}
+            name="project_type"
+            rules={[{ required: true, message: t("settings.common.required") }]}
+          >
+            <Select
+              placeholder={t("settings.projects.form.projectTypePlaceholder")}
+              options={PROJECT_TYPE_KEYS.map((k) => ({
+                value: k,
+                label: t(`settings.projects.projectType.${k}`),
+              }))}
+            />
+          </Form.Item>
         </Form>
       </Modal>
-    </Card>
+    </Space>
   );
 }
 

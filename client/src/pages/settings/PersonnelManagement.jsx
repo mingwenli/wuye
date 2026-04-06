@@ -10,6 +10,7 @@ import {
   Select,
   Space,
   Table,
+  Typography,
   message,
 } from "antd";
 import { http } from "../../api/http.js";
@@ -151,16 +152,21 @@ export default function PersonnelManagement() {
   ];
 
   return (
-    <Card
-      className="app-card"
-      title={t("settings.users.title")}
-      extra={
+    <Space direction="vertical" size="large" style={{ width: "100%" }}>
+      <Space
+        align="center"
+        style={{ width: "100%", justifyContent: "space-between" }}
+      >
+        <Typography.Title level={4} style={{ margin: 0 }}>
+          {t("settings.users.title")}
+        </Typography.Title>
         <Button type="primary" onClick={openCreate}>
           {t("settings.users.addBtn")}
         </Button>
-      }
-    >
-      <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+      </Space>
+
+      <Card className="app-card">
+        <Space direction="vertical" size="middle" style={{ width: "100%" }}>
         <Form layout="inline">
           <Space wrap size="middle" align="center">
             <Form.Item name="username" style={{ marginBottom: 0 }}>
@@ -198,13 +204,16 @@ export default function PersonnelManagement() {
         </Form>
 
         <Table
+          className="app-table"
+          size="middle"
           rowKey="id"
           loading={loading}
           dataSource={users}
           columns={columns}
           pagination={getTablePagination(t)}
         />
-      </Space>
+        </Space>
+      </Card>
 
       <Modal
         open={modalOpen}
@@ -252,7 +261,7 @@ export default function PersonnelManagement() {
           </Form.Item>
         </Form>
       </Modal>
-    </Card>
+    </Space>
   );
 }
 

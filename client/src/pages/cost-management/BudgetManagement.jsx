@@ -10,27 +10,34 @@ import {
   Row,
   Select,
   Space,
-  Statistic,
   Table,
   Tree,
   Upload,
   message,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import {
+  ApartmentOutlined,
+  CalendarOutlined,
+  DownloadOutlined,
+  FieldTimeOutlined,
+  FileDoneOutlined,
+  HistoryOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { http } from "../../api/http.js";
 import { getTablePagination } from "../../utils/tablePagination.js";
-
-const ROOT_SUBJECTS = [
-  { id: 1, name: "管理、服务人员的工资和福利费" },
-  { id: 2, name: "行政办公费、劳保后勤" },
-  { id: 3, name: "公共设施、设备日常维修及保养费" },
-  { id: 4, name: "绿化管理费" },
-  { id: 5, name: "清洁卫生费" },
-  { id: 6, name: "安全管理费" },
-  { id: 7, name: "酬金" },
-  { id: 8, name: "水、电能源消耗" },
-];
+import { downloadCsv, csvFilename } from "../../utils/exportCsv.js";
+import { MetricStatCard } from "../../components/MetricStatCard/index.js";
+import classTreeJson from "@classTree";
+import {
+  buildBudgetSubjectNodesFromClass,
+  collectAllKeys,
+  filterBudgetSubjectNodes,
+  findNodeById,
+  getRootSubjectsFromClass,
+} from "./budgetSubjectTreeUtils.js";
+import "./BudgetSubjectTree.css";
 
 function randInt(min, max, seed) {
   // 可复现的“随机”数：不用库，避免每次刷新数据都变
@@ -49,6 +56,11 @@ function money(n) {
 
 export default function BudgetManagement() {
   const { t } = useTranslation();
+
+  const rootSubjects = useMemo(
+    () => getRootSubjectsFromClass(classTreeJson),
+    []
+  );
 
   const [projects, setProjects] = useState([]);
   const [loadingProjects, setLoadingProjects] = useState(false);
@@ -98,7 +110,7 @@ export default function BudgetManagement() {
     const mock = [];
     for (const p of projects) {
       for (const year of years) {
-        for (const s of ROOT_SUBJECTS) {
+        for (const s of rootSubjects) {
           const seed = seedBase + Number(p.id) * 17 + year * 3 + s.id * 11;
           const amount = randInt(2_000_00, 12_000_000, seed); // 元
           mock.push({
@@ -115,7 +127,7 @@ export default function BudgetManagement() {
     }
 
     setBudgets(mock);
-  }, [projects, years]);
+  }, [projects, years, rootSubjects]);
 
   const filteredBudgets = useMemo(() => {
     return budgets.filter((b) => {
@@ -179,56 +191,6 @@ export default function BudgetManagement() {
     };
   }, [budgets, filters.baseSubjectId, filters.projectId]);
 
-  function buildSubSubjectTree(record) {
-    const total = Number(record.budgetAmount) || 0;
-    const baseSeed =
-      Number(record.projectId) * 100000 +
-      Number(record.year) * 1000 +
-      Number(record.baseSubjectId) * 17;
-
-    const depth1Count = 3 + (Number(record.baseSubjectId) % 2); // 3~4
-    const weights1 = Array.from({ length: depth1Count }).map((_, i) =>
-      randInt(5, 30, baseSeed + i * 19)
-    );
-    const wSum1 = weights1.reduce((a, b) => a + b, 0) || 1;
-
-    let used = 0;
-    const children = weights1.map((w, i) => {
-      const isLast = i === weights1.length - 1;
-      const amt = isLast ? total - used : Math.round((total * w) / wSum1);
-      used += amt;
-
-      const depth2Count = 1 + ((i + Number(record.baseSubjectId)) % 3); // 1~3
-      const weights2 = Array.from({ length: depth2Count }).map((__, k) =>
-        randInt(4, 20, baseSeed + i * 97 + k * 31)
-      );
-      const wSum2 = weights2.reduce((a, b) => a + b, 0) || 1;
-
-      let used2 = 0;
-      const leaves = weights2.map((w2, k) => {
-        const isLast2 = k === weights2.length - 1;
-        const amt2 =
-          isLast2 ? amt - used2 : Math.round((amt * w2) / wSum2);
-        used2 += amt2;
-        return {
-          key: `${record.baseSubjectId}_${i}_${k}`,
-          name: `${record.baseSubjectName}-下级${i + 1}.${k + 1}`,
-          amount: amt2,
-          children: [],
-        };
-      });
-
-      return {
-        key: `${record.baseSubjectId}_${i}`,
-        name: `${record.baseSubjectName}-下级${i + 1}`,
-        amount: amt,
-        children: leaves,
-      };
-    });
-
-    return children;
-  }
-
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerRecord, setDrawerRecord] = useState(null);
 
@@ -289,6 +251,28 @@ export default function BudgetManagement() {
     setImportFileList([]);
   };
 
+  const handleExportBudget = () => {
+    const list = filteredBudgetsForTable;
+    if (!list.length) {
+      message.warning(t("costManagement.exportEmpty"));
+      return;
+    }
+    const headers = [
+      t("costManagement.budget.table.projectName"),
+      t("costManagement.budget.table.year"),
+      t("costManagement.budget.table.subject"),
+      t("costManagement.budget.table.budgetAmount"),
+    ];
+    const rows = list.map((b) => [
+      b.projectName ?? "",
+      String(b.year ?? ""),
+      b.baseSubjectName ?? "",
+      money(b.budgetAmount),
+    ]);
+    downloadCsv(csvFilename("budget"), headers, rows);
+    message.success(t("costManagement.exportSuccess"));
+  };
+
   const doImport = async () => {
     if (!importYear) return;
     if (!importFileList || importFileList.length === 0) {
@@ -306,7 +290,7 @@ export default function BudgetManagement() {
       }
 
       const seedBase = Number(importYear) * 1000;
-      const newRows = ROOT_SUBJECTS.map((s, idx) => {
+      const newRows = rootSubjects.map((s, idx) => {
         const seed = seedBase + idx * 999 + project.id * 13;
         return {
           key: `${project.id}_${importYear}_${s.id}_import_${Date.now()}`,
@@ -336,34 +320,37 @@ export default function BudgetManagement() {
 
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} lg={8}>
-          <Card size="small" bordered className="app-stat-card">
-            <Statistic
-              title={`${t("costManagement.budget.lastYear")}（${summaryTotals.lastYear}）`}
-              value={summaryTotals.lastTotal}
-              precision={2}
-              formatter={(v) => money(v)}
-            />
-          </Card>
+          <MetricStatCard
+            title={`${t("costManagement.budget.lastYear")}（${summaryTotals.lastYear}）`}
+            icon={HistoryOutlined}
+            accent="#165DFF"
+            value={summaryTotals.lastTotal}
+            precision={2}
+            unit={t("common.currencyUnit")}
+          />
         </Col>
         <Col xs={24} sm={12} lg={8}>
-          <Card size="small" bordered className="app-stat-card">
-            <Statistic
-              title={`${t("costManagement.budget.thisYear")}（${summaryTotals.thisYear}）`}
-              value={summaryTotals.thisTotal}
-              precision={2}
-              formatter={(v) => money(v)}
-            />
-          </Card>
+          <MetricStatCard
+            title={`${t("costManagement.budget.thisYear")}（${summaryTotals.thisYear}）`}
+            icon={CalendarOutlined}
+            accent="#00B42A"
+            value={summaryTotals.thisTotal}
+            precision={2}
+            unit={t("common.currencyUnit")}
+          />
         </Col>
         <Col xs={24} sm={12} lg={8}>
-          <Card size="small" bordered className="app-stat-card">
-            <Statistic
-              title={`${t("costManagement.budget.nextYear")}（${summaryTotals.nextYear}）`}
-              value={summaryTotals.hasNext ? summaryTotals.nextTotal : t("costManagement.budget.notPlanned")}
-              precision={summaryTotals.hasNext ? 2 : undefined}
-              formatter={summaryTotals.hasNext ? (v) => money(v) : undefined}
-            />
-          </Card>
+          <MetricStatCard
+            title={`${t("costManagement.budget.nextYear")}（${summaryTotals.nextYear}）`}
+            icon={FieldTimeOutlined}
+            accent="#165DFF"
+            value={summaryTotals.hasNext ? summaryTotals.nextTotal : undefined}
+            valueDisplay={
+              summaryTotals.hasNext ? undefined : t("costManagement.budget.notPlanned")
+            }
+            precision={2}
+            unit={summaryTotals.hasNext ? t("common.currencyUnit") : undefined}
+          />
         </Col>
       </Row>
 
@@ -417,7 +404,7 @@ export default function BudgetManagement() {
                 setFilters((p) => ({ ...p, baseSubjectId: v || undefined }))
               }
             >
-              {ROOT_SUBJECTS.map((s) => (
+              {rootSubjects.map((s) => (
                 <Select.Option key={s.id} value={s.id}>
                   {s.name}
                 </Select.Option>
@@ -465,6 +452,9 @@ export default function BudgetManagement() {
               onChange={(e) => setListKeyword(e.target.value)}
               style={{ width: 220 }}
             />
+            <Button icon={<DownloadOutlined />} onClick={handleExportBudget}>
+              {t("costManagement.exportReport")}
+            </Button>
             <Button type="primary" onClick={openImport}>
               {t("costManagement.budget.import.btn")}
             </Button>
@@ -472,11 +462,12 @@ export default function BudgetManagement() {
         }
       >
         <Table
+          className="app-table"
+          size="middle"
           rowKey="key"
           columns={columns}
           dataSource={filteredBudgetsForTable}
           pagination={getTablePagination(t)}
-          size="small"
         />
       </Card>
 
@@ -526,47 +517,130 @@ export default function BudgetManagement() {
 
       <Drawer
         placement="right"
-        width={420}
+        width={560}
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         destroyOnClose
         title={
           drawerRecord
-            ? `${drawerRecord.baseSubjectName} - ${t("costManagement.budget.drawerTitle")}`
+            ? `${
+                findNodeById(classTreeJson, drawerRecord.baseSubjectId)?.name ??
+                drawerRecord.baseSubjectName
+              } - ${t("costManagement.budget.drawerTitle")}`
             : t("costManagement.budget.drawerTitle")
         }
       >
         {drawerRecord ? (
-          <Tree
-            defaultExpandAll
-            showLine
-            selectable={false}
-            treeData={(() => {
-              const nodes = buildSubSubjectTree(drawerRecord);
-              const toTree = (arr) =>
-                arr.map((n) => ({
-                  key: n.key,
-                  title: (
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        minWidth: 180,
-                      }}
-                    >
-                      <span>{n.name}</span>
-                      <span style={{ color: "#111827" }}>{money(n.amount)}</span>
-                    </div>
-                  ),
-                  children:
-                    n.children && n.children.length ? toTree(n.children) : undefined,
-                }));
-              return toTree(nodes);
-            })()}
-          />
+          <BudgetSubjectTreePanel record={drawerRecord} classRoots={classTreeJson} t={t} moneyFmt={money} />
         ) : null}
       </Drawer>
     </Space>
+  );
+}
+
+function BudgetSubjectTreePanel({ record, classRoots, t, moneyFmt }) {
+  const [treeSearch, setTreeSearch] = useState("");
+  const [expandedKeys, setExpandedKeys] = useState([]);
+  const [selectedKeys, setSelectedKeys] = useState([]);
+
+  const rawNodes = useMemo(
+    () => buildBudgetSubjectNodesFromClass(record, classRoots),
+    [record, classRoots]
+  );
+
+  const filteredNodes = useMemo(
+    () => filterBudgetSubjectNodes(rawNodes, treeSearch),
+    [rawNodes, treeSearch]
+  );
+
+  useEffect(() => {
+    setTreeSearch("");
+    setSelectedKeys([]);
+  }, [record?.key]);
+
+  useEffect(() => {
+    setExpandedKeys(collectAllKeys(filteredNodes));
+  }, [filteredNodes]);
+
+  const treeData = useMemo(() => {
+    function toAntd(nodes) {
+      return nodes.map((n) => {
+        const isLeaf = !n.children || n.children.length === 0;
+        const depth = Number(n.depth) > 0 ? Number(n.depth) : 1;
+        return {
+          key: n.key,
+          title: (
+            <div className="budget-subject-tree__row">
+              <span
+                className={`budget-subject-tree__icon ${
+                  isLeaf ? "budget-subject-tree__icon--leaf" : "budget-subject-tree__icon--branch"
+                }`}
+              >
+                {isLeaf ? <FileDoneOutlined /> : <ApartmentOutlined />}
+              </span>
+              <span className="budget-subject-tree__name-wrap">
+                <span className="budget-subject-tree__name">{n.name}</span>
+                <span className="budget-subject-tree__level" title={t("costManagement.budget.treeLevelHint")}>
+                  L{Math.min(depth, 9)}
+                </span>
+              </span>
+              <span className="budget-subject-tree__amt">{moneyFmt(n.amount)}</span>
+            </div>
+          ),
+          children: n.children && n.children.length ? toAntd(n.children) : undefined,
+        };
+      });
+    }
+    return toAntd(filteredNodes);
+  }, [filteredNodes, moneyFmt, t]);
+
+  const allKeys = useMemo(() => collectAllKeys(rawNodes), [rawNodes]);
+
+  if (!rawNodes.length) {
+    return (
+      <div style={{ color: "#8c8c8c", padding: "12px 0" }}>
+        {t("costManagement.budget.treeNotFound")}
+      </div>
+    );
+  }
+
+  return (
+    <div className="budget-subject-tree-wrap">
+      <div className="budget-subject-tree-toolbar">
+        <Input.Search
+          allowClear
+          placeholder={t("costManagement.budget.treeSearchPlaceholder")}
+          value={treeSearch}
+          onChange={(e) => setTreeSearch(e.target.value)}
+        />
+        <Button size="small" type="default" onClick={() => setExpandedKeys(allKeys)}>
+          {t("costManagement.budget.treeExpandAll")}
+        </Button>
+        <Button size="small" type="default" onClick={() => setExpandedKeys([])}>
+          {t("costManagement.budget.treeCollapseAll")}
+        </Button>
+      </div>
+      <div style={{ color: "#8c8c8c", fontSize: 12, lineHeight: 1.5 }}>
+        {t("costManagement.budget.treeHint")}
+      </div>
+      {treeData.length === 0 && treeSearch.trim() ? (
+        <div style={{ color: "#8c8c8c", padding: "16px 8px" }}>
+          {t("costManagement.budget.treeNoMatch")}
+        </div>
+      ) : (
+        <Tree
+          className="budget-subject-tree"
+          blockNode
+          showLine
+          selectable
+          selectedKeys={selectedKeys}
+          onSelect={(keys) => setSelectedKeys(keys)}
+          expandedKeys={expandedKeys}
+          onExpand={(keys) => setExpandedKeys(keys)}
+          treeData={treeData}
+        />
+      )}
+    </div>
   );
 }
 
